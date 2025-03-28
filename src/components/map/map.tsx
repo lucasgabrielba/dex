@@ -13,11 +13,21 @@ import { CONFIG } from 'src/global-config';
 export type MapProps = ReactMapProps & { sx?: SxProps<Theme> };
 
 export const Map = forwardRef<MapRef, MapProps>((props, ref) => {
-  const { sx, ...other } = props;
+  const { sx, projection, ...other } = props;
+
+  // Handle projection type compatibility issue
+  const safeProjection = typeof projection === 'string' ? undefined : projection;
 
   return (
     <MapRoot sx={sx}>
-      <ReactMap ref={ref} mapboxAccessToken={CONFIG.mapboxApiKey} {...other} />
+      <ReactMap
+        ref={ref}
+        mapboxAccessToken={CONFIG.mapboxApiKey}
+        projection={safeProjection}
+        {...other}
+        logoPosition="bottom-right" // Set a valid logoPosition
+        terrain={undefined} // Ensure terrain is explicitly undefined
+      />
     </MapRoot>
   );
 });

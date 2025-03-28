@@ -5,6 +5,8 @@ import { merge } from 'es-toolkit';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -17,7 +19,6 @@ import { AuthCenteredContent } from './content';
 import { MainSection } from '../core/main-section';
 import { LayoutSection } from '../core/layout-section';
 import { HeaderSection } from '../core/header-section';
-import { SettingsButton } from '../components/settings-button';
 
 import type { AuthCenteredContentProps } from './content';
 import type { MainSectionProps } from '../core/main-section';
@@ -61,6 +62,11 @@ export function AuthCenteredLayout({
       ),
       rightArea: (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 1.5 } }}>
+
+          <IconButton aria-label="info">
+            <InfoOutlineIcon />
+          </IconButton>
+
           {/** @slot Help link */}
           <Link
             href={paths.faqs}
@@ -68,11 +74,11 @@ export function AuthCenteredLayout({
             color="inherit"
             sx={{ typography: 'subtitle2' }}
           >
-            Need help?
+            Precisa de ajuda?
           </Link>
 
           {/** @slot Settings button */}
-          <SettingsButton />
+          {/* <SettingsButton /> */}
         </Box>
       ),
     };

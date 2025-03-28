@@ -22,12 +22,12 @@ export type VerifySchemaType = zod.infer<typeof VerifySchema>;
 export const VerifySchema = zod.object({
   code: zod
     .string()
-    .min(1, { message: 'Code is required!' })
-    .min(6, { message: 'Code must be at least 6 characters!' }),
+    .min(1, { message: 'O código é obrigatório!' })
+    .min(6, { message: 'O código deve ter 6 caracteres.' }),
   email: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .min(1, { message: 'Email é obrigatório!' })
+    .email({ message: 'Email deve ser válido!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -61,7 +61,7 @@ export function CenteredVerifyView() {
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
       <Field.Text
         name="email"
-        label="Email address"
+        label="Email"
         placeholder="example@gmail.com"
         slotProps={{ inputLabel: { shrink: true } }}
       />
@@ -74,9 +74,9 @@ export function CenteredVerifyView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Verify..."
+        loadingIndicator="Confirmando..."
       >
-        Verify
+        Confirmar código
       </LoadingButton>
     </Box>
   );
@@ -85,17 +85,17 @@ export function CenteredVerifyView() {
     <>
       <FormHead
         icon={<EmailInboxIcon />}
-        title="Please check your email!"
-        description={`We've emailed a 6-digit confirmation code. \nPlease enter the code in the box below to verify your email.`}
+        title="Por favor, verifique seu email"
+        description={`Enviamos um código de verificação de 6 dígitos para o email ${defaultValues.email}. \nInsira-o no campo abaixo para confirmar sua conta.`}
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <FormResendCode onResendCode={() => {}} value={0} disabled={false} />
+      <FormResendCode onResendCode={() => { }} value={0} disabled={false} />
 
-      <FormReturnLink href={paths.authDemo.centered.signIn} />
+      <FormReturnLink href={paths.auth.signIn} />
     </>
   );
 }

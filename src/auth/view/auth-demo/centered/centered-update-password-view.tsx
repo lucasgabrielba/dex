@@ -27,20 +27,20 @@ export const UpdatePasswordSchema = zod
   .object({
     code: zod
       .string()
-      .min(1, { message: 'Code is required!' })
-      .min(6, { message: 'Code must be at least 6 characters!' }),
+      .min(1, { message: 'O código é obrigatório!' })
+      .min(6, { message: 'O código deve ter 6 caracteres.' }),
     email: zod
       .string()
-      .min(1, { message: 'Email is required!' })
-      .email({ message: 'Email must be a valid email address!' }),
+      .min(1, { message: 'Email é obrigatório!' })
+      .email({ message: 'Email deve ser válido!' }),
     password: zod
       .string()
-      .min(1, { message: 'Password is required!' })
-      .min(6, { message: 'Password must be at least 6 characters!' }),
-    confirmPassword: zod.string().min(1, { message: 'Confirm password is required!' }),
+      .min(1, { message: 'Senha é obrigatória!' })
+      .min(6, { message: 'Senha deve ter 6 caracteres.' }),
+    confirmPassword: zod.string().min(1, { message: 'Confirme a senha!' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match!',
+    message: 'As senhas não coincidem',
     path: ['confirmPassword'],
   });
 
@@ -78,7 +78,7 @@ export function CenteredUpdatePasswordView() {
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
       <Field.Text
         name="email"
-        label="Email address"
+        label="Email"
         placeholder="example@gmail.com"
         slotProps={{ inputLabel: { shrink: true } }}
       />
@@ -87,8 +87,8 @@ export function CenteredUpdatePasswordView() {
 
       <Field.Text
         name="password"
-        label="Password"
-        placeholder="6+ characters"
+        label="Senha"
+        placeholder="6+ caracteres"
         type={showPassword.value ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -106,7 +106,7 @@ export function CenteredUpdatePasswordView() {
 
       <Field.Text
         name="confirmPassword"
-        label="Confirm new password"
+        label="Confirme a senha"
         type={showPassword.value ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -128,9 +128,9 @@ export function CenteredUpdatePasswordView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Update password..."
+        loadingIndicator="Atualizando..."
       >
-        Update password
+        Atualizar senha
       </LoadingButton>
     </Box>
   );
@@ -139,17 +139,17 @@ export function CenteredUpdatePasswordView() {
     <>
       <FormHead
         icon={<SentIcon />}
-        title="Request sent successfully!"
-        description={`We've sent a 6-digit confirmation email to your email. \nPlease enter the code in below box to verify your email.`}
+        title="Solicitação enviada com sucesso!"
+        description={`Enviamos um código de verificação de 6 dígitos para o email ${defaultValues.email}. \nInsira-o no campo abaixo para confirmar sua conta.`}
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <FormResendCode onResendCode={() => {}} value={0} disabled={false} />
+      <FormResendCode onResendCode={() => { }} value={0} disabled={false} />
 
-      <FormReturnLink href={paths.authDemo.centered.signIn} />
+      <FormReturnLink href={paths.auth.signIn} />
     </>
   );
 }

@@ -13,7 +13,6 @@ import { MainLayout } from 'src/layouts/main';
 import { layoutClasses } from 'src/layouts/core';
 import { SimpleLayout } from 'src/layouts/simple';
 import { DashboardLayout } from 'src/layouts/dashboard';
-import { AuthSplitLayout } from 'src/layouts/auth-split';
 import { AuthCenteredLayout } from 'src/layouts/auth-centered';
 
 import { ComponentLayout } from '../../layout';
@@ -162,32 +161,7 @@ const DEMO_COMPONENTS = [
         {textContent()}
       </AuthCenteredLayout>
     ),
-  },
-  {
-    value: 'auth-split',
-    label: 'Auth split',
-    component: (
-      <AuthSplitLayout
-        sx={{ position: 'relative' }}
-        slotProps={{
-          header: {
-            disableOffset: true,
-            disableElevation: true,
-            sx: { zIndex: 9, position: { md: 'absolute' } },
-            slots: {
-              topArea: (
-                <Alert severity="info" sx={{ borderRadius: 0 }}>
-                  This is an info Alert.
-                </Alert>
-              ),
-            },
-          },
-        }}
-      >
-        <Card sx={{ p: 4 }}>{textContent()}</Card>
-      </AuthSplitLayout>
-    ),
-  },
+  }
 ];
 
 export function LayoutView() {

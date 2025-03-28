@@ -16,38 +16,49 @@ import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 import { AnimateLogoRotate } from 'src/components/animate';
 
+import { SignUpTerms } from 'src/auth/components/sign-up-terms';
+
 import { FormHead } from '../../../components/form-head';
-import { FormSocials } from '../../../components/form-socials';
-import { FormDivider } from '../../../components/form-divider';
-import { SignUpTerms } from '../../../components/sign-up-terms';
 
 // ----------------------------------------------------------------------
 
 export type SignUpSchemaType = zod.infer<typeof SignUpSchema>;
 
 export const SignUpSchema = zod.object({
-  firstName: zod.string().min(1, { message: 'First name is required!' }),
-  lastName: zod.string().min(1, { message: 'Last name is required!' }),
+  firstName: zod.string().min(1, { message: 'Nome é obrigatório!' }),
+  lastName: zod.string().min(1, { message: 'Sobrenome é obrigatório!' }),
   email: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .min(1, { message: 'Email é obrigatório!' })
+    .email({ message: 'Email deve ser um endereço válido!' }),
+  phone: zod
+    .string()
+    .min(1, { message: 'Telefone é obrigatório!' }),
   password: zod
     .string()
-    .min(1, { message: 'Password is required!' })
-    .min(6, { message: 'Password must be at least 6 characters!' }),
+    .min(1, { message: 'Senha é obrigatória!' })
+    .min(6, { message: 'Senha deve ter pelo menos 6 caracteres!' }),
+  confirmPassword: zod
+    .string()
+    .min(1, { message: 'Confirmação de senha é obrigatória!' }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "As senhas não coincidem",
+  path: ["confirmPassword"],
 });
 
 // ----------------------------------------------------------------------
 
 export function CenteredSignUpView() {
   const showPassword = useBoolean();
+  const showConfirmPassword = useBoolean();
 
   const defaultValues: SignUpSchemaType = {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '',
     password: '',
+    confirmPassword: '',
   };
 
   const methods = useForm<SignUpSchemaType>({
@@ -86,30 +97,57 @@ export function CenteredSignUpView() {
       >
         <Field.Text
           name="firstName"
-          label="First name"
-          slotProps={{ inputLabel: { shrink: true } }}
+          label="Nome"
+          placeholder="Nome"
         />
         <Field.Text
           name="lastName"
-          label="Last name"
-          slotProps={{ inputLabel: { shrink: true } }}
+          label="Sobrenome"
+          placeholder="Sobrenome"
         />
       </Box>
 
-      <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text
+        name="email"
+        label="Seu e-mail"
+        placeholder="Seu e-mail"
+      />
+
+      <Field.Text
+        name="phone"
+        label="Seu telefone"
+        placeholder="Seu telefone"
+      />
 
       <Field.Text
         name="password"
-        label="Password"
-        placeholder="6+ characters"
+        label="Crie uma senha"
+        placeholder="Senha"
         type={showPassword.value ? 'text' : 'password'}
         slotProps={{
-          inputLabel: { shrink: true },
           input: {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton onClick={showPassword.onToggle} edge="end">
                   <Iconify icon={showPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
+
+      <Field.Text
+        name="confirmPassword"
+        label="Confirme a senha"
+        placeholder="Reescreva a senha"
+        type={showConfirmPassword.value ? 'text' : 'password'}
+        slotProps={{
+          input: {
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={showConfirmPassword.onToggle} edge="end">
+                  <Iconify icon={showConfirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -124,9 +162,9 @@ export function CenteredSignUpView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Create account..."
+        loadingIndicator="Criando conta..."
       >
-        Create account
+        Criar conta
       </LoadingButton>
     </Box>
   );
@@ -136,12 +174,12 @@ export function CenteredSignUpView() {
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
 
       <FormHead
-        title="Get started absolutely free"
+        title="Comece totalmente grátis"
         description={
           <>
-            {`Already have an account? `}
-            <Link component={RouterLink} href={paths.authDemo.centered.signIn} variant="subtitle2">
-              Get started
+            {`Já possui uma conta? `}
+            <Link component={RouterLink} href={paths.auth.signIn} variant="subtitle2">
+              Entrar
             </Link>
           </>
         }
@@ -152,14 +190,12 @@ export function CenteredSignUpView() {
       </Form>
 
       <SignUpTerms />
-
-      <FormDivider />
-
-      <FormSocials
-        signInWithGoogle={() => {}}
-        singInWithGithub={() => {}}
-        signInWithTwitter={() => {}}
-      />
+      {/* <FormDivider /> */}
+      {/* <FormSocials
+        signInWithGoogle={() => { }}
+        singInWithGithub={() => { }}
+        signInWithTwitter={() => { }}
+      /> */}
     </>
   );
 }

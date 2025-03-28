@@ -17,8 +17,6 @@ import { Form, Field } from 'src/components/hook-form';
 import { AnimateLogoRotate } from 'src/components/animate';
 
 import { FormHead } from '../../../components/form-head';
-import { FormSocials } from '../../../components/form-socials';
-import { FormDivider } from '../../../components/form-divider';
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +25,12 @@ export type SignInSchemaType = zod.infer<typeof SignInSchema>;
 export const SignInSchema = zod.object({
   email: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .min(1, { message: 'Email é obrigatório!' })
+    .email({ message: 'Email deve ser um endereço válido!' }),
   password: zod
     .string()
-    .min(1, { message: 'Password is required!' })
-    .min(6, { message: 'Password must be at least 6 characters!' }),
+    .min(1, { message: 'Senha é obrigatória!' })
+    .min(6, { message: 'Senha deve ter pelo menos 6 caracteres!' }),
 });
 
 // ----------------------------------------------------------------------
@@ -66,23 +64,23 @@ export function CenteredSignInView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      <Field.Text name="email" label="Email address" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text name="email" label="Email" slotProps={{ inputLabel: { shrink: true } }} />
 
       <Box sx={{ gap: 1.5, display: 'flex', flexDirection: 'column' }}>
         <Link
           component={RouterLink}
-          href={paths.authDemo.centered.resetPassword}
+          href={paths.auth.resetPassword}
           variant="body2"
           color="inherit"
           sx={{ alignSelf: 'flex-end' }}
         >
-          Forgot password?
+          Esqueceu sua senha?
         </Link>
 
         <Field.Text
           name="password"
-          label="Password"
-          placeholder="6+ characters"
+          label="Senha"
+          placeholder="Insira sua senha"
           type={showPassword.value ? 'text' : 'password'}
           slotProps={{
             inputLabel: { shrink: true },
@@ -108,9 +106,9 @@ export function CenteredSignInView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
-        loadingIndicator="Sign in..."
+        loadingIndicator="Entrando..."
       >
-        Sign in
+        Entrar
       </LoadingButton>
     </Box>
   );
@@ -120,12 +118,12 @@ export function CenteredSignInView() {
       <AnimateLogoRotate sx={{ mb: 3, mx: 'auto' }} />
 
       <FormHead
-        title="Sign in to your account"
+        title="Entre na sua conta"
         description={
           <>
-            {`Don’t have an account? `}
-            <Link component={RouterLink} href={paths.authDemo.centered.signUp} variant="subtitle2">
-              Get started
+            {`Não possui uma conta? `}
+            <Link component={RouterLink} href={paths.auth.signUp} variant="subtitle2">
+              Cadastre-se
             </Link>
           </>
         }
@@ -135,13 +133,13 @@ export function CenteredSignInView() {
         {renderForm()}
       </Form>
 
-      <FormDivider />
+      {/* <FormDivider />
 
       <FormSocials
-        signInWithGoogle={() => {}}
-        singInWithGithub={() => {}}
-        signInWithTwitter={() => {}}
-      />
+        signInWithGoogle={() => { }}
+        singInWithGithub={() => { }}
+        signInWithTwitter={() => { }}
+      /> */}
     </>
   );
 }
