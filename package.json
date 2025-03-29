@@ -16,10 +16,10 @@
     "fm:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "fix:all": "npm run lint:fix && npm run fm:fix",
     "clean": "rm -rf node_modules .next out dist build",
-    "re:dev": "pnpm clean && pnpm install && pnpm dev",
-    "re:build": "pnpm clean && pnpm install && pnpm build",
+    "re:dev": "yarn clean && yarn install && yarn dev",
+    "re:build": "yarn clean && yarn install && yarn build",
     "re:build-npm": "npm run clean && npm install && npm run build",
-    "tsc:dev": "pnpm dev & pnpm tsc:watch",
+    "tsc:dev": "yarn dev & yarn tsc:watch",
     "tsc:watch": "tsc --noEmit --watch",
     "tsc:print": "npx tsc --showConfig"
   },
@@ -27,7 +27,7 @@
     "node": ">=14.0.0",
     "pnpm": ">=7.0.0"
   },
-  "packageManager": "pnpm@7.0.0",
+  "packageManager": "pnpm@7.x",
   "dependencies": {
     "@auth0/auth0-react": "^2.2.4",
     "@dnd-kit/core": "^6.3.1",
@@ -50,9 +50,8 @@
     "@fullcalendar/timeline": "^6.1.15",
     "@hookform/resolvers": "^3.9.1",
     "@iconify/react": "^5.1.0",
-    "@mui/icons-material": "^6.0.0",
     "@mui/lab": "^6.0.0-beta.21",
-    "@mui/material": "^6.4.9",
+    "@mui/material": "^6.3.0",
     "@mui/x-data-grid": "^7.23.5",
     "@mui/x-date-pickers": "^7.23.3",
     "@mui/x-tree-view": "^7.23.2",
