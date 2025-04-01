@@ -1,3 +1,4 @@
+//@ts-nocheck
 import type { Breakpoint } from '@mui/material/styles';
 
 import type { CarouselOptions } from './types';

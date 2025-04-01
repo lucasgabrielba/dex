@@ -11,6 +11,7 @@ const MOCK_TITLE = _postTitles[2];
 const ROOTS = {
   AUTH: '/auth',
   DASHBOARD: '/dashboard',
+  ONBOARDING: '/onboarding',
 };
 
 // ----------------------------------------------------------------------
@@ -51,6 +52,10 @@ export const paths = {
     resetPassword: `${ROOTS.AUTH}/reset-password`,
     updatePassword: `${ROOTS.AUTH}/update-password`,
     verify: `${ROOTS.AUTH}/verify`,
+  },
+  // ONBOARDING
+  onboarding: {
+    root: ROOTS.ONBOARDING,
   },
   // DASHBOARD
   dashboard: {

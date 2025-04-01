@@ -10,6 +10,7 @@ import { authRoutes } from './auth';
 import { mainRoutes } from './main';
 import { dashboardRoutes } from './dashboard';
 import { componentsRoutes } from './components';
+import { onboardingRoutes } from './onboarding';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +39,9 @@ export const routesSection: RouteObject[] = [
 
   // Auth
   ...authRoutes,
+
+  // Onboarding
+  ...onboardingRoutes,
 
   // Dashboard
   ...dashboardRoutes,

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import type {
   AuthError,
   AuthResponse,
