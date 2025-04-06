@@ -18,7 +18,8 @@ type Props = CardProps & {
   title: string;
   total: number;
   percent: number;
-  chart: {
+  time?: string;
+  chart?: {  // Tornando chart opcional com "?"
     colors?: string[];
     categories: string[];
     series: number[];
@@ -26,37 +27,41 @@ type Props = CardProps & {
   };
 };
 
-export function EcommerceWidgetSummary({ title, percent, total, chart, sx, ...other }: Props) {
+export function EcommerceWidgetSummary({ title, percent, total, time, chart, sx, ...other }: Props) {
   const theme = useTheme();
 
-  const chartColors = chart.colors ?? [theme.palette.primary.light, theme.palette.primary.main];
+  // Configuração do chart apenas se ele for fornecido
+  const chartColors = chart?.colors ?? [theme.palette.primary.light, theme.palette.primary.main];
 
-  const chartOptions = useChart({
-    chart: { sparkline: { enabled: true } },
-    colors: [chartColors[1]],
-    xaxis: { categories: chart.categories },
-    grid: {
-      padding: {
-        top: 6,
-        left: 6,
-        right: 6,
-        bottom: 6,
+  const chartOptions = chart
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    ? useChart({
+      chart: { sparkline: { enabled: true } },
+      colors: [chartColors[1]],
+      xaxis: { categories: chart.categories },
+      grid: {
+        padding: {
+          top: 6,
+          left: 6,
+          right: 6,
+          bottom: 6,
+        },
       },
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        colorStops: [
-          { offset: 0, color: chartColors[0], opacity: 1 },
-          { offset: 100, color: chartColors[1], opacity: 1 },
-        ],
+      fill: {
+        type: 'gradient',
+        gradient: {
+          colorStops: [
+            { offset: 0, color: chartColors[0], opacity: 1 },
+            { offset: 100, color: chartColors[1], opacity: 1 },
+          ],
+        },
       },
-    },
-    tooltip: {
-      y: { formatter: (value: number) => fNumber(value), title: { formatter: () => '' } },
-    },
-    ...chart.options,
-  });
+      tooltip: {
+        y: { formatter: (value: number) => fNumber(value), title: { formatter: () => '' } },
+      },
+      ...chart?.options,
+    })
+    : undefined;
 
   const renderTrending = () => (
     <Box sx={{ gap: 0.5, display: 'flex', alignItems: 'center' }}>
@@ -96,7 +101,7 @@ export function EcommerceWidgetSummary({ title, percent, total, chart, sx, ...ot
       </Box>
 
       <Box component="span" sx={{ color: 'text.secondary', typography: 'body2' }}>
-        last week
+        {time}
       </Box>
     </Box>
   );
@@ -114,12 +119,14 @@ export function EcommerceWidgetSummary({ title, percent, total, chart, sx, ...ot
         {renderTrending()}
       </Box>
 
-      <Chart
-        type="line"
-        series={[{ data: chart.series }]}
-        options={chartOptions}
-        sx={{ width: 100, height: 66 }}
-      />
+      {chart && (
+        <Chart
+          type="line"
+          series={[{ data: chart.series }]}
+          options={chartOptions}
+          sx={{ width: 100, height: 66 }}
+        />
+      )}
     </Card>
   );
 }

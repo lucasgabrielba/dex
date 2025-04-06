@@ -1,26 +1,23 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { SeoIllustration } from 'src/assets/illustrations';
-import { _appAuthors, _appRelated, _appFeatured, _appInvoices, _appInstalled } from 'src/_mock';
+import { _mock, _appAuthors, _appRelated, _appInvoices, _appInstalled } from 'src/_mock';
 
 import { svgColorClasses } from 'src/components/svg-color';
 
 import { useMockedUser } from 'src/auth/hooks';
 
 import { AppWidget } from '../app-widget';
-import { AppWelcome } from '../app-welcome';
-import { AppFeatured } from '../app-featured';
 import { AppNewInvoice } from '../app-new-invoice';
 import { AppTopAuthors } from '../app-top-authors';
 import { AppTopRelated } from '../app-top-related';
 import { AppAreaInstalled } from '../app-area-installed';
-import { AppWidgetSummary } from '../app-widget-summary';
-import { AppCurrentDownload } from '../app-current-download';
 import { AppTopInstalledCountries } from '../app-top-installed-countries';
+import { EcommerceWidgetSummary } from '../../e-commerce/ecommerce-widget-summary';
+import { EcommerceSalesOverview } from '../../e-commerce/ecommerce-sales-overview';
+import { EcommerceCurrentBalance } from '../../e-commerce/ecommerce-current-balance';
 
 // ----------------------------------------------------------------------
 
@@ -29,76 +26,108 @@ export function OverviewAppView() {
 
   const theme = useTheme();
 
+  const _ecommerceSalesOverview = ['Total de vendas', 'Total de alugueis'].map(
+    (label, index) => ({
+      label,
+      totalAmount: _mock.number.price(index) * 100,
+      value: _mock.number.percent(index),
+    })
+  );
+
+  //apenas mock, é pra vir do back
+  const mesesEmPortugues = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril',
+    'Maio', 'Junho', 'Julho', 'Agosto',
+    'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+  ];
+
+  const dataAtual = new Date();
+  const mesAtual = dataAtual.getMonth();
+  const nomeDoMesAtual = mesesEmPortugues[mesAtual];
+
   return (
     <DashboardContent maxWidth="xl">
       <Grid container spacing={3}>
-        <Grid size={{ xs: 12, md: 8 }}>
+        {/* <Grid size={{ xs: 12, md: 12 }}>
           <AppWelcome
-            title={`Welcome back 👋 \n ${user?.displayName}`}
-            description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
+            title={`Crie seu primeiro produto agora! `}
+            description="Para começar a gerenciar suas vendas, basta adicionar seu primeiro produto."
             img={<SeoIllustration hideBackground />}
             action={
               <Button variant="contained" color="primary">
-                Go now
+                Criar meu primeiro produto
               </Button>
             }
           />
-        </Grid>
+        </Grid> */}
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <AppFeatured list={_appFeatured} />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 4 }}>
-          <AppWidgetSummary
-            title="Total active users"
+        <Grid size={{ xs: 12, md: 3 }}>
+          <EcommerceWidgetSummary
+            title="Imóveis cadastrados"
             percent={2.6}
-            total={18765}
-            chart={{
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [15, 18, 12, 51, 68, 11, 39, 37],
-            }}
+            total={12}
+            time='últimos 7 dias'
+          // chart={{
+          //   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+          //   series: [22, 8, 35, 50, 82, 84, 77, 12],
+          // }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <AppWidgetSummary
-            title="Total installed"
-            percent={0.2}
-            total={4876}
-            chart={{
-              colors: [theme.palette.info.main],
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [20, 41, 63, 33, 28, 35, 50, 46],
-            }}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <EcommerceWidgetSummary
+            title="Alugueis cadastrados"
+            percent={-2.6}
+            total={0}
+            time='últimos 7 dias'
+          // chart={{
+          //   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+          //   series: [22, 8, 35, 50, 82, 84, 77, 12],
+          // }}
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 4 }}>
-          <AppWidgetSummary
-            title="Total downloads"
-            percent={-0.1}
-            total={678}
-            chart={{
-              colors: [theme.palette.error.main],
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-              series: [18, 19, 31, 8, 16, 37, 12, 33],
-            }}
+        <Grid size={{ xs: 12, md: 3 }}>
+          <EcommerceWidgetSummary
+            title="Novos empreendimentos"
+            percent={10}
+            total={1}
+            time='último mês'
+          // chart={{
+          //   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+          //   series: [22, 8, 35, 50, 82, 84, 77, 12],
+          // }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 3 }}>
+          <EcommerceWidgetSummary
+            title="Novos clientes"
+            percent={3}
+            total={7}
+            time='últimos 7 dias'
+          // chart={{
+          //   categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+          //   series: [22, 8, 35, 50, 82, 84, 77, 12],
+          // }}
+          />
+        </Grid>
+
+
+        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
+          <EcommerceSalesOverview
+            title={`Visão geral de ${nomeDoMesAtual}`}
+            data={_ecommerceSalesOverview}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AppCurrentDownload
-            title="Current download"
-            subheader="Downloaded by operating system"
-            chart={{
-              series: [
-                { label: 'Mac', value: 12244 },
-                { label: 'Window', value: 53345 },
-                { label: 'iOS', value: 44313 },
-                { label: 'Android', value: 78343 },
-              ],
-            }}
+          <EcommerceCurrentBalance
+            title={`Total de ganhos em ${nomeDoMesAtual}`}
+            earning={25500}
+            refunded={1600}
+            orderTotal={287650}
+            currentBalance={187650}
           />
         </Grid>
 

@@ -52,7 +52,7 @@ export function OverviewEcommerceView() {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <EcommerceWidgetSummary
-            title="Product sold"
+            title="Product soldsss"
             percent={2.6}
             total={765}
             chart={{

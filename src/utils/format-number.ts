@@ -1,4 +1,3 @@
-import { formatNumberLocale } from 'src/locales';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +10,7 @@ export type InputNumberValue = string | number | null | undefined;
 
 type Options = Intl.NumberFormatOptions;
 
-const DEFAULT_LOCALE = { code: 'en-US', currency: 'USD' };
+const DEFAULT_LOCALE = { code: 'pt-br', currency: 'BRL' };
 
 function processInput(inputValue: InputNumberValue): number | null {
   if (inputValue == null || Number.isNaN(inputValue)) return null;
@@ -21,7 +20,7 @@ function processInput(inputValue: InputNumberValue): number | null {
 // ----------------------------------------------------------------------
 
 export function fNumber(inputValue: InputNumberValue, options?: Options) {
-  const locale = formatNumberLocale() || DEFAULT_LOCALE;
+  const locale = DEFAULT_LOCALE;
 
   const number = processInput(inputValue);
   if (number === null) return '';
@@ -38,7 +37,7 @@ export function fNumber(inputValue: InputNumberValue, options?: Options) {
 // ----------------------------------------------------------------------
 
 export function fCurrency(inputValue: InputNumberValue, options?: Options) {
-  const locale = formatNumberLocale() || DEFAULT_LOCALE;
+  const locale = DEFAULT_LOCALE;
 
   const number = processInput(inputValue);
   if (number === null) return '';
@@ -57,7 +56,7 @@ export function fCurrency(inputValue: InputNumberValue, options?: Options) {
 // ----------------------------------------------------------------------
 
 export function fPercent(inputValue: InputNumberValue, options?: Options) {
-  const locale = formatNumberLocale() || DEFAULT_LOCALE;
+  const locale = DEFAULT_LOCALE;
 
   const number = processInput(inputValue);
   if (number === null) return '';
@@ -75,7 +74,7 @@ export function fPercent(inputValue: InputNumberValue, options?: Options) {
 // ----------------------------------------------------------------------
 
 export function fShortenNumber(inputValue: InputNumberValue, options?: Options) {
-  const locale = formatNumberLocale() || DEFAULT_LOCALE;
+  const locale = DEFAULT_LOCALE;
 
   const number = processInput(inputValue);
   if (number === null) return '';

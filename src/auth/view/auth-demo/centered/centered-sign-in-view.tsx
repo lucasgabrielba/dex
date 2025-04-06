@@ -10,11 +10,14 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 import { AnimateLogoRotate } from 'src/components/animate';
+
+import { signInWithPassword } from 'src/auth/context/jwt';
 
 import { FormHead } from '../../../components/form-head';
 
@@ -36,6 +39,7 @@ export const SignInSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function CenteredSignInView() {
+  const router = useRouter();
   const showPassword = useBoolean();
 
   const defaultValues: SignInSchemaType = {
@@ -56,6 +60,8 @@ export function CenteredSignInView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
+      signInWithPassword({ email: data.email, password: data.password })
+      router.push(paths.dashboard.root);
       console.info('DATA', data);
     } catch (error) {
       console.error(error);
