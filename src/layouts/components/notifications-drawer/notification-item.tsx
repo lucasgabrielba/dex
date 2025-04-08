@@ -74,7 +74,15 @@ export function NotificationItem({ notification }: NotificationItemProps) {
             component="span"
             sx={{ width: 2, height: 2, borderRadius: '50%', bgcolor: 'currentColor' }}
           />
-          {notification.category}
+          {notification.category === 'Order' ? 'Pedido' :
+            notification.category === 'Chat' ? 'Chat' :
+              notification.category === 'Mail' ? 'E-mail' :
+                notification.category === 'Delivery' ? 'Entrega' :
+                  notification.category === 'Friend' ? 'Amigo' :
+                    notification.category === 'Project' ? 'Projeto' :
+                      notification.category === 'File' ? 'Arquivo' :
+                        notification.category === 'Tags' ? 'Etiquetas' :
+                          notification.category === 'Payment' ? 'Pagamento' : notification.category}
         </>
       }
       slotProps={{
@@ -112,10 +120,10 @@ export function NotificationItem({ notification }: NotificationItemProps) {
   const renderFriendAction = () => (
     <Box sx={{ gap: 1, mt: 1.5, display: 'flex' }}>
       <Button size="small" variant="contained">
-        Accept
+        Aceitar
       </Button>
       <Button size="small" variant="outlined">
-        Decline
+        Recusar
       </Button>
     </Box>
   );
@@ -132,12 +140,12 @@ export function NotificationItem({ notification }: NotificationItemProps) {
         }}
       >
         {readerContent(
-          `<p><strong>@Jaydon Frankie</strong> feedback by asking questions or just leave a note of appreciation.</p>`
+          `<p><strong>@Hudson Alvarez</strong> dê feedback fazendo perguntas ou apenas deixe uma nota de agradecimento.</p>`
         )}
       </Box>
 
       <Button size="small" variant="contained" sx={{ alignSelf: 'flex-start' }}>
-        Reply
+        Responder
       </Button>
     </>
   );
@@ -177,7 +185,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
       />
 
       <Button size="small" variant="outlined" sx={{ flexShrink: 0 }}>
-        Download
+        Baixar
       </Button>
     </Box>
   );
@@ -195,19 +203,19 @@ export function NotificationItem({ notification }: NotificationItemProps) {
         Design
       </Label>
       <Label variant="outlined" color="warning">
-        Dashboard
+        Painel
       </Label>
-      <Label variant="outlined">Design system</Label>
+      <Label variant="outlined">Sistema de design</Label>
     </Box>
   );
 
   const renderPaymentAction = () => (
     <Box sx={{ gap: 1, mt: 1.5, display: 'flex' }}>
       <Button size="small" variant="contained">
-        Pay
+        Pagar
       </Button>
       <Button size="small" variant="outlined">
-        Decline
+        Recusar
       </Button>
     </Box>
   );

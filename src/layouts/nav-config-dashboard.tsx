@@ -4,6 +4,7 @@ import { paths } from 'src/routes/paths';
 
 import { CONFIG } from 'src/global-config';
 
+import { Iconify } from 'src/components/iconify';
 import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
@@ -52,7 +53,7 @@ export const navData: NavSectionProps['data'] = [
   {
     subheader: 'Módulos',
     items: [
-      { title: 'Painel', path: paths.dashboard.root, icon: ICONS.dashboard },
+      { title: 'Painel', path: paths.dashboard.root, icon: <Iconify icon="solar:home-angle-bold-duotone" /> },
       { title: 'Imóveis', path: paths.dashboard.general.ecommerce, icon: ICONS.banking },
       { title: 'Clientes', path: paths.dashboard.user.root, icon: ICONS.user },
       { title: 'Vendas', path: paths.dashboard.general.banking, icon: ICONS.order },

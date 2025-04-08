@@ -30,7 +30,7 @@ export function AccountBillingPayment({ cards, sx, ...other }: Props) {
     <>
       <Card sx={[{ my: 3 }, ...(Array.isArray(sx) ? sx : [sx])]} {...other}>
         <CardHeader
-          title="Payment method"
+          title="Método de pagamento"
           action={
             <Button
               size="small"
@@ -38,7 +38,7 @@ export function AccountBillingPayment({ cards, sx, ...other }: Props) {
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={openForm.onTrue}
             >
-              New card
+              Novo cartão
             </Button>
           }
         />
@@ -59,7 +59,7 @@ export function AccountBillingPayment({ cards, sx, ...other }: Props) {
       </Card>
 
       <Dialog fullWidth maxWidth="xs" open={openForm.value} onClose={openForm.onFalse}>
-        <DialogTitle> Add new card </DialogTitle>
+        <DialogTitle>Adicionar novo cartão</DialogTitle>
 
         <DialogContent sx={{ overflow: 'unset' }}>
           <PaymentNewCardForm />
@@ -67,11 +67,11 @@ export function AccountBillingPayment({ cards, sx, ...other }: Props) {
 
         <DialogActions>
           <Button color="inherit" variant="outlined" onClick={openForm.onFalse}>
-            Cancel
+            Cancelar
           </Button>
 
           <Button color="inherit" variant="contained" onClick={openForm.onFalse}>
-            Add
+            Adicionar
           </Button>
         </DialogActions>
       </Dialog>

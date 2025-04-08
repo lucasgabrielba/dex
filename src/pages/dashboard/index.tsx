@@ -6,7 +6,7 @@ import { OverviewAppView } from 'src/sections/overview/app/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Painel - ${CONFIG.appName}` };
 
 export default function OverviewAppPage() {
   return (

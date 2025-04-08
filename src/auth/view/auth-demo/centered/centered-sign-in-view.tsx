@@ -1,4 +1,5 @@
 import { z as zod } from 'zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,13 +11,16 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useSearchParams } from 'src/routes/hooks';
+
+import { CONFIG } from 'src/global-config';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 import { AnimateLogoRotate } from 'src/components/animate';
 
+import { useAuthContext } from 'src/auth/hooks';
 import { signInWithPassword } from 'src/auth/context/jwt';
 
 import { FormHead } from '../../../components/form-head';
@@ -39,8 +43,11 @@ export const SignInSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function CenteredSignInView() {
-  const router = useRouter();
+  const { checkUserSession } = useAuthContext();
+  const searchParams = useSearchParams();
+  const returnTo = searchParams.get('returnTo') || CONFIG.auth.redirectPath || paths.dashboard.root;
   const showPassword = useBoolean();
+  const [error, setError] = useState('');
 
   const defaultValues: SignInSchemaType = {
     email: '',
@@ -59,12 +66,20 @@ export function CenteredSignInView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      signInWithPassword({ email: data.email, password: data.password })
-      router.push(paths.dashboard.root);
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
+      setError('');
+      // Primeiro fazemos a autenticação
+      await signInWithPassword({ email: data.email, password: data.password });
+
+      // Depois atualizamos o contexto de autenticação
+      if (checkUserSession) {
+        await checkUserSession();
+      }
+
+      // E finalmente redirecionamos
+      window.location.href = returnTo;
+    } catch (err) {
+      console.error(err);
+      setError('Credenciais inválidas. Por favor, verifique seu email e senha.');
     }
   });
 
@@ -104,6 +119,12 @@ export function CenteredSignInView() {
           }}
         />
       </Box>
+
+      {error && (
+        <Box sx={{ color: 'error.main', textAlign: 'center', mt: 1, mb: 1 }}>
+          {error}
+        </Box>
+      )}
 
       <LoadingButton
         fullWidth

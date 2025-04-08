@@ -28,7 +28,7 @@ export function AccountBillingHistory({ invoices, sx, ...other }: Props) {
 
   return (
     <Card sx={sx} {...other}>
-      <CardHeader title="Invoice history" />
+      <CardHeader title="Histórico de cobrança" />
 
       <Box
         sx={{
@@ -78,7 +78,7 @@ export function AccountBillingHistory({ invoices, sx, ...other }: Props) {
           }
           onClick={showMore.onToggle}
         >
-          Show {showMore.value ? `less` : `more`}
+          Mostrar {showMore.value ? `menos` : `mais`}
         </Button>
       </Box>
     </Card>

@@ -113,8 +113,8 @@ export function OnboardingForm() {
     trigger
   } = methods;
 
-  const services = watch('services');
-  const hasSelectedService = Object.values(services).some(val => val);
+  // const services = watch('services');
+  // const hasSelectedService = Object.values(services).some(val => val);
 
   const nextStep = async () => {
     let isValid = false;

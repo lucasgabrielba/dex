@@ -17,7 +17,6 @@ import { PlanFreeIcon, PlanStarterIcon, PlanPremiumIcon } from 'src/assets/icons
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 
-import { AddressListDialog } from '../address';
 import { PaymentCardListDialog } from '../payment/payment-card-list-dialog';
 
 // ----------------------------------------------------------------------
@@ -54,9 +53,9 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
     [plans]
   );
 
-  const handleSelectAddress = useCallback((newValue: IAddressItem | null) => {
-    setSelectedAddress(newValue);
-  }, []);
+  // const handleSelectAddress = useCallback((newValue: IAddressItem | null) => {
+  //   setSelectedAddress(newValue);
+  // }, []);
 
   const handleSelectCard = useCallback((newValue: IPaymentCard | null) => {
     setSelectedCard(newValue);
@@ -107,11 +106,11 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
           </Box>
 
           <Box sx={{ display: 'flex', typography: 'h4', alignItems: 'center' }}>
-            {plan.price || 'Free'}
+            {'R$ ' + plan.price || 'Grátis'}
 
             {!!plan.price && (
               <Box component="span" sx={{ typography: 'body2', color: 'text.disabled', ml: 0.5 }}>
-                /mo
+                /mês
               </Box>
             )}
           </Box>
@@ -122,7 +121,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
   return (
     <>
       <Card>
-        <CardHeader title="Plan" />
+        <CardHeader title="Plano" />
 
         <Grid container spacing={2} sx={{ p: 3 }}>
           {renderPlans()}
@@ -131,7 +130,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
         <Stack spacing={2} sx={{ p: 3, pt: 0, typography: 'body2' }}>
           <Grid container spacing={{ xs: 0.5, md: 2 }}>
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 4 }}>
-              Plan
+              Plano
             </Grid>
 
             <Grid
@@ -144,7 +143,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
 
           <Grid container spacing={{ xs: 0.5, md: 2 }}>
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 4 }}>
-              Billing name
+              Cobrança em nome de
             </Grid>
 
             <Grid size={{ xs: 12, md: 8 }}>
@@ -160,7 +159,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
 
           <Grid container spacing={{ xs: 0.5, md: 2 }}>
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 4 }}>
-              Billing address
+              Endereço de cobrança
             </Grid>
 
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 8 }}>
@@ -170,7 +169,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
 
           <Grid container spacing={{ xs: 0.5, md: 2 }}>
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 4 }}>
-              Billing phone number
+              Telefone
             </Grid>
 
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 8 }}>
@@ -180,7 +179,7 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
 
           <Grid container spacing={{ xs: 0.5, md: 2 }}>
             <Grid sx={{ color: 'text.secondary' }} size={{ xs: 12, md: 4 }}>
-              Payment method
+              Método de pagamento
             </Grid>
 
             <Grid size={{ xs: 12, md: 8 }}>
@@ -205,8 +204,8 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
             justifyContent: 'flex-end',
           }}
         >
-          <Button variant="outlined">Cancel plan</Button>
-          <Button variant="contained">Upgrade plan</Button>
+          <Button variant="outlined">Cancelar plano</Button>
+          <Button variant="contained">Ampliar plano</Button>
         </Box>
       </Card>
 
@@ -216,23 +215,6 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
         onClose={openCards.onFalse}
         selected={(selectedId: string) => selectedCard?.id === selectedId}
         onSelect={handleSelectCard}
-      />
-
-      <AddressListDialog
-        list={addressBook}
-        open={openAddress.value}
-        onClose={openAddress.onFalse}
-        selected={(selectedId: string) => selectedAddress?.id === selectedId}
-        onSelect={handleSelectAddress}
-        action={
-          <Button
-            size="small"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-            sx={{ alignSelf: 'flex-end' }}
-          >
-            New
-          </Button>
-        }
       />
     </>
   );

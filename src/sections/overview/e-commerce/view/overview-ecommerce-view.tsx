@@ -8,7 +8,6 @@ import {
   _ecommerceNewProducts,
   _ecommerceBestSalesman,
   _ecommerceSalesOverview,
-  _ecommerceLatestProducts,
 } from 'src/_mock';
 
 import { useMockedUser } from 'src/auth/hooks';
@@ -20,7 +19,6 @@ import { EcommerceBestSalesman } from '../ecommerce-best-salesman';
 import { EcommerceSaleByGender } from '../ecommerce-sale-by-gender';
 import { EcommerceSalesOverview } from '../ecommerce-sales-overview';
 import { EcommerceWidgetSummary } from '../ecommerce-widget-summary';
-import { EcommerceLatestProducts } from '../ecommerce-latest-products';
 import { EcommerceCurrentBalance } from '../ecommerce-current-balance';
 
 // ----------------------------------------------------------------------
@@ -181,9 +179,6 @@ export function OverviewEcommerceView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <EcommerceLatestProducts title="Latest products" list={_ecommerceLatestProducts} />
-        </Grid>
       </Grid>
     </DashboardContent>
   );

@@ -79,7 +79,7 @@ export function PaymentCardListDialog({ open, list, onClose, selected, onSelect 
         }}
       >
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Cards
+          Cartões
         </Typography>
 
         <Button
@@ -87,7 +87,7 @@ export function PaymentCardListDialog({ open, list, onClose, selected, onSelect 
           startIcon={<Iconify icon="mingcute:add-line" />}
           sx={{ alignSelf: 'flex-end' }}
         >
-          New
+          Novo
         </Button>
       </Box>
 
@@ -95,7 +95,7 @@ export function PaymentCardListDialog({ open, list, onClose, selected, onSelect 
         <TextField
           value={searchCard}
           onChange={handleSearchAddress}
-          placeholder="Search..."
+          placeholder="Buscar..."
           slotProps={{
             input: {
               startAdornment: (

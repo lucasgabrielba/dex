@@ -21,17 +21,17 @@ export const ChangePassWordSchema = zod
   .object({
     oldPassword: zod
       .string()
-      .min(1, { message: 'Password is required!' })
-      .min(6, { message: 'Password must be at least 6 characters!' }),
-    newPassword: zod.string().min(1, { message: 'New password is required!' }),
-    confirmNewPassword: zod.string().min(1, { message: 'Confirm password is required!' }),
+      .min(1, { message: 'A senha é obrigatória!' })
+      .min(6, { message: 'A senha deve ter pelo menos 6 caracteres!' }),
+    newPassword: zod.string().min(1, { message: 'A nova senha é obrigatória!' }),
+    confirmNewPassword: zod.string().min(1, { message: 'A confirmação da senha é obrigatória!' }),
   })
   .refine((data) => data.oldPassword !== data.newPassword, {
-    message: 'New password must be different than old password',
+    message: 'A nova senha deve ser diferente da senha antiga!',
     path: ['newPassword'],
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
-    message: 'Passwords do not match!',
+    message: 'As senhas não coincidem!',
     path: ['confirmNewPassword'],
   });
 
@@ -62,7 +62,7 @@ export function AccountChangePassword() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      toast.success('Update success!');
+      toast.success('Atualização realizada com sucesso!');
       console.info('DATA', data);
     } catch (error) {
       console.error(error);
@@ -82,7 +82,7 @@ export function AccountChangePassword() {
         <Field.Text
           name="oldPassword"
           type={showPassword.value ? 'text' : 'password'}
-          label="Old password"
+          label="Senha antiga"
           slotProps={{
             input: {
               endAdornment: (
@@ -100,7 +100,7 @@ export function AccountChangePassword() {
 
         <Field.Text
           name="newPassword"
-          label="New password"
+          label="Nova senha"
           type={showPassword.value ? 'text' : 'password'}
           slotProps={{
             input: {
@@ -117,7 +117,7 @@ export function AccountChangePassword() {
           }}
           helperText={
             <Box component="span" sx={{ gap: 0.5, display: 'flex', alignItems: 'center' }}>
-              <Iconify icon="eva:info-fill" width={16} /> Password must be minimum 6+
+              <Iconify icon="eva:info-fill" width={16} /> A senha deve ter no mínimo 6 caracteres
             </Box>
           }
         />
@@ -125,7 +125,7 @@ export function AccountChangePassword() {
         <Field.Text
           name="confirmNewPassword"
           type={showPassword.value ? 'text' : 'password'}
-          label="Confirm new password"
+          label="Confirmar nova senha"
           slotProps={{
             input: {
               endAdornment: (
@@ -142,7 +142,7 @@ export function AccountChangePassword() {
         />
 
         <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>
-          Save changes
+          Salvar ajustes
         </LoadingButton>
       </Card>
     </Form>

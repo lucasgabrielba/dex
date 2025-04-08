@@ -17,21 +17,21 @@ import { Form } from 'src/components/hook-form';
 
 const NOTIFICATIONS = [
   {
-    subheader: 'Activity',
+    subheader: 'Atividade',
     caption: 'Donec mi odio, faucibus at, scelerisque quis',
     items: [
-      { id: 'activity_comments', label: 'Email me when someone comments onmy article' },
-      { id: 'activity_answers', label: 'Email me when someone answers on my form' },
-      { id: 'activityFollows', label: 'Email me hen someone follows me' },
+      { id: 'activity_comments', label: 'Envie-me um e-mail quando alguém comentar no meu artigo' },
+      { id: 'activity_answers', label: 'Envie-me um e-mail quando alguém responder ao meu formulário' },
+      { id: 'activityFollows', label: 'Envie-me um e-mail quando alguém me seguir' },
     ],
   },
   {
-    subheader: 'Application',
+    subheader: 'Aplicativo',
     caption: 'Donec mi odio, faucibus at, scelerisque quis',
     items: [
-      { id: 'application_news', label: 'News and announcements' },
-      { id: 'application_product', label: 'Weekly product updates' },
-      { id: 'application_blog', label: 'Weekly blog digest' },
+      { id: 'application_news', label: 'Notícias e anúncios' },
+      { id: 'application_product', label: 'Atualizações semanais do produto' },
+      { id: 'application_blog', label: 'Resumo semanal do blog' },
     ],
   },
 ];
@@ -55,7 +55,7 @@ export function AccountNotifications({ sx, ...other }: CardProps) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      toast.success('Update success!');
+      toast.success('Atualização realizada com sucesso!');
       console.info('DATA', data);
     } catch (error) {
       console.error(error);
@@ -137,7 +137,7 @@ export function AccountNotifications({ sx, ...other }: CardProps) {
         ))}
 
         <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 'auto' }}>
-          Save changes
+          Salvar ajustes
         </LoadingButton>
       </Card>
     </Form>

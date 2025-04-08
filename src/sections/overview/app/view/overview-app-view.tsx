@@ -1,30 +1,24 @@
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
-import { useTheme } from '@mui/material/styles';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-import { _mock, _appAuthors, _appRelated, _appInvoices, _appInstalled } from 'src/_mock';
+import { _mock, _salesFunnelData, _ecommerceBestSalesman } from 'src/_mock';
 
-import { svgColorClasses } from 'src/components/svg-color';
-
-import { useMockedUser } from 'src/auth/hooks';
-
-import { AppWidget } from '../app-widget';
-import { AppNewInvoice } from '../app-new-invoice';
-import { AppTopAuthors } from '../app-top-authors';
 import { AppTopRelated } from '../app-top-related';
-import { AppAreaInstalled } from '../app-area-installed';
-import { AppTopInstalledCountries } from '../app-top-installed-countries';
+import { LatestSales } from '../../e-commerce/latest-sales';
+import { EcommerceYearlySales } from '../../e-commerce/ecommerce-yearly-sales';
+import { EcommerceBestSalesman } from '../../e-commerce/ecommerce-best-salesman';
+import { EcommerceSaleByGender } from '../../e-commerce/ecommerce-sale-by-gender';
 import { EcommerceWidgetSummary } from '../../e-commerce/ecommerce-widget-summary';
 import { EcommerceSalesOverview } from '../../e-commerce/ecommerce-sales-overview';
+import { BankingBalanceStatistics } from '../../banking/banking-balance-statistics';
 import { EcommerceCurrentBalance } from '../../e-commerce/ecommerce-current-balance';
 
 // ----------------------------------------------------------------------
 
 export function OverviewAppView() {
-  const { user } = useMockedUser();
+  // const { user } = useMockedUser();
 
-  const theme = useTheme();
+  // const theme = useTheme();
 
   const _ecommerceSalesOverview = ['Total de vendas', 'Total de alugueis'].map(
     (label, index) => ({
@@ -44,6 +38,59 @@ export function OverviewAppView() {
   const dataAtual = new Date();
   const mesAtual = dataAtual.getMonth();
   const nomeDoMesAtual = mesesEmPortugues[mesAtual];
+
+  // Mock data for latest sales
+  const _latestSales = [
+    {
+      id: "1",
+      name: "Lake House 1702",
+      date: "Hoje",
+      price: "R$ 495.000,00",
+      agent: "Jayvion Simon",
+      coverUrl: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: "2",
+      name: "Lake House 1702",
+      date: "Ontem",
+      price: "R$ 495.000,00",
+      agent: "Jayvion Simon",
+      coverUrl: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: "3",
+      name: "Lake House 1702",
+      date: "09 de Mar",
+      price: "R$ 495.000,00",
+      agent: "Jayvion Simon",
+      coverUrl: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: "4",
+      name: "Lake House 1702",
+      date: "08 de Mar",
+      price: "R$ 495.000,00",
+      agent: "Jayvion Simon",
+      coverUrl: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: "5",
+      name: "Lake House 1702",
+      date: "07 de Mar",
+      price: "R$ 495.000,00",
+      agent: "Jayvion Simon",
+      coverUrl: "/placeholder.svg?height=80&width=80",
+    },
+    {
+      id: "6",
+      name: "Lake House 1702",
+      date: "06 de Mar",
+      price: "R$ 495.000,00",
+      agent: "Jayvion Simon",
+      coverUrl: "/placeholder.svg?height=80&width=80",
+    },
+  ]
+
 
   return (
     <DashboardContent maxWidth="xl">
@@ -118,6 +165,9 @@ export function OverviewAppView() {
           <EcommerceSalesOverview
             title={`Visão geral de ${nomeDoMesAtual}`}
             data={_ecommerceSalesOverview}
+            sx={{
+              height: 1
+            }}
           />
         </Grid>
 
@@ -131,48 +181,64 @@ export function OverviewAppView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
-          <AppAreaInstalled
-            title="Area installed"
-            subheader="(+43%) than last year"
+        <Grid size={{ xs: 12, md: 4, lg: 4 }}>
+          <EcommerceSaleByGender
+            title="Pipeline de negócios"
+            total={2324}
+            chart={{
+              series: [
+                { label: 'Fechados', value: 25 },
+                { label: 'Em Aberto', value: 50 },
+                { label: 'Perdidos', value: 75 },
+              ],
+            }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 4, lg: 4 }}>
+          <EcommerceYearlySales
+            title="Total de vendas"
+            subheader="(+43%) no mesmo período"
             chart={{
               categories: [
                 'Jan',
-                'Feb',
+                'Fev',
                 'Mar',
-                'Apr',
-                'May',
+                'Abr',
+                'Mai',
                 'Jun',
                 'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
+                'Ago',
+                'Set',
+                'Out',
                 'Nov',
-                'Dec',
+                'Dez',
               ],
               series: [
                 {
                   name: '2022',
                   data: [
-                    { name: 'Asia', data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16] },
-                    { name: 'Europe', data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16] },
-                    { name: 'Americas', data: [12, 10, 18, 22, 20, 12, 8, 21, 20, 14, 15, 16] },
+                    {
+                      name: 'Total de Vendas',
+                      data: [10, 41, 35, 51, 49, 62, 69, 91, 148, 35, 51, 49],
+                    },
+                    {
+                      name: 'Total de locações',
+                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 13, 56, 77],
+                    },
                   ],
                 },
                 {
                   name: '2023',
                   data: [
-                    { name: 'Asia', data: [6, 18, 14, 9, 20, 6, 22, 19, 8, 22, 8, 17] },
-                    { name: 'Europe', data: [6, 18, 14, 9, 20, 6, 22, 19, 8, 22, 8, 17] },
-                    { name: 'Americas', data: [6, 18, 14, 9, 20, 6, 22, 19, 8, 22, 8, 17] },
-                  ],
-                },
-                {
-                  name: '2024',
-                  data: [
-                    { name: 'Asia', data: [6, 20, 15, 18, 7, 24, 6, 10, 12, 17, 18, 10] },
-                    { name: 'Europe', data: [6, 20, 15, 18, 7, 24, 6, 10, 12, 17, 18, 10] },
-                    { name: 'Americas', data: [6, 20, 15, 18, 7, 24, 6, 10, 12, 17, 18, 10] },
+                    {
+                      name: 'Total de Vendas',
+                      data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 69, 62, 49],
+                    },
+                    {
+                      name: 'Total de locações',
+                      data: [56, 13, 34, 10, 77, 99, 88, 45, 77, 99, 88, 77],
+                    },
                   ],
                 },
               ],
@@ -180,53 +246,67 @@ export function OverviewAppView() {
           />
         </Grid>
 
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <AppNewInvoice
-            title="New invoice"
-            tableData={_appInvoices}
+        <Grid size={{ xs: 12, md: 4, lg: 4 }}>
+          <AppTopRelated title="Fúnil de vendas" list={_salesFunnelData} />
+        </Grid>
+
+
+        <Grid size={{ xs: 12, md: 12, lg: 12 }}>
+          <BankingBalanceStatistics
+            title="Captação de imóveis"
+            subheader="Estatísticas ao longo do tempo"
+            chart={{
+              series: [
+                {
+                  name: 'Semanal',
+                  categories: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5'],
+                  data: [
+                    { name: 'Vendas', data: [24, 41, 35, 151, 49] },
+                    { name: 'Locação', data: [24, 56, 77, 88, 99] },
+                    { name: 'Lançamentos', data: [40, 34, 77, 88, 99] },
+                  ],
+                },
+                {
+                  name: 'Mensal',
+                  categories: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'],
+                  data: [
+                    { name: 'Vendas', data: [83, 112, 119, 88, 103, 112, 114, 108, 93] },
+                    { name: 'Locação', data: [46, 46, 43, 58, 40, 59, 54, 42, 51] },
+                    { name: 'Lançamentos', data: [25, 40, 38, 35, 20, 32, 27, 40, 21] },
+                  ],
+                },
+                {
+                  name: 'Anual',
+                  categories: ['2018', '2019', '2020', '2021', '2022', '2023'],
+                  data: [
+                    { name: 'Vendas', data: [76, 42, 29, 41, 27, 96] },
+                    { name: 'Locação', data: [46, 44, 24, 43, 44, 43] },
+                    { name: 'Lançamentos', data: [23, 22, 37, 38, 32, 25] },
+                  ],
+                },
+              ],
+            }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6, lg: 8 }}>
+          <EcommerceBestSalesman
+            title="Melhores vendedores ( 135 )"
+            tableData={_ecommerceBestSalesman}
             headCells={[
-              { id: 'id', label: 'Invoice ID' },
-              { id: 'category', label: 'Category' },
-              { id: 'price', label: 'Price' },
-              { id: 'status', label: 'Status' },
-              { id: '' },
+              { id: 'name', label: 'Vendedor' },
+              { id: 'category', label: 'Qnt. de vendas' },
+              { id: 'country', label: 'Equipe', align: 'center' },
+              { id: 'totalAmount', label: 'Total', align: 'right' },
+              { id: 'rank', label: 'Rank', align: 'right' },
             ]}
           />
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AppTopRelated title="Related applications" list={_appRelated} />
+          <LatestSales title="Últimas vendas" list={_latestSales} />
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AppTopInstalledCountries title="Top installed countries" list={_appInstalled} />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <AppTopAuthors title="Top authors" list={_appAuthors} />
-        </Grid>
-
-        <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-          <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-            <AppWidget
-              title="Conversion"
-              total={38566}
-              icon="solar:user-rounded-bold"
-              chart={{ series: 48 }}
-            />
-
-            <AppWidget
-              title="Applications"
-              total={55566}
-              icon="fluent:mail-24-filled"
-              chart={{
-                series: 75,
-                colors: [theme.vars.palette.info.light, theme.vars.palette.info.main],
-              }}
-              sx={{ bgcolor: 'info.dark', [`& .${svgColorClasses.root}`]: { color: 'info.light' } }}
-            />
-          </Box>
-        </Grid>
       </Grid>
     </DashboardContent>
   );

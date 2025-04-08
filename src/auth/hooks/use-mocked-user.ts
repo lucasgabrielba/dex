@@ -15,7 +15,7 @@ import { _mock } from 'src/_mock';
 export function useMockedUser() {
   const user = {
     id: '8864c717-587d-472a-929a-8e5f298024da-0',
-    displayName: 'Jaydon Frankie',
+    displayName: 'Hudson Alvarez',
     email: 'demo@minimals.cc',
     photoURL: _mock.image.avatar(24),
     phoneNumber: _mock.phoneNumber(1),
@@ -27,6 +27,10 @@ export function useMockedUser() {
     about: 'Praesent turpis. Phasellus viverra nulla ut metus varius laoreet. Phasellus tempus.',
     role: 'admin',
     isPublic: true,
+    pixKey: '234.123.123-11',
+    pixKeyType: 'CPF',
+    creci: '1232131-0',
+    position: 'Corretor',
   };
 
   return { user };

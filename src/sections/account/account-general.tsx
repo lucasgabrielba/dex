@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid2';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
@@ -18,48 +18,50 @@ import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
 import { useMockedUser } from 'src/auth/hooks';
 
-// ----------------------------------------------------------------------
-
+// Schema de validação
 export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
 
 export const UpdateUserSchema = zod.object({
-  displayName: zod.string().min(1, { message: 'Name is required!' }),
+  displayName: zod.string().min(1, { message: 'Nome é obrigatório!' }),
   email: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
-  photoURL: schemaHelper.file({ message: 'Avatar is required!' }),
+    .min(1, { message: 'Email é obrigatório!' })
+    .email({ message: 'Email deve ser um endereço válido!' }),
+  photoURL: schemaHelper.file({ message: 'Avatar é obrigatório!' }),
   phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
-  country: schemaHelper.nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
-    // message for null value
-    message: 'Country is required!',
+  country: schemaHelper.nullableInput(zod.string().min(1, { message: 'País é obrigatório!' }), {
+    message: 'País é obrigatório!',
   }),
-  address: zod.string().min(1, { message: 'Address is required!' }),
-  state: zod.string().min(1, { message: 'State is required!' }),
-  city: zod.string().min(1, { message: 'City is required!' }),
-  zipCode: zod.string().min(1, { message: 'Zip code is required!' }),
-  about: zod.string().min(1, { message: 'About is required!' }),
-  // Not required
+  address: zod.string().min(1, { message: 'Endereço é obrigatório!' }),
+  state: zod.string().min(1, { message: 'Estado é obrigatório!' }),
+  city: zod.string().min(1, { message: 'Cidade é obrigatória!' }),
+  zipCode: zod.string().min(1, { message: 'CEP é obrigatório!' }),
+  pixKey: zod.string().min(1, { message: 'Chave Pix é obrigatória!' }),
+  pixKeyType: zod.string().optional(),
+  creci: zod.string().min(1, { message: 'CRECI é obrigatório!' }),
+  position: zod.string().optional(),
   isPublic: zod.boolean(),
 });
 
-// ----------------------------------------------------------------------
-
+// Componente
 export function AccountGeneral() {
   const { user } = useMockedUser();
 
   const currentUser: UpdateUserSchemaType = {
-    displayName: user?.displayName,
-    email: user?.email,
+    displayName: user?.displayName || 'Jayvion Simon',
+    email: user?.email || 'nannie.abernathy70@yahoo.com',
     photoURL: user?.photoURL,
-    phoneNumber: user?.phoneNumber,
-    country: user?.country,
-    address: user?.address,
-    state: user?.state,
-    city: user?.city,
-    zipCode: user?.zipCode,
-    about: user?.about,
-    isPublic: user?.isPublic,
+    phoneNumber: user?.phoneNumber || '365-374-4961',
+    country: user?.country || 'Brasil',
+    address: user?.address || '19034 Verna Unions Apt. 164',
+    state: user?.state || 'Goiás',
+    city: user?.city || 'Goiânia',
+    zipCode: user?.zipCode || '22000',
+    pixKey: user?.pixKey || '234.123.123-11',
+    pixKeyType: user?.pixKeyType || 'CPF',
+    creci: user?.creci || '1232131-0',
+    position: user?.position || 'Corretor',
+    isPublic: user?.isPublic || false,
   };
 
   const defaultValues: UpdateUserSchemaType = {
@@ -72,7 +74,10 @@ export function AccountGeneral() {
     state: '',
     city: '',
     zipCode: '',
-    about: '',
+    pixKey: '',
+    pixKeyType: '',
+    creci: '',
+    position: '',
     isPublic: false,
   };
 
@@ -91,7 +96,7 @@ export function AccountGeneral() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      toast.success('Update success!');
+      toast.success('Atualização realizada com sucesso!');
       console.info('DATA', data);
     } catch (error) {
       console.error(error);
@@ -102,14 +107,7 @@ export function AccountGeneral() {
     <Form methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
-          <Card
-            sx={{
-              pt: 10,
-              pb: 5,
-              px: 3,
-              textAlign: 'center',
-            }}
-          >
+          <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
             <Field.UploadAvatar
               name="photoURL"
               maxSize={3145728}
@@ -124,22 +122,13 @@ export function AccountGeneral() {
                     color: 'text.disabled',
                   }}
                 >
-                  Allowed *.jpeg, *.jpg, *.png, *.gif
-                  <br /> max size of {fData(3145728)}
+                  Permitido *.jpeg, *.jpg, *.png, *.gif
+                  <br /> Tamanho máximo de {fData(3145728)}
                 </Typography>
               }
             />
 
-            <Field.Switch
-              name="isPublic"
-              labelPlacement="start"
-              label="Public profile"
-              sx={{ mt: 5 }}
-            />
-
-            <Button variant="soft" color="error" sx={{ mt: 3 }}>
-              Delete user
-            </Button>
+            {/* <Field.Switch name="isPublic" labelPlacement="start" label="Perfil público" sx={{ mt: 5 }} /> */}
           </Card>
         </Grid>
 
@@ -153,23 +142,38 @@ export function AccountGeneral() {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
               }}
             >
-              <Field.Text name="displayName" label="Name" />
-              <Field.Text name="email" label="Email address" />
-              <Field.Phone name="phoneNumber" label="Phone number" />
-              <Field.Text name="address" label="Address" />
+              <Field.Text name="displayName" label="Nome" />
+              <Field.Text name="email" label="Email" />
+              <Field.Phone name="phoneNumber" label="Telefone" />
+              <Field.Text name="address" label="Endereço" />
+              <Field.CountrySelect name="country" label="País" placeholder="País" />
+              <Field.Text name="state" label="Estado" />
+              <Field.Text name="city" label="Cidade" />
+              <Field.Text name="zipCode" label="CEP" />
 
-              <Field.CountrySelect name="country" label="Country" placeholder="Choose a country" />
+              {/* Select para pixKeyType */}
+              <Field.Select name="pixKeyType" label="Tipo de chave Pix">
+                <MenuItem value="CPF">CPF</MenuItem>
+                <MenuItem value="CNPJ">CNPJ</MenuItem>
+                <MenuItem value="EMAIL">Email</MenuItem>
+                <MenuItem value="TELEFONE">Telefone</MenuItem>
+                <MenuItem value="CHAVE_ALEATORIA">Chave Aleatória</MenuItem>
+              </Field.Select>
 
-              <Field.Text name="state" label="State/region" />
-              <Field.Text name="city" label="City" />
-              <Field.Text name="zipCode" label="Zip/code" />
+              <Field.Text name="pixKey" label="Chave Pix" />
+              <Field.Text name="creci" label="CRECI" />
+
+              {/* Select para position */}
+              <Field.Select name="position" label="Cargo">
+                <MenuItem value="CORRETOR">Corretor</MenuItem>
+                <MenuItem value="GERENTE">Gerente</MenuItem>
+                <MenuItem value="ADMIN">Administrador</MenuItem>
+              </Field.Select>
             </Box>
 
             <Stack spacing={3} sx={{ mt: 3, alignItems: 'flex-end' }}>
-              <Field.Text name="about" multiline rows={4} label="About" />
-
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save changes
+                Salvar ajustes
               </LoadingButton>
             </Stack>
           </Card>

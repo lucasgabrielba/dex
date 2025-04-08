@@ -7,6 +7,37 @@ import { _mock } from './_mock';
 // APP
 // ----------------------------------------------------------------------
 
+export const _salesFunnelData = [
+  {
+    id: _mock.id(1),
+    name: "Lake House",
+    date: "12 Jan 2025",
+    price: 0,
+    agent: "Matheus Tavares",
+  },
+  {
+    id: _mock.id(2),
+    name: "Lake House",
+    date: "12 Jan 2025",
+    price: 0,
+    agent: "Matheus Tavares",
+  },
+  {
+    id: _mock.id(3),
+    name: "Lake House",
+    date: "12 Jan 2025",
+    price: 0,
+    agent: "Matheus Tavares",
+  },
+  {
+    id: _mock.id(4),
+    name: "Lake House",
+    date: "12 Jan 2025",
+    price: 0,
+    agent: "Matheus Tavares",
+  },
+]
+
 export const _appRelated = [
   'Microsoft office 365',
   'Opera',

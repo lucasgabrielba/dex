@@ -48,14 +48,14 @@ export function PaymentNewCardForm({
       {...other}
     >
       <FormField
-        label="Card number"
+        label="Número do cartão"
         placeholder="xxxx xxxx xxxx xxxx"
         slotProps={{ inputLabel: { shrink: true } }}
         {...numberField}
         name={numberField?.name ?? ''}
       />
       <FormField
-        label="Card holder"
+        label="Nome do titular"
         placeholder="John Doe"
         slotProps={{ inputLabel: { shrink: true } }}
         {...holderField}
@@ -64,7 +64,7 @@ export function PaymentNewCardForm({
       <Box sx={{ gap: 2, display: 'flex' }}>
         <FormField
           fullWidth
-          label="Expiration date"
+          label="Data de validade"
           placeholder="MM/YY"
           slotProps={{ inputLabel: { shrink: true } }}
           {...dateField}
@@ -104,7 +104,7 @@ export function PaymentNewCardForm({
         }}
       >
         <Iconify icon="solar:lock-password-outline" />
-        Your transaction is secured with SSL encryption
+        Sua transação é assegurada com criptografia de ponta a ponta.
       </Box>
     </Box>
   );

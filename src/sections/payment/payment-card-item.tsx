@@ -32,17 +32,17 @@ export function PaymentCardItem({ card, sx, ...other }: PaymentItemProps) {
       <MenuList>
         <MenuItem onClick={menuActions.onClose}>
           <Iconify icon="eva:star-fill" />
-          Set as primary
+          Selecionar como padrão
         </MenuItem>
 
         <MenuItem onClick={menuActions.onClose}>
           <Iconify icon="solar:pen-bold" />
-          Edit
+          Editar
         </MenuItem>
 
         <MenuItem onClick={menuActions.onClose} sx={{ color: 'error.main' }}>
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          Excluir
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -68,7 +68,7 @@ export function PaymentCardItem({ card, sx, ...other }: PaymentItemProps) {
             icon={(card.cardType === 'visa' && 'logos:visa') || 'logos:mastercard'}
           />
 
-          {card.primary && <Label color="info">Default</Label>}
+          {card.primary && <Label color="info">Padrão</Label>}
         </Box>
 
         <Typography variant="subtitle2">{card.cardNumber}</Typography>
