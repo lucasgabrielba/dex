@@ -25,7 +25,7 @@ export function UserTableFiltersResult({ filters, onResetPage, totalResults, sx 
 
   const handleRemoveStatus = useCallback(() => {
     onResetPage();
-    updateFilters({ status: 'all' });
+    updateFilters({ status: 'todos' });
   }, [onResetPage, updateFilters]);
 
   const handleRemoveRole = useCallback(
@@ -45,7 +45,7 @@ export function UserTableFiltersResult({ filters, onResetPage, totalResults, sx 
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>
-      <FiltersBlock label="Status:" isShow={currentFilters.status !== 'all'}>
+      <FiltersBlock label="Status:" isShow={currentFilters.status !== 'todos'}>
         <Chip
           {...chipProps}
           label={currentFilters.status}

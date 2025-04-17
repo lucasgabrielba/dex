@@ -2,11 +2,11 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/global-config';
 
-import { UserListView } from 'src/sections/user/view';
+import { AccountChangePasswordView } from 'src/sections/account/view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Lista de | Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Segurança da conta | Dashboard - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
@@ -15,7 +15,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <UserListView />
+      <AccountChangePasswordView />
     </>
   );
 }

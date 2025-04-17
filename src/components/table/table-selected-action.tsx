@@ -69,7 +69,7 @@ export function TableSelectedAction({
           ...(dense && { ml: 3 }),
         }}
       >
-        {numSelected} selected
+        {numSelected} selecionado(s)
       </Typography>
 
       {action && action}

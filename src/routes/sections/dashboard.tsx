@@ -139,6 +139,26 @@ export const dashboardRoutes: RouteObject[] = [
         ],
       },
       {
+        path: 'clients',
+        children: [
+          { index: true, element: <UserListPage /> },
+          { path: 'list', element: <UserListPage /> },
+          { path: 'new', element: <UserCreatePage /> },
+          { path: ':id/edit', element: <UserEditPage /> },
+          {
+            path: 'account',
+            element: accountLayout(),
+            children: [
+              { index: true, element: <AccountGeneralPage /> },
+              { path: 'billing', element: <AccountBillingPage /> },
+              { path: 'notifications', element: <AccountNotificationsPage /> },
+              { path: 'socials', element: <AccountSocialsPage /> },
+              { path: 'change-password', element: <AccountChangePasswordPage /> },
+            ],
+          },
+        ],
+      },
+      {
         path: 'product',
         children: [
           { index: true, element: <ProductListPage /> },

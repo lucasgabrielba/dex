@@ -1,5 +1,5 @@
 import type { TableHeadCellProps } from 'src/components/table';
-import type { IUserItem, IUserTableFilters } from 'src/types/user';
+import type { IClientItem, IClientTableFilters } from 'src/types/client';
 
 import { useState, useCallback } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
@@ -18,8 +18,8 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
+import { _clientList } from 'src/_mock/_client';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { _roles, _userList, USER_STATUS_OPTIONS } from 'src/_mock';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -45,15 +45,23 @@ import { UserTableFiltersResult } from '../user-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+const STATUS_OPTIONS = [
+  { value: 'todos', label: 'Todos' },
+  { value: 'vendido', label: 'Vendas' },
+  { value: 'em andamento', label: 'Em andamento' },
+  { value: 'vencendo', label: 'Vencendo' },
+  { value: 'prospecto', label: 'Prospecto' },
+  { value: 'desatualizado', label: 'Desatualizados' },
+];
 
 const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Name' },
-  { id: 'phoneNumber', label: 'Phone number', width: 180 },
-  { id: 'company', label: 'Company', width: 220 },
-  { id: 'role', label: 'Role', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
-  { id: '', width: 88 },
+  { id: 'name', label: 'Cliente', width: 300 },
+  { id: 'phoneNumber', label: 'Criado em' },
+  { id: 'company', label: 'Última atualização' },
+  { id: 'role', label: 'Valor' },
+  { id: 'status', label: 'Produto' },
+  { id: 'status', label: 'Status' },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -63,9 +71,17 @@ export function UserListView() {
 
   const confirmDialog = useBoolean();
 
-  const [tableData, setTableData] = useState<IUserItem[]>(_userList);
+  const [tableData, setTableData] = useState<IClientItem[]>(_clientList);
 
-  const filters = useSetState<IUserTableFilters>({ name: '', role: [], status: 'all' });
+  const filters = useSetState<IClientTableFilters>({
+    name: '',
+    status: 'todos',
+    role: [],
+    filterBy: 'name', // Default to 'name'
+    startDate: '',
+    endDate: '',
+    search: '',
+  });
   const { state: currentFilters, setState: updateFilters } = filters;
 
   const dataFiltered = applyFilter({
@@ -77,7 +93,10 @@ export function UserListView() {
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
   const canReset =
-    !!currentFilters.name || currentFilters.role.length > 0 || currentFilters.status !== 'all';
+    !!currentFilters.name ||
+    currentFilters.role.length > 0 ||
+    currentFilters.status !== 'todos' ||
+    !!currentFilters.search;
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -85,7 +104,7 @@ export function UserListView() {
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      toast.success('Delete success!');
+      toast.success('Apagado com sucesso!');
 
       setTableData(deleteRow);
 
@@ -97,7 +116,7 @@ export function UserListView() {
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
 
-    toast.success('Delete success!');
+    toast.success('Apagado com sucesso!');
 
     setTableData(deleteRows);
 
@@ -116,10 +135,10 @@ export function UserListView() {
     <ConfirmDialog
       open={confirmDialog.value}
       onClose={confirmDialog.onFalse}
-      title="Delete"
+      title="Apagar"
       content={
         <>
-          Are you sure want to delete <strong> {table.selected.length} </strong> items?
+          Você tem certeza que deseja apagar os <strong> {table.selected.length} </strong> clientes?
         </>
       }
       action={
@@ -131,7 +150,7 @@ export function UserListView() {
             confirmDialog.onFalse();
           }}
         >
-          Delete
+          Apagar
         </Button>
       }
     />
@@ -141,11 +160,11 @@ export function UserListView() {
     <>
       <DashboardContent>
         <CustomBreadcrumbs
-          heading="List"
+          heading="Meus clientes"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
-            { name: 'List' },
+            { name: 'Clientes', href: paths.dashboard.clients.root },
+            { name: 'Meus Clientes' },
           ]}
           action={
             <Button
@@ -154,7 +173,7 @@ export function UserListView() {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              New user
+              Novo cliente
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -180,17 +199,18 @@ export function UserListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === currentFilters.status) && 'filled') ||
+                      ((tab.value === 'todos' || tab.value === currentFilters.status) && 'filled') ||
                       'soft'
                     }
                     color={
-                      (tab.value === 'active' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'banned' && 'error') ||
+                      (tab.value === 'vendido' && 'success') ||
+                      (tab.value === 'em andamento' && 'warning') ||
+                      (tab.value === 'vencendo' && 'error') ||
+                      (tab.value === 'prospectos' && 'info') ||
                       'default'
                     }
                   >
-                    {['active', 'pending', 'banned', 'rejected'].includes(tab.value)
+                    {['active', 'em andamento', 'vencendo', 'desatualizado'].includes(tab.value)
                       ? tableData.filter((user) => user.status === tab.value).length
                       : tableData.length}
                   </Label>
@@ -202,7 +222,9 @@ export function UserListView() {
           <UserTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            options={{ roles: _roles }}
+            options={{
+              filterOptions: ['name', 'phoneNumber', 'email', 'company', 'product'],
+            }}
           />
 
           {canReset && (
@@ -226,7 +248,7 @@ export function UserListView() {
                 )
               }
               action={
-                <Tooltip title="Delete">
+                <Tooltip title="Apagar">
                   <IconButton color="primary" onClick={confirmDialog.onTrue}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
                   </IconButton>
@@ -299,35 +321,61 @@ export function UserListView() {
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: IUserItem[];
-  filters: IUserTableFilters;
+  inputData: IClientItem[];
+  filters: IClientTableFilters;
   comparator: (a: any, b: any) => number;
 };
 
 function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
-  const { name, status, role } = filters;
+  const { name, status, role, filterBy, search, startDate, endDate } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+  let filteredData = [...inputData];
 
+  // Sorting
+  const stabilizedThis = filteredData.map((el, index) => [el, index] as const);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+  filteredData = stabilizedThis.map((el) => el[0]);
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  // Apply search filter based on selected attribute (filterBy)
+  if (search && filterBy) {
+    filteredData = filteredData.filter((user) => {
+      const value = user[filterBy as keyof IClientItem]?.toString().toLowerCase() || '';
+      return value.includes(search.toLowerCase());
+    });
+  }
 
+  // Apply name filter (if still needed separately)
   if (name) {
-    inputData = inputData.filter((user) => user.name.toLowerCase().includes(name.toLowerCase()));
+    filteredData = filteredData.filter((user) =>
+      user.name.toLowerCase().includes(name.toLowerCase())
+    );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => user.status === status);
+  // Apply status filter
+  if (status !== 'todos') {
+    filteredData = filteredData.filter((user) => user.status === status);
   }
 
+  // Apply role filter
   if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+    filteredData = filteredData.filter((user) => role.includes(user.role));
   }
 
-  return inputData;
+  // Apply date range filter (assuming createdAt is used)
+  if (startDate) {
+    filteredData = filteredData.filter(
+      (user) => new Date(user.createdAt) >= new Date(startDate)
+    );
+  }
+  if (endDate) {
+    filteredData = filteredData.filter(
+      (user) => new Date(user.createdAt) <= new Date(endDate)
+    );
+  }
+
+  return filteredData;
 }
