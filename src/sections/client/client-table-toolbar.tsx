@@ -2,6 +2,7 @@ import type { IClientTableFilters } from 'src/types/client';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 
+import dayjs from 'dayjs';
 import { useCallback } from 'react';
 import { usePopover } from 'minimal-shared/hooks';
 
@@ -15,6 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
@@ -23,13 +25,14 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 type Props = {
   onResetPage: () => void;
+  dateError?: boolean;
   filters: UseSetStateReturn<IClientTableFilters>;
   options: {
     filterOptions: string[];
   };
 };
 
-export function ClientTableToolbar({ filters, options, onResetPage }: Props) {
+export function ClientTableToolbar({ filters, options, onResetPage, dateError }: Props) {
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -50,18 +53,18 @@ export function ClientTableToolbar({ filters, options, onResetPage }: Props) {
     [onResetPage, updateFilters]
   );
 
-  const handleStartDateChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterStartDate = useCallback(
+    (newValue: any) => {
       onResetPage();
-      updateFilters({ startDate: event.target.value });
+      updateFilters({ startDate: newValue });
     },
     [onResetPage, updateFilters]
   );
 
-  const handleEndDateChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterEndDate = useCallback(
+    (newValue: any) => {
       onResetPage();
-      updateFilters({ endDate: event.target.value });
+      updateFilters({ endDate: newValue });
     },
     [onResetPage, updateFilters]
   );
@@ -100,6 +103,15 @@ export function ClientTableToolbar({ filters, options, onResetPage }: Props) {
     </CustomPopover>
   );
 
+  // Convertendo strings para objetos dayjs quando necessário
+  const startDateValue = currentFilters.startDate ?
+    (typeof currentFilters.startDate === 'string' ? dayjs(currentFilters.startDate) : currentFilters.startDate) :
+    null;
+
+  const endDateValue = currentFilters.endDate ?
+    (typeof currentFilters.endDate === 'string' ? dayjs(currentFilters.endDate) : currentFilters.endDate) :
+    null;
+
   return (
     <>
       <Box
@@ -131,35 +143,25 @@ export function ClientTableToolbar({ filters, options, onResetPage }: Props) {
         </Box>
 
         <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <InputLabel sx={{ mb: 1, fontSize: '0.875rem' }}>Data inicial</InputLabel>
-          <TextField
-            fullWidth
-            type="date"
-            value={currentFilters.startDate || ''}
-            onChange={handleStartDateChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Iconify icon="solar:calendar-linear" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
+          <DatePicker
+            label="Data inicial"
+            value={startDateValue}
+            onChange={handleFilterStartDate}
+            slotProps={{ textField: { fullWidth: true } }}
           />
         </Box>
 
         <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <InputLabel sx={{ mb: 1, fontSize: '0.875rem' }}>Data final</InputLabel>
-          <TextField
-            fullWidth
-            type="date"
-            value={currentFilters.endDate || ''}
-            onChange={handleEndDateChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Iconify icon="solar:calendar-linear" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
+          <DatePicker
+            label="Data final"
+            value={endDateValue}
+            onChange={handleFilterEndDate}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                error: dateError,
+                helperText: dateError ? 'Data final deve ser posterior à data inicial' : null,
+              },
             }}
           />
         </Box>
@@ -180,7 +182,7 @@ export function ClientTableToolbar({ filters, options, onResetPage }: Props) {
           />
         </Box>
 
-        <IconButton>
+        <IconButton onClick={menuActions.onOpen}>
           <Iconify icon="solar:menu-dots-bold" />
         </IconButton>
       </Box>

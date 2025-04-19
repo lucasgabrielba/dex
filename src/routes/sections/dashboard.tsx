@@ -47,7 +47,7 @@ const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
 const ClientProfilePage = lazy(() => import('src/pages/dashboard/client/details'));
 // const ClientCardsPage = lazy(() => import('src/pages/dashboard/client/cards'));
 const ClientListPage = lazy(() => import('src/pages/dashboard/client/list'));
-// const ClientCreatePage = lazy(() => import('src/pages/dashboard/client/new'));
+const ClientCreatePage = lazy(() => import('src/pages/dashboard/client/new'));
 // const ClientEditPage = lazy(() => import('src/pages/dashboard/client/edit'));
 // Account
 const AccountGeneralPage = lazy(() => import('src/pages/dashboard/user/account/general'));
@@ -149,7 +149,7 @@ export const dashboardRoutes: RouteObject[] = [
         children: [
           { index: true, element: <ClientListPage /> },
           { path: 'list', element: <ClientListPage /> },
-          { path: 'new', element: <UserCreatePage /> },
+          { path: 'new', element: <ClientCreatePage /> },
           { path: ':id', element: <ClientProfilePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
         ],

@@ -60,7 +60,7 @@ export function AppTopRelated({ title, subheader, list, sx, ...other }: Props) {
   const activeDeals = list.length;
 
   return (
-    <Card sx={{ ...sx }} {...other}>
+    <Card sx={{ ...sx, height: 'auto' }} {...other}>
       <CardHeader
         title={title}
         action={
@@ -73,7 +73,7 @@ export function AppTopRelated({ title, subheader, list, sx, ...other }: Props) {
 
       {renderTabs()}
 
-      <Scrollbar sx={{ minHeight: 200, height: 0.5 }}>
+      <Scrollbar sx={{ minHeight: 200, height: 0.5, maxHeight: 260 }}>
         <Box
           sx={{
             p: 3,

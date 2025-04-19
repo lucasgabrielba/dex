@@ -14,6 +14,8 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { Iconify } from 'src/components/iconify';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { useMockedUser } from 'src/auth/hooks';
+
 // ----------------------------------------------------------------------
 
 const NAV_ITEMS = [
@@ -48,11 +50,12 @@ const NAV_ITEMS = [
 
 export function AccountLayout({ children, ...other }: DashboardContentProps) {
   const pathname = usePathname();
+  const { user } = useMockedUser();
 
   return (
     <DashboardContent {...other}>
       <CustomBreadcrumbs
-        heading="Account"
+        heading={user?.displayName}
         links={[
           { name: 'Painel', href: paths.dashboard.root },
           { name: 'Meu Perfil', href: paths.dashboard.user.account },
