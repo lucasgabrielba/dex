@@ -42,7 +42,7 @@ export function KanbanColumn({ children, column, tasks, disabled, sx }: ColumnPr
 
   const isOverContainer = over
     ? (column.id === over.id && active?.data.current?.type !== 'container') ||
-      tasksIds.includes(over.id)
+    tasksIds.includes(over.id)
     : false;
 
   const handleUpdateColumn = useCallback(
@@ -72,7 +72,7 @@ export function KanbanColumn({ children, column, tasks, disabled, sx }: ColumnPr
     try {
       deleteColumn(column.id);
 
-      toast.success('Delete success!', { position: 'top-center' });
+      toast.success('Apagado com sucesso!', { position: 'top-center' });
     } catch (error) {
       console.error(error);
     }

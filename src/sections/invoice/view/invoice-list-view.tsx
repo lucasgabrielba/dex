@@ -150,7 +150,7 @@ export function InvoiceListView() {
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      toast.success('Delete success!');
+      toast.success('Apagado com sucesso!');
 
       setTableData(deleteRow);
 
@@ -162,7 +162,7 @@ export function InvoiceListView() {
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
 
-    toast.success('Delete success!');
+    toast.success('Apagado com sucesso!');
 
     setTableData(deleteRows);
 

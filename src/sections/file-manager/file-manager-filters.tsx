@@ -50,7 +50,7 @@ export function FileManagerFilters({
 
   const displayLabel = currentFilters.type.length
     ? currentFilters.type.slice(0, 2).join(',')
-    : 'All type';
+    : 'Todos os tipos';
 
   const handleFilterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,7 +95,7 @@ export function FileManagerFilters({
     <TextField
       value={currentFilters.name}
       onChange={handleFilterName}
-      placeholder="Search..."
+      placeholder="Pesquisar..."
       slotProps={{
         input: {
           startAdornment: (
@@ -187,11 +187,11 @@ export function FileManagerFilters({
             }}
           >
             <Button variant="outlined" color="inherit" onClick={handleResetType}>
-              Clear
+              Limpar
             </Button>
 
             <Button variant="contained" onClick={menuActions.onClose}>
-              Apply
+              Aplicar
             </Button>
           </Box>
         </Stack>
@@ -213,7 +213,7 @@ export function FileManagerFilters({
       >
         {!!currentFilters.startDate && !!currentFilters.endDate
           ? fDateRangeShortLabel(currentFilters.startDate, currentFilters.endDate)
-          : 'Select date'}
+          : 'Período'}
       </Button>
 
       <CustomDateRangePicker

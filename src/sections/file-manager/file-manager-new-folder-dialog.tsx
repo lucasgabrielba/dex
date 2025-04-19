@@ -32,7 +32,7 @@ export function FileManagerNewFolderDialog({
   onUpdate,
   folderName,
   onChangeFolderName,
-  title = 'Upload files',
+  title = 'Upload de arquivos',
   ...other
 }: Props) {
   const [files, setFiles] = useState<(File | string)[]>([]);
@@ -72,7 +72,7 @@ export function FileManagerNewFolderDialog({
         {(onCreate || onUpdate) && (
           <TextField
             fullWidth
-            label="Folder name"
+            label="Nome da pasta"
             value={folderName}
             onChange={onChangeFolderName}
             sx={{ mb: 3 }}

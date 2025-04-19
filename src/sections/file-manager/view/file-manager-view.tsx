@@ -12,8 +12,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
 
-import { DashboardContent } from 'src/layouts/dashboard';
-import { _allFiles, FILE_TYPE_OPTIONS } from 'src/_mock';
+import { FILE_TYPE_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Iconify } from 'src/components/iconify';
@@ -30,7 +29,13 @@ import { FileManagerNewFolderDialog } from '../file-manager-new-folder-dialog';
 
 // ----------------------------------------------------------------------
 
-export function FileManagerView() {
+interface FileManagerViewProps {
+  files?: IFile[];
+  title?: string;
+  uploadeButtonName?: string;
+}
+
+export function FileManagerView({ files = [], title = 'File manager', uploadeButtonName = 'Upload' }: FileManagerViewProps) {
   const table = useTable({ defaultRowsPerPage: 10 });
 
   const dateRange = useBoolean();
@@ -39,7 +44,7 @@ export function FileManagerView() {
 
   const [displayMode, setDisplayMode] = useState('list');
 
-  const [tableData, setTableData] = useState<IFile[]>(_allFiles);
+  const [tableData, setTableData] = useState<IFile[]>(files);
 
   const filters = useSetState<IFileFilters>({
     name: '',
@@ -80,7 +85,7 @@ export function FileManagerView() {
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      toast.success('Delete success!');
+      toast.success('Apagado com sucesso!');
 
       setTableData(deleteRow);
 
@@ -92,7 +97,7 @@ export function FileManagerView() {
   const handleDeleteItems = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
 
-    toast.success('Delete success!');
+    toast.success('Apagado com sucesso!');
 
     setTableData(deleteRows);
 
@@ -146,10 +151,10 @@ export function FileManagerView() {
     <ConfirmDialog
       open={confirmDialog.value}
       onClose={confirmDialog.onFalse}
-      title="Delete"
+      title="Apagar"
       content={
         <>
-          Are you sure want to delete <strong> {table.selected.length} </strong> items?
+          Você tem certeza que deseja apagar <strong> {table.selected.length} </strong> items?
         </>
       }
       action={
@@ -161,7 +166,7 @@ export function FileManagerView() {
             confirmDialog.onFalse();
           }}
         >
-          Delete
+          Apagar
         </Button>
       }
     />
@@ -187,25 +192,23 @@ export function FileManagerView() {
 
   return (
     <>
-      <DashboardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="h4">File manager</Typography>
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-            onClick={newFilesDialog.onTrue}
-          >
-            Upload
-          </Button>
-        </Box>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography variant="h4">{title}</Typography>
+        <Button
+          variant="contained"
+          startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+          onClick={newFilesDialog.onTrue}
+        >
+          {uploadeButtonName}
+        </Button>
+      </Box>
 
-        <Stack spacing={2.5} sx={{ my: { xs: 3, md: 5 } }}>
-          {renderFilters()}
-          {canReset && renderResults()}
-        </Stack>
+      <Stack spacing={2.5} sx={{ my: { xs: 3, md: 5 } }}>
+        {renderFilters()}
+        {canReset && renderResults()}
+      </Stack>
 
-        {notFound ? <EmptyContent filled sx={{ py: 10 }} /> : renderList()}
-      </DashboardContent>
+      {notFound ? <EmptyContent filled sx={{ py: 10 }} /> : renderList()}
 
       {renderNewFilesDialog()}
       {renderConfirmDialog()}

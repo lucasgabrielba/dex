@@ -118,7 +118,7 @@ export function AddressListDialog({
         <TextField
           value={searchAddress}
           onChange={handleSearchAddress}
-          placeholder="Search..."
+          placeholder="Pesquisar..."
           slotProps={{
             input: {
               startAdornment: (

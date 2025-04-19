@@ -94,7 +94,7 @@ export function MailList({
       <Stack sx={{ p: 2 }}>
         {mdUp ? (
           <TextField
-            placeholder="Search..."
+            placeholder="Pesquisar..."
             slotProps={{
               input: {
                 startAdornment: (

@@ -1,4 +1,4 @@
-import type { IClientTableFilters } from 'src/types/client';
+import type { IUserTableFilters } from 'src/types/user';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 
@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
@@ -23,9 +24,9 @@ import { CustomPopover } from 'src/components/custom-popover';
 
 type Props = {
   onResetPage: () => void;
-  filters: UseSetStateReturn<IClientTableFilters>;
+  filters: UseSetStateReturn<IUserTableFilters>;
   options: {
-    filterOptions: string[];
+    roles: string[];
   };
 };
 
@@ -42,34 +43,13 @@ export function UserTableToolbar({ filters, options, onResetPage }: Props) {
     [onResetPage, updateFilters]
   );
 
-  const handleFilterChange = useCallback(
-    (event: SelectChangeEvent<string>) => {
-      onResetPage();
-      updateFilters({ filterBy: event.target.value });
-    },
-    [onResetPage, updateFilters]
-  );
+  const handleFilterRole = useCallback(
+    (event: SelectChangeEvent<string[]>) => {
+      const newValue =
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value;
 
-  const handleStartDateChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
-      updateFilters({ startDate: event.target.value });
-    },
-    [onResetPage, updateFilters]
-  );
-
-  const handleEndDateChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onResetPage();
-      updateFilters({ endDate: event.target.value });
-    },
-    [onResetPage, updateFilters]
-  );
-
-  const handleSearchChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onResetPage();
-      updateFilters({ search: event.target.value });
+      updateFilters({ role: newValue });
     },
     [onResetPage, updateFilters]
   );
@@ -84,17 +64,17 @@ export function UserTableToolbar({ filters, options, onResetPage }: Props) {
       <MenuList>
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:printer-minimalistic-bold" />
-          Imprimir
+          Print
         </MenuItem>
 
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:import-bold" />
-          Importar
+          Import
         </MenuItem>
 
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:export-bold" />
-          Exportar
+          Export
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -105,84 +85,66 @@ export function UserTableToolbar({ filters, options, onResetPage }: Props) {
       <Box
         sx={{
           p: 2.5,
-          gap: 2.5,
+          gap: 2,
           display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'flex-end',
+          pr: { xs: 2.5, md: 1 },
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'flex-end', md: 'center' },
         }}
       >
-        <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <InputLabel sx={{ mb: 1, fontSize: '0.875rem' }}>Filtrar por</InputLabel>
-          <FormControl fullWidth>
-            <Select
-              value={currentFilters.filterBy || 'name'}
-              onChange={handleFilterChange}
-              input={<OutlinedInput />}
-              displayEmpty
-              sx={{ height: 56 }}
-            >
-              <MenuItem value="name">Nome</MenuItem>
-              <MenuItem value="phoneNumber">Número de Telefone</MenuItem>
-              <MenuItem value="email">Email</MenuItem>
-              <MenuItem value="company">Empresa</MenuItem>
-              <MenuItem value="product">Produto</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 200 } }}>
+          <InputLabel htmlFor="filter-role-select">Role</InputLabel>
+          <Select
+            multiple
+            value={currentFilters.role}
+            onChange={handleFilterRole}
+            input={<OutlinedInput label="Role" />}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            inputProps={{ id: 'filter-role-select' }}
+            MenuProps={{ PaperProps: { sx: { maxHeight: 240 } } }}
+          >
+            {options.roles.map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox
+                  disableRipple
+                  size="small"
+                  checked={currentFilters.role.includes(option)}
+                />
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
-        <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <InputLabel sx={{ mb: 1, fontSize: '0.875rem' }}>Data inicial</InputLabel>
+        <Box
+          sx={{
+            gap: 2,
+            width: 1,
+            flexGrow: 1,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <TextField
             fullWidth
-            type="date"
-            value={currentFilters.startDate || ''}
-            onChange={handleStartDateChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Iconify icon="solar:calendar-linear" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
+            value={currentFilters.name}
+            onChange={handleFilterName}
+            placeholder="Search..."
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
-        </Box>
 
-        <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <InputLabel sx={{ mb: 1, fontSize: '0.875rem' }}>Data final</InputLabel>
-          <TextField
-            fullWidth
-            type="date"
-            value={currentFilters.endDate || ''}
-            onChange={handleEndDateChange}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Iconify icon="solar:calendar-linear" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <IconButton onClick={menuActions.onOpen}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
         </Box>
-
-        <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
-          <TextField
-            fullWidth
-            value={currentFilters.search || ''}
-            onChange={handleSearchChange}
-            placeholder="Pesquisar por..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-
-        <IconButton>
-          <Iconify icon="solar:menu-dots-bold" />
-        </IconButton>
       </Box>
 
       {renderMenuActions()}

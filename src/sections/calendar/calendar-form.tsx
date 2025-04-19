@@ -102,7 +102,7 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
   const onDelete = useCallback(async () => {
     try {
       await deleteEvent(`${currentEvent?.id}`);
-      toast.success('Delete success!');
+      toast.success('Apagado com sucesso!');
       onClose();
     } catch (error) {
       console.error(error);

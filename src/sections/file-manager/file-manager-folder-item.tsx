@@ -192,7 +192,7 @@ export function FileManagerFolderItem({
           }}
         >
           <Iconify icon="eva:link-2-fill" />
-          Copy Link
+          Copiar Link
         </MenuItem>
 
         <MenuItem
@@ -202,7 +202,7 @@ export function FileManagerFolderItem({
           }}
         >
           <Iconify icon="solar:share-bold" />
-          Share
+          Compartilhar
         </MenuItem>
 
         <MenuItem
@@ -212,7 +212,7 @@ export function FileManagerFolderItem({
           }}
         >
           <Iconify icon="solar:pen-bold" />
-          Edit
+          Editar
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -225,7 +225,7 @@ export function FileManagerFolderItem({
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          Apagar
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -264,7 +264,7 @@ export function FileManagerFolderItem({
     <FileManagerNewFolderDialog
       open={editFolderDialog.value}
       onClose={editFolderDialog.onFalse}
-      title="Edit Folder"
+      title="Editar Pasta"
       onUpdate={() => {
         editFolderDialog.onFalse();
         setFolderName(folderName);
@@ -279,11 +279,11 @@ export function FileManagerFolderItem({
     <ConfirmDialog
       open={confirmDialog.value}
       onClose={confirmDialog.onFalse}
-      title="Delete"
-      content="Are you sure want to delete?"
+      title="Apagar"
+      content="Você tem certeza que deseja apagar?"
       action={
         <Button variant="contained" color="error" onClick={onDelete}>
-          Delete
+          Apagar
         </Button>
       }
     />

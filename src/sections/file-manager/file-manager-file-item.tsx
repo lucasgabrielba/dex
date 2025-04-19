@@ -215,7 +215,7 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
           }}
         >
           <Iconify icon="eva:link-2-fill" />
-          Copy Link
+          Copiar Link
         </MenuItem>
 
         <MenuItem
@@ -225,7 +225,7 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
           }}
         >
           <Iconify icon="solar:share-bold" />
-          Share
+          Compartilhar
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -238,7 +238,7 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          Apagar
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -248,11 +248,11 @@ export function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ..
     <ConfirmDialog
       open={confirmDialog.value}
       onClose={confirmDialog.onFalse}
-      title="Delete"
-      content="Are you sure want to delete?"
+      title="Apagar"
+      content="Você tem certeza que deseja apagar este arquivo?"
       action={
         <Button variant="contained" color="error" onClick={onDelete}>
-          Delete
+          Apagar
         </Button>
       }
     />

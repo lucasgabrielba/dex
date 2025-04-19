@@ -3,7 +3,6 @@ export * from './_job';
 export * from './_mock';
 
 export * from './_user';
-
 export * from './_tour';
 
 export * from './_blog';
@@ -13,6 +12,8 @@ export * from './assets';
 export * from './_files';
 
 export * from './_order';
+
+export * from './_client';
 
 export * from './_others';
 

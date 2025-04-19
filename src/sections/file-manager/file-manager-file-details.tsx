@@ -100,7 +100,7 @@ export function FileManagerFileDetails({
           justifyContent: 'space-between',
         }}
       >
-        Properties
+        Propriedades
         <IconButton size="small" onClick={showProperties.onToggle}>
           <Iconify
             icon={
@@ -114,7 +114,7 @@ export function FileManagerFileDetails({
         <>
           <Box sx={{ display: 'flex', typography: 'caption', textTransform: 'capitalize' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
-              Size
+              Tamanho
             </Box>
 
             {fData(file?.size)}
@@ -122,7 +122,7 @@ export function FileManagerFileDetails({
 
           <Box sx={{ display: 'flex', typography: 'caption', textTransform: 'capitalize' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
-              Modified
+              Modificação
             </Box>
 
             {fDateTime(file?.modifiedAt)}
@@ -130,7 +130,7 @@ export function FileManagerFileDetails({
 
           <Box sx={{ display: 'flex', typography: 'caption', textTransform: 'capitalize' }}>
             <Box component="span" sx={{ width: 80, color: 'text.secondary', mr: 2 }}>
-              Type
+              Tipo
             </Box>
 
             {fileFormat(file?.type)}
@@ -278,7 +278,7 @@ export function FileManagerFileDetails({
             startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
             onClick={onDelete}
           >
-            Delete
+            Apagar
           </Button>
         </Box>
       </Drawer>

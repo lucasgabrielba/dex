@@ -151,19 +151,19 @@ export function FormWizard() {
 
             {activeStep === 0 && (
               <Button type="submit" variant="contained" onClick={() => handleNext('stepOne')}>
-                Next
+                Próximo
               </Button>
             )}
 
             {activeStep === 1 && (
               <Button type="submit" variant="contained" onClick={() => handleNext('stepTwo')}>
-                Next
+                Próximo
               </Button>
             )}
 
             {activeStep === STEPS.length - 1 && (
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save changes
+                Salvar alterações
               </LoadingButton>
             )}
           </Box>

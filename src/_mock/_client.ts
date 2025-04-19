@@ -11,6 +11,20 @@ export const CLIENT_STATUS_OPTIONS = [
   { value: 'rejected', label: 'Rejected' },
 ];
 
+export const _clientBank = [
+  {
+    id: '1',
+    title: 'Dados Bancários',
+    banco: 'Nubank',
+    tipoConta: 'Conta Corrente',
+    conta: '0000-0',
+    agencia: '000-1',
+    chavePix: '000.000.000-00',
+    tipoChavePix: 'CPF'
+  }
+];
+
+
 export const _clientAbout = {
   id: _mock.id(1),
   role: _mock.role(1),
@@ -19,7 +33,7 @@ export const _clientAbout = {
   company: _mock.companyNames(1),
   country: _mock.countryNames(2),
   coverUrl: _mock.image.cover(3),
-  totalFollowers: _mock.number.nativeL(1),
+  totalPropertys: _mock.number.nativeL(1),
   totalFollowing: _mock.number.nativeL(2),
   quote:
     'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
@@ -31,11 +45,20 @@ export const _clientAbout = {
   },
 };
 
-export const _clientFollowers = Array.from({ length: 18 }, (_, index) => ({
+
+export const _clientPropertys = Array.from({ length: 18 }, (_, index) => ({
   id: _mock.id(index),
-  name: _mock.fullName(index),
-  country: _mock.countryNames(index),
-  avatarUrl: _mock.image.avatar(index),
+  name: _mock.companyNames(index),
+  city: _mock.countryNames(index),
+  state: _mock.countryNames(index + 1).slice(0, 2).toUpperCase(),
+  avatarUrl: _mock.image.travel(index),
+  status:
+    (index % 2 && 'Visita agendada') ||
+    (index % 3 && 'Comprado') ||
+    (index % 4 && 'Cancelado') ||
+    (index % 4 && 'À venda') ||
+    (index % 4 && 'À venda') ||
+    'À venda',
 }));
 
 export const _clientFriends = Array.from({ length: 18 }, (_, index) => ({
@@ -92,7 +115,7 @@ export const _clientCards = Array.from({ length: 21 }, (_, index) => ({
   name: _mock.fullName(index),
   coverUrl: _mock.image.cover(index),
   avatarUrl: _mock.image.avatar(index),
-  totalFollowers: _mock.number.nativeL(index),
+  totalPropertys: _mock.number.nativeL(index),
   totalPosts: _mock.number.nativeL(index + 2),
   totalFollowing: _mock.number.nativeL(index + 1),
 }));
@@ -103,6 +126,15 @@ export const _clientPayment = Array.from({ length: 3 }, (_, index) => ({
   cardType: ['mastercard', 'visa', 'visa'][index],
   primary: index === 1,
 }));
+
+export const _clientSocialMedia = [
+  {
+    id: '1',
+    instagram: '@cliente_exemplo',
+    tiktok: '@cliente_tiktok',
+    whatsapp: '+55 (62) 99999-9999'
+  }
+];
 
 export const _clientAddressBook = Array.from({ length: 4 }, (_, index) => ({
   id: _mock.id(index),
@@ -131,13 +163,15 @@ export const _clientList: IClientItem[] = Array.from({ length: 20 }, (_, index) 
   zipCode: '85807',
   state: 'Virginia',
   city: 'Rancho Cordova',
-  role: _mock.role(index),
+  profession: _mock.role(index),
   email: _mock.email(index),
   address: '908 Jack Locks',
   name: _mock.fullName(index),
   isVerified: _mock.boolean(index),
   company: _mock.companyNames(index),
   country: _mock.countryNames(index),
+  coverUrl: _mock.image.cover(3),
+  photoURL: _mock.image.avatar(index),
   avatarUrl: _mock.image.avatar(index),
   phoneNumber: _mock.phoneNumber(index),
   status:

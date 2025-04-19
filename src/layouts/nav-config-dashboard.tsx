@@ -57,11 +57,11 @@ export const navData: NavSectionProps['data'] = [
       { title: 'Imóveis', path: paths.dashboard.general.ecommerce, icon: ICONS.banking },
       {
         title: 'Clientes',
-        path: paths.dashboard.clients.root,
+        path: paths.dashboard.client.root,
         icon: ICONS.user,
         children: [
-          { title: 'Meus clientes', path: paths.dashboard.clients.list },
-          { title: 'Adicionar novo cliente', path: paths.dashboard.clients.new },
+          { title: 'Meus clientes', path: paths.dashboard.client.list },
+          { title: 'Adicionar novo cliente', path: paths.dashboard.client.new },
         ],
       },
       { title: 'Vendas', path: paths.dashboard.general.banking, icon: ICONS.order },

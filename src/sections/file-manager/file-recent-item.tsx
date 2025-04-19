@@ -146,7 +146,7 @@ export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
           }}
         >
           <Iconify icon="eva:link-2-fill" />
-          Copy Link
+          Copiar Link
         </MenuItem>
 
         <MenuItem
@@ -156,7 +156,7 @@ export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
           }}
         >
           <Iconify icon="solar:share-bold" />
-          Share
+          Compartilhar
         </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -169,7 +169,7 @@ export function FileRecentItem({ file, onDelete, sx, ...other }: Props) {
           sx={{ color: 'error.main' }}
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          Apagar
         </MenuItem>
       </MenuList>
     </CustomPopover>

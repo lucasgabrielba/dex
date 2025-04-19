@@ -49,4 +49,9 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
+  client: {
+    list: '/api/client/list',
+    details: '/api/client/details',
+    search: '/api/client/search',
+  },
 };

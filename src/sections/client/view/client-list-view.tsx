@@ -1,12 +1,12 @@
 import type { TableHeadCellProps } from 'src/components/table';
-import type { IOrderItem, IOrderTableFilters } from 'src/types/order';
+import type { IClientItem, IClientTableFilters } from 'src/types/client';
 
 import { useState, useCallback } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
@@ -16,11 +16,10 @@ import TableBody from '@mui/material/TableBody';
 import IconButton from '@mui/material/IconButton';
 
 import { paths } from 'src/routes/paths';
+import { RouterLink } from 'src/routes/components';
 
-import { fIsAfter, fIsBetween } from 'src/utils/format-time';
-
+import { _clientList } from 'src/_mock/_client';
 import { DashboardContent } from 'src/layouts/dashboard';
-import { _orders, ORDER_STATUS_OPTIONS } from 'src/_mock';
 
 import { Label } from 'src/components/label';
 import { toast } from 'src/components/snackbar';
@@ -40,56 +39,64 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { OrderTableRow } from '../order-table-row';
-import { OrderTableToolbar } from '../order-table-toolbar';
-import { OrderTableFiltersResult } from '../order-table-filters-result';
+import { ClientTableRow } from '../client-table-row';
+import { ClientTableToolbar } from '../client-table-toolbar';
+import { ClientTableFiltersResult } from '../client-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...ORDER_STATUS_OPTIONS];
+const STATUS_OPTIONS = [
+  { value: 'todos', label: 'Todos' },
+  { value: 'vendido', label: 'Vendas' },
+  { value: 'em andamento', label: 'Em andamento' },
+  { value: 'vencendo', label: 'Vencendo' },
+  { value: 'prospecto', label: 'Prospecto' },
+  { value: 'desatualizado', label: 'Desatualizados' },
+];
 
 const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'orderNumber', label: 'Order', width: 88 },
-  { id: 'name', label: 'Customer' },
-  { id: 'createdAt', label: 'Date', width: 140 },
-  { id: 'totalQuantity', label: 'Items', width: 120, align: 'center' },
-  { id: 'totalAmount', label: 'Price', width: 140 },
-  { id: 'status', label: 'Status', width: 110 },
-  { id: '', width: 88 },
+  { id: 'name', label: 'Cliente', width: 300 },
+  { id: 'phoneNumber', label: 'Criado em' },
+  { id: 'company', label: 'Última atualização' },
+  { id: 'profession', label: 'Valor' },
+  { id: 'status', label: 'Produto' },
+  { id: 'status', label: 'Status' },
+  { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export function OrderListView() {
-  const table = useTable({ defaultOrderBy: 'orderNumber' });
+export function ClientListView() {
+  const table = useTable();
 
   const confirmDialog = useBoolean();
 
-  const [tableData, setTableData] = useState<IOrderItem[]>(_orders);
+  const [tableData, setTableData] = useState<IClientItem[]>(_clientList);
 
-  const filters = useSetState<IOrderTableFilters>({
+  const filters = useSetState<IClientTableFilters>({
     name: '',
-    status: 'all',
-    startDate: null,
-    endDate: null,
+    status: 'todos',
+    profession: [],
+    filterBy: 'name', // Default to 'name'
+    startDate: '',
+    endDate: '',
+    search: '',
   });
   const { state: currentFilters, setState: updateFilters } = filters;
-
-  const dateError = fIsAfter(currentFilters.startDate, currentFilters.endDate);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters: currentFilters,
-    dateError,
   });
 
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
   const canReset =
     !!currentFilters.name ||
-    currentFilters.status !== 'all' ||
-    (!!currentFilters.startDate && !!currentFilters.endDate);
+    currentFilters.profession.length > 0 ||
+    currentFilters.status !== 'todos' ||
+    !!currentFilters.search;
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -128,10 +135,10 @@ export function OrderListView() {
     <ConfirmDialog
       open={confirmDialog.value}
       onClose={confirmDialog.onFalse}
-      title="Delete"
+      title="Apagar"
       content={
         <>
-          Are you sure want to delete <strong> {table.selected.length} </strong> items?
+          Você tem certeza que deseja apagar os <strong> {table.selected.length} </strong> clientes?
         </>
       }
       action={
@@ -143,7 +150,7 @@ export function OrderListView() {
             confirmDialog.onFalse();
           }}
         >
-          Delete
+          Apagar
         </Button>
       }
     />
@@ -153,12 +160,22 @@ export function OrderListView() {
     <>
       <DashboardContent>
         <CustomBreadcrumbs
-          heading="List"
+          heading="Meus clientes"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Order', href: paths.dashboard.order.root },
-            { name: 'List' },
+            { name: 'Clientes', href: paths.dashboard.client.root },
+            { name: 'Meus Clientes' },
           ]}
+          action={
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.client.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              Novo cliente
+            </Button>
+          }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -182,18 +199,19 @@ export function OrderListView() {
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === currentFilters.status) && 'filled') ||
+                      ((tab.value === 'todos' || tab.value === currentFilters.status) && 'filled') ||
                       'soft'
                     }
                     color={
-                      (tab.value === 'completed' && 'success') ||
-                      (tab.value === 'pending' && 'warning') ||
-                      (tab.value === 'cancelled' && 'error') ||
+                      (tab.value === 'vendido' && 'success') ||
+                      (tab.value === 'em andamento' && 'warning') ||
+                      (tab.value === 'vencendo' && 'error') ||
+                      (tab.value === 'prospectos' && 'info') ||
                       'default'
                     }
                   >
-                    {['completed', 'pending', 'cancelled', 'refunded'].includes(tab.value)
-                      ? tableData.filter((user) => user.status === tab.value).length
+                    {['active', 'em andamento', 'vencendo', 'desatualizado'].includes(tab.value)
+                      ? tableData.filter((client) => client.status === tab.value).length
                       : tableData.length}
                   </Label>
                 }
@@ -201,14 +219,16 @@ export function OrderListView() {
             ))}
           </Tabs>
 
-          <OrderTableToolbar
+          <ClientTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
-            dateError={dateError}
+            options={{
+              filterOptions: ['name', 'phoneNumber', 'email', 'company', 'product'],
+            }}
           />
 
           {canReset && (
-            <OrderTableFiltersResult
+            <ClientTableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
@@ -228,7 +248,7 @@ export function OrderListView() {
                 )
               }
               action={
-                <Tooltip title="Delete">
+                <Tooltip title="Apagar">
                   <IconButton color="primary" onClick={confirmDialog.onTrue}>
                     <Iconify icon="solar:trash-bin-trash-bold" />
                   </IconButton>
@@ -236,7 +256,7 @@ export function OrderListView() {
               }
             />
 
-            <Scrollbar sx={{ minHeight: 444 }}>
+            <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={table.order}
@@ -260,13 +280,13 @@ export function OrderListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <OrderTableRow
+                      <ClientTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        detailsHref={paths.dashboard.order.details(row.id)}
+                        editHref={paths.dashboard.client.edit(row.id)}
                       />
                     ))}
 
@@ -301,42 +321,61 @@ export function OrderListView() {
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  dateError: boolean;
-  inputData: IOrderItem[];
-  filters: IOrderTableFilters;
+  inputData: IClientItem[];
+  filters: IClientTableFilters;
   comparator: (a: any, b: any) => number;
 };
 
-function applyFilter({ inputData, comparator, filters, dateError }: ApplyFilterProps) {
-  const { status, name, startDate, endDate } = filters;
+function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
+  const { name, status, profession, filterBy, search, startDate, endDate } = filters;
 
-  const stabilizedThis = inputData.map((el, index) => [el, index] as const);
+  let filteredData = [...inputData];
 
+  // Sorting
+  const stabilizedThis = filteredData.map((el, index) => [el, index] as const);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+  filteredData = stabilizedThis.map((el) => el[0]);
 
-  inputData = stabilizedThis.map((el) => el[0]);
+  // Apply search filter based on selected attribute (filterBy)
+  if (search && filterBy) {
+    filteredData = filteredData.filter((client) => {
+      const value = client[filterBy as keyof IClientItem]?.toString().toLowerCase() || '';
+      return value.includes(search.toLowerCase());
+    });
+  }
 
+  // Apply name filter (if still needed separately)
   if (name) {
-    inputData = inputData.filter(({ orderNumber, customer }) =>
-      [orderNumber, customer.name, customer.email].some((field) =>
-        field?.toLowerCase().includes(name.toLowerCase())
-      )
+    filteredData = filteredData.filter((client) =>
+      client.name.toLowerCase().includes(name.toLowerCase())
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((order) => order.status === status);
+  // Apply status filter
+  if (status !== 'todos') {
+    filteredData = filteredData.filter((client) => client.status === status);
   }
 
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter((order) => fIsBetween(order.createdAt, startDate, endDate));
-    }
+  // Apply profession filter
+  if (profession.length) {
+    filteredData = filteredData.filter((client) => profession.includes(client.profession));
   }
 
-  return inputData;
+  // Apply date range filter (assuming createdAt is used)
+  if (startDate) {
+    filteredData = filteredData.filter(
+      (client) => new Date(client.createdAt) >= new Date(startDate)
+    );
+  }
+  if (endDate) {
+    filteredData = filteredData.filter(
+      (client) => new Date(client.createdAt) <= new Date(endDate)
+    );
+  }
+
+  return filteredData;
 }

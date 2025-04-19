@@ -51,7 +51,7 @@ export function KanbanContactsDialog({ assignee = [], open, onClose }: Props) {
           fullWidth
           value={searchContact}
           onChange={handleSearchContacts}
-          placeholder="Search..."
+          placeholder="Pesquisar..."
           slotProps={{
             input: {
               startAdornment: (

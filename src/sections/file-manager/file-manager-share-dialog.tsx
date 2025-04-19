@@ -38,7 +38,7 @@ export function FileManagerShareDialog({
 
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose} {...other}>
-      <DialogTitle> Invite </DialogTitle>
+      <DialogTitle> Convite </DialogTitle>
 
       <Box sx={{ px: 3 }}>
         {onChangeInvite && (
@@ -57,7 +57,7 @@ export function FileManagerShareDialog({
                       disabled={!inviteEmail}
                       sx={{ mr: -0.75 }}
                     >
-                      Send Invite
+                      Enviar convite
                     </Button>
                   </InputAdornment>
                 ),
@@ -81,13 +81,13 @@ export function FileManagerShareDialog({
       <DialogActions sx={{ justifyContent: 'space-between' }}>
         {onCopyLink && (
           <Button startIcon={<Iconify icon="eva:link-2-fill" />} onClick={onCopyLink}>
-            Copy link
+            Copiar Link
           </Button>
         )}
 
         {onClose && (
           <Button variant="outlined" color="inherit" onClick={onClose}>
-            Close
+            Fechar
           </Button>
         )}
       </DialogActions>

@@ -86,7 +86,7 @@ export function ProductSearch({ redirectPath, sx }: Props) {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search..."
+          placeholder="Pesquisar..."
           slotProps={{
             input: {
               ...params.InputProps,

@@ -97,7 +97,7 @@ export function ProductListView() {
     (id: string) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
 
-      toast.success('Delete success!');
+      toast.success('Apagado com sucesso!');
 
       setTableData(deleteRow);
     },
@@ -107,7 +107,7 @@ export function ProductListView() {
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
-    toast.success('Delete success!');
+    toast.success('Apagado com sucesso!');
 
     setTableData(deleteRows);
   }, [selectedRowIds, tableData]);

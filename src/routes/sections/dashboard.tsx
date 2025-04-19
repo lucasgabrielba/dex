@@ -43,6 +43,12 @@ const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
 const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
+// Client
+const ClientProfilePage = lazy(() => import('src/pages/dashboard/client/details'));
+// const ClientCardsPage = lazy(() => import('src/pages/dashboard/client/cards'));
+const ClientListPage = lazy(() => import('src/pages/dashboard/client/list'));
+// const ClientCreatePage = lazy(() => import('src/pages/dashboard/client/new'));
+// const ClientEditPage = lazy(() => import('src/pages/dashboard/client/edit'));
 // Account
 const AccountGeneralPage = lazy(() => import('src/pages/dashboard/user/account/general'));
 const AccountBillingPage = lazy(() => import('src/pages/dashboard/user/account/billing'));
@@ -139,23 +145,13 @@ export const dashboardRoutes: RouteObject[] = [
         ],
       },
       {
-        path: 'clients',
+        path: 'client',
         children: [
-          { index: true, element: <UserListPage /> },
-          { path: 'list', element: <UserListPage /> },
+          { index: true, element: <ClientListPage /> },
+          { path: 'list', element: <ClientListPage /> },
           { path: 'new', element: <UserCreatePage /> },
+          { path: ':id', element: <ClientProfilePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
-          {
-            path: 'account',
-            element: accountLayout(),
-            children: [
-              { index: true, element: <AccountGeneralPage /> },
-              { path: 'billing', element: <AccountBillingPage /> },
-              { path: 'notifications', element: <AccountNotificationsPage /> },
-              { path: 'socials', element: <AccountSocialsPage /> },
-              { path: 'change-password', element: <AccountChangePasswordPage /> },
-            ],
-          },
         ],
       },
       {
