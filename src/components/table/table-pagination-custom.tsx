@@ -3,9 +3,7 @@ import type { TablePaginationProps } from '@mui/material/TablePagination';
 
 import Box from '@mui/material/Box';
 import TablePagination from '@mui/material/TablePagination';
-
 // ----------------------------------------------------------------------
-
 export type TablePaginationCustomProps = TablePaginationProps & {
   dense?: boolean;
   sx?: SxProps<Theme>;
@@ -25,9 +23,18 @@ export function TablePaginationCustom({
         rowsPerPageOptions={rowsPerPageOptions}
         component="div"
         {...other}
+        labelRowsPerPage="Itens por página:"
+        labelDisplayedRows={({ from, to, count }) =>
+          `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`
+        }
+        getItemAriaLabel={(type) =>
+          type === 'first' ? 'Ir para a primeira página' :
+            type === 'last' ? 'Ir para a última página' :
+              type === 'next' ? 'Ir para a próxima página' :
+                'Ir para a página anterior'
+        }
         sx={{ borderTopColor: 'transparent' }}
       />
-
       {/* {onChangeDense && (
         <FormControlLabel
           label="Dense"

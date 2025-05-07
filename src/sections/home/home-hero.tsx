@@ -79,9 +79,9 @@ export function HomeHero({ sx, ...other }: BoxProps) {
         ]}
       >
         <Box component="span" sx={{ width: 1, opacity: 0.24 }}>
-          Boost your building
+          Potencialize seu negócio
         </Box>
-        process with
+        imobiliário com
         <Box
           component={m.span}
           animate={{ backgroundPosition: '200% center' }}
@@ -99,7 +99,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             ml: { xs: 0.75, md: 1, xl: 1.5 },
           }}
         >
-          Minimal
+          Duplicate
         </Box>
       </Box>
     </m.div>
@@ -115,7 +115,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           [theme.breakpoints.up(lgKey)]: { fontSize: 20, lineHeight: '36px' },
         }}
       >
-        {`The starting point for your next project is based on MUI. \nEasy customization helps you build apps faster and better.`}
+        {`Sistema completo para gestão de vendas e comissões imobiliárias. \nOptimize o relacionamento vendedor-cliente e aumente seus resultados.`}
       </Typography>
     </m.div>
   );
@@ -141,7 +141,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             />
           ))}
         </AvatarGroup>
-        160+ Happy customers
+        260+ Imobiliárias satisfeitas
       </Box>
     </m.div>
   );
@@ -166,7 +166,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             startIcon={<Iconify width={24} icon="iconoir:flash" />}
           >
             <span>
-              Live preview
+              Demonstração
               <Box
                 component="small"
                 sx={{
@@ -192,7 +192,7 @@ export function HomeHero({ sx, ...other }: BoxProps) {
             sx={{ gap: 0.75, alignItems: 'center', display: 'inline-flex' }}
           >
             <Iconify width={16} icon="eva:external-link-fill" />
-            Get free version
+            Versão gratuita
           </Link>
         </Stack>
       </m.div>
@@ -205,10 +205,10 @@ export function HomeHero({ sx, ...other }: BoxProps) {
           target="_blank"
           rel="noopener"
           href={paths.figmaUrl}
-          startIcon={<Iconify width={24} icon="solar:figma-outline" />}
+          startIcon={<Iconify width={24} icon="solar:calendar-outline" />}
           sx={{ borderColor: 'text.primary' }}
         >
-          Figma preview
+          Agendar apresentação
         </Button>
       </m.div>
     </Box>
@@ -218,27 +218,28 @@ export function HomeHero({ sx, ...other }: BoxProps) {
     <Stack spacing={3} sx={{ textAlign: 'center' }}>
       <m.div {...motionProps}>
         <Typography variant="overline" sx={{ opacity: 0.4 }}>
-          Available For
+          Funcionalidades
         </Typography>
       </m.div>
 
       <Box sx={{ gap: 2.5, display: 'flex' }}>
-        {['js', 'ts', 'nextjs', 'vite', 'figma'].map((platform) => (
-          <m.div {...motionProps} key={platform}>
+        {['Vendas', 'Comissões', 'Clientes', 'Imóveis', 'Relatórios'].map((feature, index) => (
+          <m.div {...motionProps} key={feature}>
             <Box
-              component="img"
-              alt={platform}
-              src={`${CONFIG.assetsDir}/assets/icons/platforms/ic-${platform}.svg`}
+              component="div"
               sx={[
                 {
-                  width: 24,
-                  height: 24,
-                  ...theme.applyStyles('dark', {
-                    ...(platform === 'nextjs' && { filter: 'invert(1)' }),
-                  }),
+                  px: 1.5,
+                  py: 0.75,
+                  borderRadius: 1,
+                  typography: 'caption',
+                  bgcolor: 'background.paper',
+                  boxShadow: theme.customShadows.z8,
                 },
               ]}
-            />
+            >
+              {feature}
+            </Box>
           </m.div>
         ))}
       </Box>

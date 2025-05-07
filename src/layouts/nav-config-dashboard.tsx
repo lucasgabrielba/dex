@@ -54,7 +54,16 @@ export const navData: NavSectionProps['data'] = [
     subheader: 'Módulos',
     items: [
       { title: 'Painel', path: paths.dashboard.root, icon: <Iconify icon="solar:home-angle-bold-duotone" /> },
-      { title: 'Imóveis', path: paths.dashboard.general.ecommerce, icon: ICONS.banking },
+      {
+        title: 'Imóveis',
+        path: paths.dashboard.general.ecommerce,
+        icon: ICONS.banking,
+        children: [
+          { title: 'Lista de imóveis', path: paths.dashboard.property.list },
+          { title: 'Lista de empreendimentos', path: paths.dashboard.property.developmentList },
+          { title: 'Adicionar novo imóvel', path: paths.dashboard.property.new },
+        ],
+      },
       {
         title: 'Clientes',
         path: paths.dashboard.client.root,

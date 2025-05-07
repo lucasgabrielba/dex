@@ -100,6 +100,19 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/client/${MOCK_ID}/edit`,
       },
     },
+    property: {
+      root: `${ROOTS.DASHBOARD}/property`,
+      new: `${ROOTS.DASHBOARD}/property/new`,
+      list: `${ROOTS.DASHBOARD}/property/list`,
+      developmentList: `${ROOTS.DASHBOARD}/property/development/list`,
+      cards: `${ROOTS.DASHBOARD}/property/cards`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/property/${id}`,
+      account: `${ROOTS.DASHBOARD}/property/account`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/property/${id}/edit`,
+      demo: {
+        edit: `${ROOTS.DASHBOARD}/property/${MOCK_ID}/edit`,
+      },
+    },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,

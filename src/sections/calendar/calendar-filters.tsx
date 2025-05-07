@@ -134,14 +134,14 @@ export function CalendarFilters({
       </Typography>
 
       <DatePicker
-        label="Start date"
+        label="Data inicial"
         value={currentFilters.startDate}
         onChange={handleFilterStartDate}
         sx={{ mb: 2.5 }}
       />
 
       <DatePicker
-        label="End date"
+        label="Data final"
         value={currentFilters.endDate}
         onChange={handleFilterEndDate}
         slotProps={{

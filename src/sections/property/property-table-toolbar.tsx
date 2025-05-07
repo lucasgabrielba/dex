@@ -1,7 +1,6 @@
 import type { IDatePickerControl } from 'src/types/common';
-import type { IInvoiceTableFilters } from 'src/types/invoice';
-import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
+import type { IPropertyTableFilters } from 'src/types/property';
 
 import { useCallback } from 'react';
 import { usePopover } from 'minimal-shared/hooks';
@@ -10,15 +9,15 @@ import Box from '@mui/material/Box';
 import Select from '@mui/material/Select';
 import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
 import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { formHelperTextClasses } from '@mui/material/FormHelperText';
+
+import { PROPERTY_TYPE_OPTIONS } from 'src/_mock/_property';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
@@ -28,13 +27,10 @@ import { CustomPopover } from 'src/components/custom-popover';
 type Props = {
   dateError: boolean;
   onResetPage: () => void;
-  filters: UseSetStateReturn<IInvoiceTableFilters>;
-  options: {
-    services: string[];
-  };
+  filters: UseSetStateReturn<IPropertyTableFilters>;
 };
 
-export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }: Props) {
+export function PropertyTableToolbar({ filters, onResetPage, dateError }: Props) {
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
@@ -47,13 +43,10 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
     [onResetPage, updateFilters]
   );
 
-  const handleFilterService = useCallback(
-    (event: SelectChangeEvent<string[]>) => {
-      const newValue =
-        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value;
-
+  const handleFilterType = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       onResetPage();
-      updateFilters({ service: newValue });
+      updateFilters({ type: event.target.value });
     },
     [onResetPage, updateFilters]
   );
@@ -61,6 +54,7 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
   const handleFilterStartDate = useCallback(
     (newValue: IDatePickerControl) => {
       onResetPage();
+      //@ts-ignore
       updateFilters({ startDate: newValue });
     },
     [onResetPage, updateFilters]
@@ -69,7 +63,8 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
   const handleFilterEndDate = useCallback(
     (newValue: IDatePickerControl) => {
       onResetPage();
-      updateFilters({ endDate: newValue });
+      //@ts-ignore
+      updateFilters({ endDate: newValuee });
     },
     [onResetPage, updateFilters]
   );
@@ -84,17 +79,17 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
       <MenuList>
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:printer-minimalistic-bold" />
-          Print
+          Imprimir
         </MenuItem>
 
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:import-bold" />
-          Import
+          Importar
         </MenuItem>
 
         <MenuItem onClick={() => menuActions.onClose()}>
           <Iconify icon="solar:export-bold" />
-          Export
+          Exportar
         </MenuItem>
       </MenuList>
     </CustomPopover>
@@ -107,35 +102,21 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
           p: 2.5,
           gap: 2,
           display: 'flex',
-          pr: { xs: 2.5, md: 1 },
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: { xs: 'flex-end', md: 'center' },
+          flexWrap: 'wrap',
+          alignItems: 'center',
         }}
       >
-        <FormControl sx={{ flexShrink: 0, width: { xs: 1, md: 180 } }}>
-          <InputLabel htmlFor="filter-service-select">Service</InputLabel>
-
+        <FormControl sx={{ width: { xs: 1, md: 200 } }}>
+          <InputLabel>Tipo</InputLabel>
           <Select
-            multiple
-            value={currentFilters.service}
-            onChange={handleFilterService}
-            input={<OutlinedInput label="Service" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            inputProps={{ id: 'filter-service-select' }}
-            sx={{ textTransform: 'capitalize' }}
+            value={currentFilters.type}
+            onChange={handleFilterType}
+            label="Tipo"
           >
-            {options.services.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox
-                  disableRipple
-                  size="small"
-                  checked={currentFilters.service.includes(option)}
-                  inputProps={{
-                    id: `${option}-checkbox`,
-                    'aria-label': `${option} checkbox`,
-                  }}
-                />
-                {option}
+            <MenuItem value="all">Todos</MenuItem>
+            {PROPERTY_TYPE_OPTIONS.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
               </MenuItem>
             ))}
           </Select>
@@ -143,14 +124,16 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
 
         <DatePicker
           label="Data inicial"
-          value={currentFilters.endDate}
+          //@ts-ignore
+          value={currentFilters.startDate}
           onChange={handleFilterStartDate}
           slotProps={{ textField: { fullWidth: true } }}
-          sx={{ maxWidth: { md: 180 } }}
+          sx={{ width: { xs: 1, md: 200 } }}
         />
 
         <DatePicker
           label="Data final"
+          //@ts-ignore
           value={currentFilters.endDate}
           onChange={handleFilterEndDate}
           slotProps={{
@@ -161,39 +144,30 @@ export function InvoiceTableToolbar({ filters, options, dateError, onResetPage }
             },
           }}
           sx={{
-            maxWidth: { md: 180 },
+            width: { xs: 1, md: 200 },
             [`& .${formHelperTextClasses.root}`]: {
-              bottom: { md: -40 },
               position: { md: 'absolute' },
+              bottom: { md: -40 },
             },
           }}
         />
 
-        <Box
-          sx={{
-            gap: 2,
-            width: 1,
-            flexGrow: 1,
-            display: 'flex',
-            alignItems: 'center',
+        <TextField
+          fullWidth
+          value={currentFilters.name}
+          onChange={handleFilterName}
+          placeholder="Buscar imóvel por nome, tipo..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            ),
           }}
-        >
-          <TextField
-            fullWidth
-            value={currentFilters.name}
-            onChange={handleFilterName}
-            placeholder="Search customer or invoice number..."
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                  </InputAdornment>
-                ),
-              },
-            }}
-          />
+          sx={{ width: { xs: 1, md: 260 } }}
+        />
 
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', flexGrow: 1 }}>
           <IconButton onClick={menuActions.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
