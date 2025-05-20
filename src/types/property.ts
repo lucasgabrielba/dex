@@ -42,3 +42,60 @@ export type IPropertyItem = {
   state: string;
   cep: string;
 };
+export interface PropertyAmenity {
+  id: string;
+  name: string;
+  checked: boolean;
+}
+
+export interface CondominiumAmenity {
+  id: string;
+  name: string;
+  checked: boolean;
+}
+
+
+export default interface PropertyFormValues {
+  // Property Information
+  propertyCondition: string;
+  propertyType: string;
+  sunPosition: string;
+  size: number;
+  bedrooms: number;
+  suites: number;
+  floor: number | string;
+  bathrooms: number;
+  parkingSpots: number;
+  iptuValue: number;
+  propertyAmenities: PropertyAmenity[];
+
+  // Condominium Information
+  buildingName: string;
+  constructionYear: string;
+  condominiumFee: number;
+  condominiumAmenities: CondominiumAmenity[];
+
+  // Location
+  zipCode: string;
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+
+  // Images
+  images: string[];
+
+  // Values
+  purpose: string;
+  salePrice: number;
+  rentPrice: number;
+  acceptsFinancing: boolean;
+  acceptsExchange: boolean;
+  condominiumValue: number;
+  iptuValuePerYear: number;
+  valueNotes: string;
+  showPriceOnRequest: boolean;
+  exclusiveProperty: boolean;
+  highlightProperty: boolean;
+}

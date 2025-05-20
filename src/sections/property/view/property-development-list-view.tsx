@@ -160,10 +160,11 @@ export function PropertyDevelopmentListView() {
     <>
       <DashboardContent>
         <Stack
-          direction="row"
-          alignItems="center"
+          direction={{ xs: "column", sm: "row" }}
+          alignItems={{ xs: "flex-start", sm: "center" }}
           justifyContent="space-between"
-          sx={{ mb: { xs: 3, md: 5 } }}
+          spacing={{ xs: 2, sm: 0 }}
+          sx={{ mb: { xs: 2, md: 4 } }}
         >
           <CustomBreadcrumbs
             heading="Empreendimentos"
@@ -172,12 +173,20 @@ export function PropertyDevelopmentListView() {
               { name: 'Imóveis', href: paths.dashboard.property.root },
               { name: 'Lista de empreendimentos' },
             ]}
+            sx={{
+              '.MuiTypography-h4': {
+                fontSize: { xs: '1.25rem', md: '1.5rem' }
+              }
+            }}
           />
-
           <Button
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
             onClick={handleAddNewProperty}
+            sx={{
+              fontSize: { xs: '0.875rem', md: '1rem' },
+              width: { xs: '100%', sm: 'auto' }
+            }}
           >
             Novo empreendimento
           </Button>

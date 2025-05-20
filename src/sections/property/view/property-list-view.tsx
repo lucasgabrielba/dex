@@ -127,8 +127,7 @@ export function PropertyListView() {
 
   const handleAddNewProperty = () => {
     // Redirecionamento para a página de criação de imóvel
-    // window.location.href = paths.dashboard.property.new;
-    console.log('Criar novo imóvel');
+    window.location.href = paths.dashboard.property.new;
   };
 
   const renderConfirmDialog = () => (
@@ -160,10 +159,11 @@ export function PropertyListView() {
     <>
       <DashboardContent>
         <Stack
-          direction="row"
-          alignItems="center"
+          direction={{ xs: "column", sm: "row" }}
+          alignItems={{ xs: "flex-start", sm: "center" }}
           justifyContent="space-between"
-          sx={{ mb: { xs: 3, md: 5 } }}
+          spacing={{ xs: 2, sm: 0 }}
+          sx={{ mb: { xs: 2, md: 4 } }}
         >
           <CustomBreadcrumbs
             heading="Imóveis"
@@ -172,12 +172,20 @@ export function PropertyListView() {
               { name: 'Imóveis', href: paths.dashboard.property.root },
               { name: 'Lista de imóveis' },
             ]}
+            sx={{
+              '.MuiTypography-h4': {
+                fontSize: { xs: '1.25rem', md: '1.5rem' }
+              }
+            }}
           />
-
           <Button
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
-            onClick={handleAddNewProperty}
+            href={paths.dashboard.property.new}
+            sx={{
+              fontSize: { xs: '0.875rem', md: '1rem' },
+              width: { xs: '100%', sm: 'auto' }
+            }}
           >
             Novo imóvel
           </Button>
