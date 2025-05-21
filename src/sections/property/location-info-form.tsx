@@ -2,15 +2,46 @@ import { z } from 'zod';
 import React, { useState, useEffect } from 'react';
 
 import Grid from '@mui/material/Grid2';
-import { Box, Card, TextField, Typography, CardContent } from '@mui/material';
+import { Box, Card, MenuItem, TextField, Typography, CardContent } from '@mui/material';
 
 interface LocationInfoFormProps {
   onComplete: () => void;
 }
 
+// Estados brasileiros
+const estadosBrasil = [
+  { value: 'AC' },
+  { value: 'AL' },
+  { value: 'AP' },
+  { value: 'AM' },
+  { value: 'BA' },
+  { value: 'CE' },
+  { value: 'DF' },
+  { value: 'ES' },
+  { value: 'GO' },
+  { value: 'MA' },
+  { value: 'MT' },
+  { value: 'MS' },
+  { value: 'MG' },
+  { value: 'PA' },
+  { value: 'PB' },
+  { value: 'PR' },
+  { value: 'PE' },
+  { value: 'PI' },
+  { value: 'RJ' },
+  { value: 'RN' },
+  { value: 'RS' },
+  { value: 'RO' },
+  { value: 'RR' },
+  { value: 'SC' },
+  { value: 'SP' },
+  { value: 'SE' },
+  { value: 'TO' }
+];
+
 // Schema de validação com Zod
 const locationSchema = z.object({
-  cep: z.string().min(8, "CEP deve ter no mínimo 8 caracteres"),
+  cep: z.string().min(9, "CEP deve ter formato 00000-000"),
   rua: z.string().min(3, "Rua é obrigatória"),
   numero: z.string().min(1, "Número é obrigatório"),
   bairro: z.string().min(2, "Bairro é obrigatório"),
@@ -20,6 +51,18 @@ const locationSchema = z.object({
 
 // Tipo para os dados do formulário
 type LocationFormData = z.infer<typeof locationSchema>;
+
+// Função para aplicar máscara no CEP
+const applyCepMask = (value: string): string => {
+  const numbers = value.replace(/\D/g, '');
+  if (numbers.length <= 5) {
+    return numbers;
+  }
+  return `${numbers.slice(0, 5)}-${numbers.slice(5, 8)}`;
+};
+
+// Função para permitir apenas números
+const onlyNumbers = (value: string): string => value.replace(/\D/g, '');
 
 const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onComplete }) => {
   // Estado para os dados do formulário
@@ -38,7 +81,20 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onComplete }) => {
   // Função para atualizar o estado do formulário
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+
+    let processedValue = value;
+
+    // Aplicar máscara no CEP
+    if (name === 'cep') {
+      processedValue = applyCepMask(value);
+    }
+
+    // Permitir apenas números no campo número
+    if (name === 'numero') {
+      processedValue = onlyNumbers(value);
+    }
+
+    setFormData(prev => ({ ...prev, [name]: processedValue }));
   };
 
   // Validação em tempo real
@@ -107,6 +163,7 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onComplete }) => {
                   onChange={handleChange}
                   error={!!errors.cep}
                   helperText={errors.cep}
+                  inputProps={{ maxLength: 9 }}
                   sx={{
                     '& .MuiOutlinedInput-root': { borderRadius: 1 }
                   }}
@@ -185,9 +242,9 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onComplete }) => {
               <Box sx={{ mb: 3 }}>
                 <TextField
                   fullWidth
+                  select
                   name="estado"
                   label="Estado"
-                  placeholder="Ex: SP"
                   value={formData.estado}
                   onChange={handleChange}
                   error={!!errors.estado}
@@ -195,7 +252,13 @@ const LocationInfoForm: React.FC<LocationInfoFormProps> = ({ onComplete }) => {
                   sx={{
                     '& .MuiOutlinedInput-root': { borderRadius: 1 }
                   }}
-                />
+                >
+                  {estadosBrasil.map((estado) => (
+                    <MenuItem key={estado.value} value={estado.value}>
+                      {estado.value}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Box>
             </Grid>
           </Grid>

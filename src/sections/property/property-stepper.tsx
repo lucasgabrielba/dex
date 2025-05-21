@@ -1,9 +1,10 @@
 import type { StepIconProps } from '@mui/material/StepIcon';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
+import { Alert } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stepper from '@mui/material/Stepper';
 import { styled } from '@mui/material/styles';
@@ -96,13 +97,106 @@ const steps = [
 export default function PropertyStepper() {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState<Record<number, boolean>>({});
+  const [formValid, setFormValid] = useState(false);
+  const [validationMessage, setValidationMessage] = useState('');
 
   // Verifica se todos os passos estão completos
   const isLastStep = () => activeStep === steps.length - 1;
 
+  // Função para validar o step atual
+  const validateCurrentStep = (): boolean => {
+    const currentStepData = getCurrentStepData();
+
+    switch (activeStep) {
+      case 0: // PropertyInfoForm
+        return !!(currentStepData?.size && currentStepData?.iptu);
+      case 1: // CondominiumInfoForm  
+        return !!(currentStepData?.buildYear && currentStepData?.condominiumFee);
+      case 2: // LocationInfoForm
+        return !!(currentStepData?.cep && currentStepData?.rua && currentStepData?.numero &&
+          currentStepData?.bairro && currentStepData?.cidade && currentStepData?.estado);
+      case 3: { // ImagesForm
+        const images = JSON.parse(localStorage.getItem('propertyImages') || '[]');
+        return images.length > 0;
+      }
+      case 4: // ValuesForm
+        return !!(currentStepData?.purpose && currentStepData?.condominiumValue && currentStepData?.iptuValue);
+      default:
+        return false;
+    }
+  };
+
+  // Função para obter dados do step atual
+  const getCurrentStepData = () => {
+    const storageKeys = [
+      'propertyFormData',
+      'condominiumFormData',
+      'locationFormData',
+      'propertyImages',
+      'valuesFormData'
+    ];
+
+    const data = localStorage.getItem(storageKeys[activeStep]);
+    return data ? JSON.parse(data) : null;
+  };
+
+  // Função para obter mensagem de validação
+  const getValidationMessage = (): string => {
+    switch (activeStep) {
+      case 0:
+        return 'Preencha todos os campos obrigatórios sobre o imóvel';
+      case 1:
+        return 'Preencha as informações do condomínio';
+      case 2:
+        return 'Preencha o endereço completo do imóvel';
+      case 3:
+        return 'Adicione pelo menos uma imagem do imóvel';
+      case 4:
+        return 'Preencha os valores do imóvel';
+      default:
+        return 'Complete as informações necessárias';
+    }
+  };
+
+  // Validar step em tempo real
+  useEffect(() => {
+    const isValid = validateCurrentStep();
+    setFormValid(isValid);
+
+    if (!isValid) {
+      setValidationMessage(getValidationMessage());
+    } else {
+      setValidationMessage('');
+    }
+  }, [activeStep]);
+
+  // Verificar mudanças no localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isValid = validateCurrentStep();
+      setFormValid(isValid);
+
+      if (!isValid) {
+        setValidationMessage(getValidationMessage());
+      } else {
+        setValidationMessage('');
+      }
+    };
+
+    // Verificar a cada 500ms se houve mudanças
+    const interval = setInterval(handleStorageChange, 500);
+
+    return () => clearInterval(interval);
+  }, [activeStep]);
+
   // Marca o passo atual como completo
   const handleComplete = () => {
-    const newCompleted = completed;
+    if (!formValid) {
+      setValidationMessage(getValidationMessage());
+      return;
+    }
+
+    const newCompleted = { ...completed };
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
 
@@ -110,21 +204,48 @@ export default function PropertyStepper() {
     if (!isLastStep()) {
       handleNext();
     } else {
-      // Aqui você pode adicionar o código para enviar o formulário completo
-      console.log("Formulário finalizado com sucesso!");
-      // Opcional: redirecionar ou mostrar mensagem de sucesso
+      // Enviar formulário completo
+      handleSubmitForm();
     }
+  };
+
+  // Função para enviar o formulário
+  const handleSubmitForm = () => {
+    const allData = {
+      property: JSON.parse(localStorage.getItem('propertyFormData') || '{}'),
+      propertyAmenities: JSON.parse(localStorage.getItem('propertyAmenities') || '{}'),
+      condominium: JSON.parse(localStorage.getItem('condominiumFormData') || '{}'),
+      condominiumAmenities: JSON.parse(localStorage.getItem('condominiumAmenities') || '{}'),
+      location: JSON.parse(localStorage.getItem('locationFormData') || '{}'),
+      images: JSON.parse(localStorage.getItem('propertyImages') || '[]'),
+      values: JSON.parse(localStorage.getItem('valuesFormData') || '{}'),
+      valuesOptions: JSON.parse(localStorage.getItem('valuesAdditionalOptions') || '{}'),
+    };
+
+    console.log("Dados completos do formulário:", allData);
+
+    // Aqui você pode enviar os dados para o backend
+    // await api.post('/properties', allData);
+
+    // Limpar localStorage após envio bem-sucedido
+    // localStorage.removeItem('propertyFormData');
+    // localStorage.removeItem('propertyAmenities');
+    // ... etc
+
+    alert("Formulário enviado com sucesso!");
   };
 
   // Avança para o próximo passo
   const handleNext = () => {
     const newActiveStep = activeStep + 1;
     setActiveStep(newActiveStep);
+    setValidationMessage('');
   };
 
   // Retorna para o passo anterior
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setValidationMessage('');
   };
 
   // Renderiza o componente do passo atual
@@ -155,6 +276,13 @@ export default function PropertyStepper() {
         })}
       </Stepper>
 
+      {/* Mensagem de validação */}
+      {validationMessage && (
+        <Alert severity="warning" sx={{ mb: 3 }}>
+          {validationMessage}
+        </Alert>
+      )}
+
       {/* Conteúdo do passo atual */}
       <Box sx={{ mt: 2, mb: 2 }}>
         {renderStepContent()}
@@ -169,14 +297,21 @@ export default function PropertyStepper() {
           onClick={handleBack}
           sx={{ mr: 1 }}
         >
-          Cancelar
+          {activeStep === 0 ? 'Cancelar' : 'Voltar'}
         </Button>
         <Button
           variant="contained"
           onClick={handleComplete}
+          disabled={!formValid}
           sx={{
-            bgcolor: '#06092B',
-            '&:hover': { bgcolor: '#040619' }
+            bgcolor: formValid ? '#06092B' : 'grey.400',
+            '&:hover': {
+              bgcolor: formValid ? '#040619' : 'grey.500'
+            },
+            '&:disabled': {
+              bgcolor: 'grey.300',
+              color: 'grey.600'
+            }
           }}
         >
           {isLastStep() ? 'Finalizar' : 'Continuar'}

@@ -162,7 +162,7 @@ export function ClientListView() {
         <CustomBreadcrumbs
           heading="Meus clientes"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
+            { name: 'Painel', href: paths.dashboard.root },
             { name: 'Clientes', href: paths.dashboard.client.root },
             { name: 'Meus Clientes' },
           ]}

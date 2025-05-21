@@ -50,7 +50,7 @@ const ClientListPage = lazy(() => import('src/pages/dashboard/client/list'));
 const ClientCreatePage = lazy(() => import('src/pages/dashboard/client/new'));
 // const ClientEditPage = lazy(() => import('src/pages/dashboard/client/edit'));
 // Property
-// const PropertyProfilePage = lazy(() => import('src/pages/dashboard/property/details'));
+const PropertyProfilePage = lazy(() => import('src/pages/dashboard/property/details'));
 // const PropertyCardsPage = lazy(() => import('src/pages/dashboard/property/cards'));
 const PropertyListPage = lazy(() => import('src/pages/dashboard/property/list'));
 const PropertyDevelopmentListPage = lazy(() => import('src/pages/dashboard/property/developmentList'));
@@ -168,7 +168,7 @@ export const dashboardRoutes: RouteObject[] = [
           { path: 'list', element: <PropertyListPage /> },
           { path: 'development/list', element: <PropertyDevelopmentListPage /> },
           { path: 'new', element: <PropertyCreatePage /> },
-          // { path: ':id', element: <PropertyProfilePage /> },
+          { path: ':id', element: <PropertyProfilePage /> },
           // { path: ':id/edit', element: <UserEditPage /> },
         ],
       },

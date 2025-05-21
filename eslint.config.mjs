@@ -95,6 +95,7 @@ const sortImportsRules = () => {
   return {
     'perfectionist/sort-named-imports': [1, { type: 'line-length', order: 'asc' }],
     'perfectionist/sort-named-exports': [1, { type: 'line-length', order: 'asc' }],
+    'consistent-return': 'off',
     'perfectionist/sort-exports': [
       1,
       {

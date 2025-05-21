@@ -7,7 +7,7 @@ import { PropertyListView } from 'src/sections/property/view/property-list-view'
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Lista de imóveis | Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Lista de imóveis | Painel - ${CONFIG.appName}` };
 
 export default function Page() {
   return (

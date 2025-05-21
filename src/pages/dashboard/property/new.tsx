@@ -6,7 +6,7 @@ import { PropertyCreateView } from 'src/sections/property/view/property-create-v
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Cadstrar novo imóvel | Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Cadstrar novo imóvel | Painel - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
