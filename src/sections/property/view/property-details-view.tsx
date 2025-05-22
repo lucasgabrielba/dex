@@ -33,7 +33,7 @@ type Props = {
 };
 
 export function PropertyDetailsView({ property, error, loading }: Props) {
-  const tabs = useTabs('description');
+  const tabs = useTabs('imovel');
 
   const [status, setStatus] = useState('');
 
