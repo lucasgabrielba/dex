@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable default-case */
 import type { DroppableContainer, KeyboardCoordinateGetter } from '@dnd-kit/core';
 
 import { KeyboardCode, closestCorners, getFirstCollision } from '@dnd-kit/core';
@@ -68,6 +66,7 @@ export const coordinateGetter: KeyboardCoordinateGetter = (
             filteredContainers.push(entry);
           }
           break;
+        default:
       }
     });
 

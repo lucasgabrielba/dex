@@ -125,10 +125,10 @@ export function PropertyListView() {
     [updateFilters, table]
   );
 
-  const handleAddNewProperty = () => {
-    // Redirecionamento para a página de criação de imóvel
-    window.location.href = paths.dashboard.property.new;
-  };
+  // const handleAddNewProperty = () => {
+  //   // Redirecionamento para a página de criação de imóvel
+  //   window.location.href = paths.dashboard.property.new;
+  // };
 
   const renderConfirmDialog = () => (
     <ConfirmDialog

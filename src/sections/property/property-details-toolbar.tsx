@@ -55,8 +55,10 @@ export function PropertyDetailsToolbar({
               onChangePublish(option.value);
             }}
           >
-            {option.value === 'published' && <Iconify icon="eva:cloud-upload-fill" />}
-            {option.value === 'draft' && <Iconify icon="solar:file-text-bold" />}
+            {option.value === 'Em andamento' && <Iconify icon="solar:play-circle-bold" />}
+            {option.value === 'Pendente' && <Iconify icon="solar:clock-circle-bold" />}
+            {option.value === 'Vendido' && <Iconify icon="solar:check-circle-bold" />}
+            {option.value === 'Alugado' && <Iconify icon="solar:home-smile-bold" />}
             {option.label}
           </MenuItem>
         ))}
@@ -78,20 +80,20 @@ export function PropertyDetailsToolbar({
           href={backHref}
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
         >
-          Back
+          Voltar
         </Button>
 
         <Box sx={{ flexGrow: 1 }} />
 
-        {publish === 'published' && (
-          <Tooltip title="Go Live">
+        {publish === 'Em andamento' && (
+          <Tooltip title="Ver Publicação">
             <IconButton component={RouterLink} href={liveHref}>
               <Iconify icon="eva:external-link-fill" />
             </IconButton>
           </Tooltip>
         )}
 
-        <Tooltip title="Edit">
+        <Tooltip title="Editar">
           <IconButton component={RouterLink} href={editHref}>
             <Iconify icon="solar:pen-bold" />
           </IconButton>
@@ -101,7 +103,7 @@ export function PropertyDetailsToolbar({
           color="inherit"
           variant="contained"
           loading={!publish}
-          loadingIndicator="Loading…"
+          loadingIndicator="Carregando…"
           endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
           onClick={menuActions.onOpen}
           sx={{ textTransform: 'capitalize' }}

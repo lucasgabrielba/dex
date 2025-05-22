@@ -1,43 +1,31 @@
 import type { IPropertyItem } from 'src/types/property';
-import type { CheckoutContextValue } from 'src/types/checkout';
 
-import { useCallback } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
-import Link, { linkClasses } from '@mui/material/Link';
-import { formHelperTextClasses } from '@mui/material/FormHelperText';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
-import { fCurrency, fShortenNumber } from 'src/utils/format-number';
+import { fCurrency } from 'src/utils/format-number';
 
-import { Label } from 'src/components/label';
+import { Form } from 'src/components/hook-form';
 import { Iconify } from 'src/components/iconify';
-import { Form, Field } from 'src/components/hook-form';
-import { ColorPicker } from 'src/components/color-utils';
-import { NumberInput } from 'src/components/number-input';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   property: IPropertyItem;
   disableActions?: boolean;
-  items?: CheckoutContextValue['state']['items'];
-  onAddToCart?: CheckoutContextValue['onAddToCart'];
 };
 
 export function PropertyDetailsSummary({
-  items,
   property,
-  onAddToCart,
   disableActions,
   ...other
 }: Props) {
@@ -46,280 +34,173 @@ export function PropertyDetailsSummary({
   const {
     id,
     name,
-    sizes,
-    price,
-    colors,
-    coverUrl,
-    newLabel,
-    available,
-    priceSale,
-    saleLabel,
-    totalRatings,
-    totalReviews,
-    inventoryType,
-    subDescription,
+    value,
+    type,
+    area,
+    status,
+    // address,
+    // city,
+    // state,
+    // cep,
+    agent,
+    propertyCondition,
+    pricePerSquareMeter,
+    propertyDescription,
+    // viewsCount,
+    favoritesCount
   } = property;
-
-  const existProperty = !!items?.length && items.map((item) => item.id).includes(id);
-
-  const isMaxQuantity =
-    !!items?.length &&
-    items.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
     id,
     name,
-    coverUrl,
-    available,
-    price,
-    colors: colors[0],
-    size: sizes[4],
-    quantity: available < 1 ? 0 : 1,
+    value,
+    type,
+    area,
+    status,
   };
 
   const methods = useForm<typeof defaultValues>({
     defaultValues,
   });
 
-  const { watch, control, setValue, handleSubmit } = methods;
-
-  const values = watch();
+  const { handleSubmit } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     console.info('DATA', JSON.stringify(data, null, 2));
-
     try {
-      if (!existProperty) {
-        onAddToCart?.({ ...data, colors: [values.colors] });
-      }
-      router.push(paths.property.checkout);
+      // Lógica para processar os dados
+      router.push(paths.dashboard.property.root);
     } catch (error) {
       console.error(error);
     }
   });
 
-  const handleAddCart = useCallback(() => {
-    try {
-      onAddToCart?.({
-        ...values,
-        colors: [values.colors],
-        subtotal: values.price * values.quantity,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }, [onAddToCart, values]);
-
-  const renderPrice = () => (
-    <Box sx={{ typography: 'h5' }}>
-      {priceSale && (
-        <Box
-          component="span"
-          sx={{ color: 'text.disabled', textDecoration: 'line-through', mr: 0.5 }}
-        >
-          {fCurrency(priceSale)}
-        </Box>
-      )}
-
-      {fCurrency(price)}
-    </Box>
-  );
-
-  const renderShare = () => (
-    <Box
-      sx={{
-        gap: 3,
-        display: 'flex',
-        justifyContent: 'center',
-        [`& .${linkClasses.root}`]: {
-          gap: 1,
-          alignItems: 'center',
-          display: 'inline-flex',
-          color: 'text.secondary',
-          typography: 'subtitle2',
-        },
-      }}
-    >
-      <Link>
-        <Iconify icon="mingcute:add-line" width={16} />
-        Compare
-      </Link>
-
-      <Link>
-        <Iconify icon="solar:heart-bold" width={16} />
-        Favorite
-      </Link>
-
-      <Link>
-        <Iconify icon="solar:share-bold" width={16} />
-        Share
-      </Link>
-    </Box>
-  );
-
-  const renderColorOptions = () => (
-    <Box sx={{ display: 'flex' }}>
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Color
-      </Typography>
-
-      <Controller
-        name="colors"
-        control={control}
-        render={({ field }) => (
-          <ColorPicker
-            options={colors}
-            value={field.value}
-            onChange={(color) => field.onChange(color as string)}
-            limit={4}
-          />
-        )}
-      />
-    </Box>
-  );
-
-  const renderSizeOptions = () => (
-    <Box sx={{ display: 'flex' }}>
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Size
-      </Typography>
-
-      <Field.Select
-        name="size"
-        size="small"
-        helperText={
-          <Link underline="always" color="text.primary">
-            Size chart
-          </Link>
-        }
-        sx={{
-          maxWidth: 88,
-          [`& .${formHelperTextClasses.root}`]: { mx: 0, mt: 1, textAlign: 'right' },
-        }}
-      >
-        {sizes.map((size) => (
-          <MenuItem key={size} value={size}>
-            {size}
-          </MenuItem>
-        ))}
-      </Field.Select>
-    </Box>
-  );
-
-  const renderQuantity = () => (
-    <Box sx={{ display: 'flex' }}>
-      <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Quantity
-      </Typography>
-
-      <Stack spacing={1}>
-        <NumberInput
-          hideDivider
-          value={values.quantity}
-          onChange={(event, quantity: number) => setValue('quantity', quantity)}
-          max={available}
-          sx={{ maxWidth: 112 }}
-        />
-
-        <Typography
-          variant="caption"
-          component="div"
-          sx={{ textAlign: 'right', color: 'text.secondary' }}
-        >
-          Available: {available}
-        </Typography>
-      </Stack>
-    </Box>
-  );
-
-  const renderActions = () => (
-    <Box sx={{ gap: 2, display: 'flex' }}>
-      <Button
-        fullWidth
-        disabled={isMaxQuantity || disableActions}
-        size="large"
-        color="warning"
-        variant="contained"
-        startIcon={<Iconify icon="solar:cart-plus-bold" width={24} />}
-        onClick={handleAddCart}
-        sx={{ whiteSpace: 'nowrap' }}
-      >
-        Add to cart
-      </Button>
-
-      <Button fullWidth size="large" type="submit" variant="contained" disabled={disableActions}>
-        Buy now
-      </Button>
-    </Box>
-  );
-
-  const renderSubDescription = () => (
-    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      {subDescription}
-    </Typography>
-  );
-
-  const renderRating = () => (
-    <Box
-      sx={{
-        display: 'flex',
-        typography: 'body2',
-        alignItems: 'center',
-        color: 'text.disabled',
-      }}
-    >
-      <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
-      {`(${fShortenNumber(totalReviews)} reviews)`}
-    </Box>
-  );
-
-  const renderLabels = () =>
-    (newLabel.enabled || saleLabel.enabled) && (
-      <Box sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
-        {newLabel.enabled && <Label color="info">{newLabel.content}</Label>}
-        {saleLabel.enabled && <Label color="error">{saleLabel.content}</Label>}
-      </Box>
-    );
-
-  const renderInventoryType = () => (
-    <Box
-      component="span"
-      sx={{
-        typography: 'overline',
-        color:
-          (inventoryType === 'out of stock' && 'error.main') ||
-          (inventoryType === 'low stock' && 'warning.main') ||
-          'success.main',
-      }}
-    >
-      {inventoryType}
-    </Box>
-  );
-
   return (
     <Form methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ pt: 3 }} {...other}>
-        <Stack spacing={2} alignItems="flex-start">
-          {renderLabels()}
-          {renderInventoryType()}
+        {/* Status */}
+        <Chip
+          label={status}
+          size="small"
+          sx={{
+            alignSelf: 'flex-start',
+            bgcolor: 'warning.lighter',
+            color: 'warning.dark',
+            fontWeight: 600,
+            borderRadius: 1,
+            px: 1
+          }}
+        />
 
-          <Typography variant="h5">{name}</Typography>
+        {/* Código do imóvel */}
+        <Typography variant="body2" sx={{ color: 'info.main', fontWeight: 600 }}>
+          IMV-{String(id).padStart(4, '0')}
+        </Typography>
 
-          {renderRating()}
-          {renderPrice()}
-          {renderSubDescription()}
-        </Stack>
+        {/* Título */}
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
+          {name}
+        </Typography>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/* Interessados */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Iconify
+            icon="solar:home-bold"
+            width={16}
+            sx={{ color: 'success.main', transform: 'rotate(45deg)' }}
+          />
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {favoritesCount || 2} Interessados recentemente
+          </Typography>
+        </Box>
 
-        {renderColorOptions()}
-        {renderSizeOptions()}
-        {renderQuantity()}
+        {/* Preços */}
+        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 3 }}>
+          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+            R$ {((pricePerSquareMeter || value / area) / 1000).toFixed(3).replace('.', ',')}
+            <Typography component="span" variant="body2" sx={{ ml: 0.5 }}>
+              m2
+            </Typography>
+          </Typography>
+          <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+            {fCurrency(value)}
+          </Typography>
+        </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/* Informações do imóvel */}
+        <Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+            <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 500 }}>
+              Tipo
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              {type}
+            </Typography>
+          </Box>
 
-        {renderActions()}
-        {renderShare()}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+            <Typography variant="body1" sx={{ color: 'text.primary', fontWeight: 500 }}>
+              Condições
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              {propertyCondition || 'Novo'}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Descrição */}
+        <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6, mb: 3 }}>
+          {propertyDescription || `Imóvel aconchegante para alugar com 2 quartos e 1 banheiro no total. é ideal para quem procura conforto e comodidade. O condomínio é bem equipado com diversas instalações, apropriado para quem busca lazer sem sair de casa e fica localizado em Av...`}
+        </Typography>
+
+        {/* Agente */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
+          <Avatar
+            src={agent?.avatarUrl}
+            sx={{ width: 48, height: 48 }}
+          >
+            {agent?.name?.charAt(0)}
+          </Avatar>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
+              {agent?.name || 'Matheus Vieira Tavares'}
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {agent?.phone || '(62) 0 0000-0000'}
+            </Typography>
+          </Box>
+          <Button
+            variant="text"
+            endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={16} />}
+            sx={{
+              color: 'text.primary',
+              fontWeight: 600,
+              '&:hover': { bgcolor: 'transparent' }
+            }}
+          >
+            Ver perfil
+          </Button>
+        </Box>
+
+        {/* Botão Agendar Visita */}
+        <Button
+          fullWidth
+          size="large"
+          variant="contained"
+          disabled={disableActions}
+          startIcon={<Iconify icon="solar:star-bold" width={20} />}
+          sx={{
+            bgcolor: 'warning.main',
+            color: 'common.white',
+            fontWeight: 600,
+            py: 2,
+            '&:hover': {
+              bgcolor: 'warning.dark'
+            }
+          }}
+        >
+          Agendar visita
+        </Button>
       </Stack>
     </Form>
   );

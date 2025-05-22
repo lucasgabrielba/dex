@@ -1,7 +1,7 @@
 import type { IPaymentCard, IAddressItem } from 'src/types/common';
 
-import { useState, useCallback } from 'react';
 import { useBoolean } from 'minimal-shared/hooks';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -42,6 +42,11 @@ export function AccountBillingPlan({ cardList, addressBook, plans }: Props) {
   const [selectedPlan, setSelectedPlan] = useState('');
   const [selectedCard, setSelectedCard] = useState<IPaymentCard | null>(primaryCard);
   const [selectedAddress, setSelectedAddress] = useState<IAddressItem | null>(primaryAddress);
+
+
+  useEffect(() => {
+    setSelectedAddress(primaryAddress)
+  }, [primaryAddress])
 
   const handleSelectPlan = useCallback(
     (newValue: string) => {

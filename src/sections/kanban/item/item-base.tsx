@@ -45,7 +45,6 @@ const ItemBase = forwardRef<HTMLLIElement, ItemBaseProps>((props, ref) => {
 
     document.body.style.cursor = 'grabbing';
 
-    // eslint-disable-next-line consistent-return
     return () => {
       document.body.style.cursor = '';
     };

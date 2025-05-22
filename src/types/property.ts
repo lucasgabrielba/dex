@@ -1,5 +1,7 @@
 import type { IDateValue } from './common';
+
 // ----------------------------------------------------------------------
+
 export type IPropertyFilters = {
   name: string;
   status: string;
@@ -42,7 +44,74 @@ export type IPropertyItem = {
   state: string;
   cep: string;
   images: string[];
+  description?: string;
+  propertyDescription?: string;
+  totalRatings?: number;
+  totalReviews?: number;
+  reviews?: IPropertyReview[];
+  ratings?: {
+    name: string;
+    starCount: number;
+    reviewCount: number;
+  }[];
+
+  // Campos adicionais para detalhes do imóvel
+  bedrooms?: number;
+  suites?: number;
+  bathrooms?: number;
+  parkingSpaces?: number;
+  amenities?: string[];
+  condominiumFee?: number;
+  iptuValue?: number;
+  sunPosition?: string;
+  floor?: string;
+  furnished?: boolean;
+  hasBalcony?: boolean;
+  acceptsFinancing?: boolean;
+  acceptsExchange?: boolean;
+  exclusiveProperty?: boolean;
+  highlightProperty?: boolean;
+  propertyCondition?: string;
+  constructionYear?: string;
+  buildingName?: string;
+
+  // Localização detalhada
+  neighborhood?: string;
+  street?: string;
+  streetNumber?: string;
+  complement?: string;
+  zipCode?: string;
+  latitude?: number;
+  longitude?: number;
+
+  // Informações do condomínio
+  totalFloors?: number;
+  condominiumAmenities?: string[];
+
+  // Preços
+  salePrice?: number;
+  rentPrice?: number;
+  pricePerSquareMeter?: number;
+
+  // Datas
+  availableFrom?: IDateValue;
+  lastUpdated?: IDateValue;
+
+  // Responsável
+  agent?: {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    avatarUrl?: string;
+  };
+
+  // Métricas
+  viewsCount?: number;
+  favoritesCount?: number;
+  contactsCount?: number;
 };
+
 export interface PropertyAmenity {
   id: string;
   name: string;
@@ -54,7 +123,6 @@ export interface CondominiumAmenity {
   name: string;
   checked: boolean;
 }
-
 
 export default interface PropertyFormValues {
   // Property Information

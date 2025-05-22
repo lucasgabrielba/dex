@@ -3,18 +3,19 @@ import { Helmet } from 'react-helmet-async';
 import { useParams } from 'src/routes/hooks';
 
 import { CONFIG } from 'src/global-config';
-import { useGetProduct } from 'src/actions/product';
+import { useGetProperty } from 'src/actions/property';
 
-import { ProductDetailsView } from 'src/sections/product/view';
+import { PropertyDetailsView } from 'src/sections/property/view/property-details-view';
+
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Product details | Painel - ${CONFIG.appName}` };
+const metadata = { title: `Detalhes do Imóvel | Painel - ${CONFIG.appName}` };
 
-export default function Page() {
+export default function PropertyDetailsPage() {
   const { id = '' } = useParams();
 
-  const { product, productLoading, productError } = useGetProduct(id);
+  const { property, propertyLoading, propertyError } = useGetProperty(id);
 
   return (
     <>
@@ -22,7 +23,11 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <ProductDetailsView product={product} loading={productLoading} error={productError} />
+      <PropertyDetailsView
+        property={property}
+        loading={propertyLoading}
+        error={propertyError}
+      />
     </>
   );
 }

@@ -1,7 +1,5 @@
 import type { IClientItem } from 'src/types/client';
 
-import { useState, useCallback } from 'react';
-
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
@@ -70,11 +68,11 @@ export function ClientDetailsView({ client, error, loading }: Props) {
   const searchParams = useSearchParams();
   const selectedTab = searchParams.get(TAB_PARAM) ?? '';
 
-  const [searchFriends, setSearchFriends] = useState('');
+  // const [searchFriends, setSearchFriends] = useState('');
 
-  const handleSearchFriends = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchFriends(event.target.value);
-  }, []);
+  // const handleSearchFriends = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchFriends(event.target.value);
+  // }, []);
 
   const createRedirectPath = (currentPath: string, query: string) => {
     const queryString = new URLSearchParams({ [TAB_PARAM]: query }).toString();

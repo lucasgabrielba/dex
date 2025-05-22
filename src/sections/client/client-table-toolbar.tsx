@@ -37,13 +37,13 @@ export function ClientTableToolbar({ filters, options, onResetPage, dateError }:
 
   const { state: currentFilters, setState: updateFilters } = filters;
 
-  const handleFilterName = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onResetPage();
-      updateFilters({ name: event.target.value });
-    },
-    [onResetPage, updateFilters]
-  );
+  // const handleFilterName = useCallback(
+  //   (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     onResetPage();
+  //     updateFilters({ name: event.target.value });
+  //   },
+  //   [onResetPage, updateFilters]
+  // );
 
   const handleFilterChange = useCallback(
     (event: SelectChangeEvent<string>) => {

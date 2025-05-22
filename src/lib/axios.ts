@@ -54,4 +54,11 @@ export const endpoints = {
     details: '/api/client/details',
     search: '/api/client/search',
   },
+  property: {
+    list: '/api/property/list',
+    details: '/api/property/details',
+    search: '/api/property/search',
+    stats: '/api/property/stats',
+    filters: '/api/property/filters',
+  }
 };

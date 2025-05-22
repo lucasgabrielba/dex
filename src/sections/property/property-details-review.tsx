@@ -15,8 +15,8 @@ import { fShortenNumber } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
 
-import { PropertyReviewList } from './property-review-list';
-import { PropertyReviewNewForm } from './property-review-new-form';
+// import { PropertyReviewList } from './property-review-list';
+// import { PropertyReviewNewForm } from './property-review-new-form';
 
 // ----------------------------------------------------------------------
 
@@ -123,8 +123,8 @@ export function PropertyDetailsReview({
       </Box>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
-      <PropertyReviewList reviews={reviews} />
-      <PropertyReviewNewForm open={review.value} onClose={review.onFalse} />
+      {/* <PropertyReviewList reviews={reviews} /> */}
+      {/* <PropertyReviewNewForm open={review.value} onClose={review.onFalse} /> */}
     </>
   );
 }

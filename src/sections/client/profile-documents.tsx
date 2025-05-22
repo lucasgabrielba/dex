@@ -56,15 +56,15 @@ export function ProfileDocuments({ client }: Props) {
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
   const notFound = (!dataFiltered.length && !!currentFilters.name) || !dataFiltered.length;
 
-  const handleDeleteItem = useCallback(
-    (id: string) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      toast.success('Arquivo excluído com sucesso!');
-      setTableData(deleteRow);
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
+  // const handleDeleteItem = useCallback(
+  //   (id: string) => {
+  //     const deleteRow = tableData.filter((row) => row.id !== id);
+  //     toast.success('Arquivo excluído com sucesso!');
+  //     setTableData(deleteRow);
+  //     table.onUpdatePageDeleteRow(dataInPage.length);
+  //   },
+  //   [dataInPage.length, table, tableData]
+  // );
 
   const handleDeleteItems = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));

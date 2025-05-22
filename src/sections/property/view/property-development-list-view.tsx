@@ -292,6 +292,7 @@ export function PropertyDevelopmentListView() {
                     .map((row) => (
                       <PropertyDevTableRow
                         key={row.id}
+                        //@ts-ignore
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
