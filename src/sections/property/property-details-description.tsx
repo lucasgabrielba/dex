@@ -9,7 +9,7 @@ type Props = {
   sx?: SxProps<Theme>;
 };
 
-export function ProductDetailsDescription({ description, sx }: Props) {
+export function PropertyDetailsDescription({ description, sx }: Props) {
   return (
     <Markdown
       children={description}

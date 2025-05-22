@@ -26,7 +26,7 @@ type Props = BoxProps & {
   publishOptions: { value: string; label: string }[];
 };
 
-export function ProductDetailsToolbar({
+export function PropertyDetailsToolbar({
   sx,
   publish,
   backHref,

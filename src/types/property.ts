@@ -41,6 +41,7 @@ export type IPropertyItem = {
   city: string;
   state: string;
   cep: string;
+  images: string[];
 };
 export interface PropertyAmenity {
   id: string;

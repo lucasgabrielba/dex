@@ -1,4 +1,4 @@
-import type { IProductReview } from 'src/types/product';
+import type { IPropertyReview } from 'src/types/property';
 
 import { sumBy } from 'es-toolkit';
 import { useBoolean } from 'minimal-shared/hooks';
@@ -15,19 +15,19 @@ import { fShortenNumber } from 'src/utils/format-number';
 
 import { Iconify } from 'src/components/iconify';
 
-import { ProductReviewList } from './product-review-list';
-import { ProductReviewNewForm } from './product-review-new-form';
+import { PropertyReviewList } from './property-review-list';
+import { PropertyReviewNewForm } from './property-review-new-form';
 
 // ----------------------------------------------------------------------
 
 type Props = {
   totalRatings?: number;
   totalReviews?: number;
-  reviews?: IProductReview[];
+  reviews?: IPropertyReview[];
   ratings?: { name: string; starCount: number; reviewCount: number }[];
 };
 
-export function ProductDetailsReview({
+export function PropertyDetailsReview({
   totalRatings,
   totalReviews,
   ratings = [],
@@ -123,8 +123,8 @@ export function ProductDetailsReview({
       </Box>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
-      <ProductReviewList reviews={reviews} />
-      <ProductReviewNewForm open={review.value} onClose={review.onFalse} />
+      <PropertyReviewList reviews={reviews} />
+      <PropertyReviewNewForm open={review.value} onClose={review.onFalse} />
     </>
   );
 }

@@ -9,11 +9,11 @@ import Skeleton from '@mui/material/Skeleton';
 
 // ----------------------------------------------------------------------
 
-type ProductItemSkeletonProps = PaperProps & {
+type PropertyItemSkeletonProps = PaperProps & {
   itemCount?: number;
 };
 
-export function ProductItemSkeleton({ sx, itemCount = 16, ...other }: ProductItemSkeletonProps) {
+export function PropertyItemSkeleton({ sx, itemCount = 16, ...other }: PropertyItemSkeletonProps) {
   return Array.from({ length: itemCount }, (_, index) => (
     <Paper
       key={index}
@@ -48,7 +48,7 @@ export function ProductItemSkeleton({ sx, itemCount = 16, ...other }: ProductIte
 
 // ----------------------------------------------------------------------
 
-export function ProductDetailsSkeleton({ ...other }: Grid2Props) {
+export function PropertyDetailsSkeleton({ ...other }: Grid2Props) {
   return (
     <Grid container spacing={8} {...other}>
       <Grid size={{ xs: 12, md: 6, lg: 7 }}>

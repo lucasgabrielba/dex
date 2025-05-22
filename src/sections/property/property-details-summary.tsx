@@ -1,4 +1,4 @@
-import type { IProductItem } from 'src/types/product';
+import type { IPropertyItem } from 'src/types/property';
 import type { CheckoutContextValue } from 'src/types/checkout';
 
 import { useCallback } from 'react';
@@ -28,15 +28,15 @@ import { NumberInput } from 'src/components/number-input';
 // ----------------------------------------------------------------------
 
 type Props = {
-  product: IProductItem;
+  property: IPropertyItem;
   disableActions?: boolean;
   items?: CheckoutContextValue['state']['items'];
   onAddToCart?: CheckoutContextValue['onAddToCart'];
 };
 
-export function ProductDetailsSummary({
+export function PropertyDetailsSummary({
   items,
-  product,
+  property,
   onAddToCart,
   disableActions,
   ...other
@@ -58,9 +58,9 @@ export function ProductDetailsSummary({
     totalReviews,
     inventoryType,
     subDescription,
-  } = product;
+  } = property;
 
-  const existProduct = !!items?.length && items.map((item) => item.id).includes(id);
+  const existProperty = !!items?.length && items.map((item) => item.id).includes(id);
 
   const isMaxQuantity =
     !!items?.length &&
@@ -89,10 +89,10 @@ export function ProductDetailsSummary({
     console.info('DATA', JSON.stringify(data, null, 2));
 
     try {
-      if (!existProduct) {
+      if (!existProperty) {
         onAddToCart?.({ ...data, colors: [values.colors] });
       }
-      router.push(paths.product.checkout);
+      router.push(paths.property.checkout);
     } catch (error) {
       console.error(error);
     }

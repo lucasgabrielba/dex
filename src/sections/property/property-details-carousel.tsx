@@ -1,4 +1,4 @@
-import type { IProductItem } from 'src/types/product';
+import type { IPropertyItem } from 'src/types/property';
 
 import { useEffect } from 'react';
 
@@ -17,10 +17,10 @@ import {
 // ----------------------------------------------------------------------
 
 type Props = {
-  images?: IProductItem['images'];
+  images?: IPropertyItem['images'];
 };
 
-export function ProductDetailsCarousel({ images }: Props) {
+export function PropertyDetailsCarousel({ images }: Props) {
   const carousel = useCarousel({ thumbs: { slidesToShow: 'auto' } });
 
   const slides = images?.map((img) => ({ src: img })) || [];

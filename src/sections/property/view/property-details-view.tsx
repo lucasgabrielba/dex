@@ -1,4 +1,4 @@
-import type { IProductItem } from 'src/types/product';
+import type { IPropertyItem } from 'src/types/property';
 
 import { useTabs } from 'minimal-shared/hooks';
 import { varAlpha } from 'minimal-shared/utils';
@@ -15,18 +15,18 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
+import { PROPERTY_PUBLISH_OPTIONS } from 'src/_mock';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 import { EmptyContent } from 'src/components/empty-content';
 
-import { ProductDetailsSkeleton } from '../product-skeleton';
-import { ProductDetailsReview } from '../product-details-review';
-import { ProductDetailsSummary } from '../product-details-summary';
-import { ProductDetailsToolbar } from '../product-details-toolbar';
-import { ProductDetailsCarousel } from '../product-details-carousel';
-import { ProductDetailsDescription } from '../product-details-description';
+import { PropertyDetailsSkeleton } from '../property-skeleton';
+import { PropertyDetailsReview } from '../property-details-review';
+import { PropertyDetailsSummary } from '../property-details-summary';
+import { PropertyDetailsToolbar } from '../property-details-toolbar';
+import { PropertyDetailsCarousel } from '../property-details-carousel';
+import { PropertyDetailsDescription } from '../property-details-description';
 
 // ----------------------------------------------------------------------
 
@@ -51,21 +51,21 @@ const SUMMARY = [
 // ----------------------------------------------------------------------
 
 type Props = {
-  product?: IProductItem;
+  property?: IPropertyItem;
   loading?: boolean;
   error?: any;
 };
 
-export function ProductDetailsView({ product, error, loading }: Props) {
+export function PropertyDetailsView({ property, error, loading }: Props) {
   const tabs = useTabs('description');
 
   const [publish, setPublish] = useState('');
 
   useEffect(() => {
-    if (product) {
-      setPublish(product?.publish);
+    if (property) {
+      setPublish(property?.publish);
     }
-  }, [product]);
+  }, [property]);
 
   const handleChangePublish = useCallback((newValue: string) => {
     setPublish(newValue);
@@ -74,7 +74,7 @@ export function ProductDetailsView({ product, error, loading }: Props) {
   if (loading) {
     return (
       <DashboardContent sx={{ pt: 5 }}>
-        <ProductDetailsSkeleton />
+        <PropertyDetailsSkeleton />
       </DashboardContent>
     );
   }
@@ -84,11 +84,11 @@ export function ProductDetailsView({ product, error, loading }: Props) {
       <DashboardContent sx={{ pt: 5 }}>
         <EmptyContent
           filled
-          title="Product not found!"
+          title="Property not found!"
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.product.root}
+              href={paths.dashboard.property.root}
               startIcon={<Iconify width={16} icon="eva:arrow-ios-back-fill" />}
               sx={{ mt: 3 }}
             >
@@ -103,22 +103,22 @@ export function ProductDetailsView({ product, error, loading }: Props) {
 
   return (
     <DashboardContent>
-      <ProductDetailsToolbar
-        backHref={paths.dashboard.product.root}
-        liveHref={paths.product.details(`${product?.id}`)}
-        editHref={paths.dashboard.product.edit(`${product?.id}`)}
+      <PropertyDetailsToolbar
+        backHref={paths.dashboard.property.root}
+        liveHref={paths.property.details(`${property?.id}`)}
+        editHref={paths.dashboard.property.edit(`${property?.id}`)}
         publish={publish}
         onChangePublish={handleChangePublish}
-        publishOptions={PRODUCT_PUBLISH_OPTIONS}
+        publishOptions={PROPERTY_PUBLISH_OPTIONS}
       />
 
       <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
         <Grid size={{ xs: 12, md: 6, lg: 7 }}>
-          <ProductDetailsCarousel images={product?.images ?? []} />
+          <PropertyDetailsCarousel images={property?.images ?? []} />
         </Grid>
 
         <Grid size={{ xs: 12, md: 6, lg: 5 }}>
-          {product && <ProductDetailsSummary disableActions product={product} />}
+          {property && <PropertyDetailsSummary disableActions property={property} />}
         </Grid>
       </Grid>
 
@@ -158,22 +158,22 @@ export function ProductDetailsView({ product, error, loading }: Props) {
         >
           {[
             { value: 'description', label: 'Description' },
-            { value: 'reviews', label: `Reviews (${product?.reviews.length})` },
+            { value: 'reviews', label: `Reviews (${property?.reviews.length})` },
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label} />
           ))}
         </Tabs>
 
         {tabs.value === 'description' && (
-          <ProductDetailsDescription description={product?.description ?? ''} />
+          <PropertyDetailsDescription description={property?.description ?? ''} />
         )}
 
         {tabs.value === 'reviews' && (
-          <ProductDetailsReview
-            ratings={product?.ratings ?? []}
-            reviews={product?.reviews ?? []}
-            totalRatings={product?.totalRatings ?? 0}
-            totalReviews={product?.totalReviews ?? 0}
+          <PropertyDetailsReview
+            ratings={property?.ratings ?? []}
+            reviews={property?.reviews ?? []}
+            totalRatings={property?.totalRatings ?? 0}
+            totalReviews={property?.totalReviews ?? 0}
           />
         )}
       </Card>
