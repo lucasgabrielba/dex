@@ -1,1 +1,1 @@
-export const JWT_STORAGE_KEY = 'jwt_access_token';
+export const SANCTUM_TOKEN_KEY = 'sanctum_access_token';

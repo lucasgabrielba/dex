@@ -67,25 +67,43 @@ export function CenteredSignInView() {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setError('');
-      // Primeiro fazemos a autenticação
+
+      // Faz o login
       await signInWithPassword({ email: data.email, password: data.password });
 
-      // Depois atualizamos o contexto de autenticação
+      // Atualiza o contexto de autenticação
       if (checkUserSession) {
         await checkUserSession();
       }
 
-      // E finalmente redirecionamos
+      // Redireciona para a página de destino
       window.location.href = returnTo;
-    } catch (err) {
-      console.error(err);
-      setError('Credenciais inválidas. Por favor, verifique seu email e senha.');
+    } catch (err: any) {
+      console.error('Erro no login:', err);
+
+      // Trata os diferentes tipos de erro
+      let errorMessage = 'Erro interno do servidor. Tente novamente.';
+
+      if (err.message === 'Email ainda não verificado.') {
+        errorMessage = 'Email ainda não verificado. Verifique sua caixa de entrada.';
+      } else if (err.message === 'Credenciais inválidas.') {
+        errorMessage = 'Email ou senha incorretos. Verifique suas credenciais.';
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
     }
   });
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      <Field.Text name="email" label="Email" slotProps={{ inputLabel: { shrink: true } }} />
+      <Field.Text
+        name="email"
+        label="Email"
+        placeholder="Digite seu email"
+        slotProps={{ inputLabel: { shrink: true } }}
+      />
 
       <Box sx={{ gap: 1.5, display: 'flex', flexDirection: 'column' }}>
         <Link
@@ -101,7 +119,7 @@ export function CenteredSignInView() {
         <Field.Text
           name="password"
           label="Senha"
-          placeholder="Insira sua senha"
+          placeholder="Digite sua senha"
           type={showPassword.value ? 'text' : 'password'}
           slotProps={{
             inputLabel: { shrink: true },
@@ -121,7 +139,18 @@ export function CenteredSignInView() {
       </Box>
 
       {error && (
-        <Box sx={{ color: 'error.main', textAlign: 'center', mt: 1, mb: 1 }}>
+        <Box
+          sx={{
+            color: 'error.main',
+            textAlign: 'center',
+            mt: 1,
+            mb: 1,
+            p: 2,
+            bgcolor: 'error.lighter',
+            borderRadius: 1,
+            typography: 'body2'
+          }}
+        >
           {error}
         </Box>
       )}
@@ -159,14 +188,6 @@ export function CenteredSignInView() {
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
-
-      {/* <FormDivider />
-
-      <FormSocials
-        signInWithGoogle={() => { }}
-        singInWithGithub={() => { }}
-        signInWithTwitter={() => { }}
-      /> */}
     </>
   );
 }

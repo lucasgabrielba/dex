@@ -3,8 +3,8 @@ import { useMemo, useEffect, useCallback } from 'react';
 
 import axios, { endpoints } from 'src/lib/axios';
 
-import { JWT_STORAGE_KEY } from './constant';
 import { AuthContext } from '../auth-context';
+import { SANCTUM_TOKEN_KEY } from './constant';
 import { setSession, isValidToken } from './utils';
 
 import type { AuthState } from '../../types';
@@ -26,11 +26,12 @@ export function AuthProvider({ children }: Props) {
 
   const checkUserSession = useCallback(async () => {
     try {
-      const accessToken = sessionStorage.getItem(JWT_STORAGE_KEY);
+      const accessToken = sessionStorage.getItem(SANCTUM_TOKEN_KEY);
 
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
+        // Busca os dados do usuário usando o token na rota get-me
         const res = await axios.get(endpoints.auth.me);
 
         const { user } = res.data;
@@ -40,7 +41,12 @@ export function AuthProvider({ children }: Props) {
         setState({ user: null, loading: false });
       }
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao verificar sessão:', error);
+
+      // Se o token for inválido, remove da sessão
+      sessionStorage.removeItem(SANCTUM_TOKEN_KEY);
+      delete axios.defaults.headers.common.Authorization;
+
       setState({ user: null, loading: false });
     }
   }, [setState]);
@@ -58,7 +64,14 @@ export function AuthProvider({ children }: Props) {
 
   const memoizedValue = useMemo(
     () => ({
-      user: state.user ? { ...state.user, role: state.user?.role ?? 'admin' } : null,
+      user: state.user ? {
+        ...state.user,
+        role: state.user?.role ?? 'admin',
+        displayName: `${state.user?.name} ${state.user?.last_name}`,
+        id: state.user?.id,
+        email: state.user?.email,
+        phoneNumber: state.user?.phone,
+      } : null,
       checkUserSession,
       loading: status === 'loading',
       authenticated: status === 'authenticated',
