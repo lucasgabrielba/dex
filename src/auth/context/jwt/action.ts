@@ -17,6 +17,18 @@ export type SignUpParams = {
   lastName: string;
 };
 
+// Função auxiliar para buscar CSRF token
+const getCsrfToken = async (): Promise<void> => {
+  try {
+    await axios.get('/api/sanctum/csrf-cookie', {
+      withCredentials: true,
+    });
+  } catch (error) {
+    console.error('Erro ao buscar CSRF token:', error);
+    throw error;
+  }
+};
+
 // ----------------------------------------------------------------------
 
 /** **************************************
@@ -24,14 +36,14 @@ export type SignUpParams = {
  *************************************** */
 export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
   try {
-    // Primeiro busca o CSRF token usando axios direto para evitar interceptor
-    await axios.get(`${axios.defaults.baseURL}/api/sanctum/csrf-cookie`, {
-      withCredentials: true,
-    });
+    // Busca o CSRF token
+    await getCsrfToken();
 
     const params = { email, password };
 
-    const res = await axios.post(endpoints.auth.signIn, params);
+    const res = await axios.post(endpoints.auth.signIn, params, {
+      withCredentials: true,
+    });
 
     // Verifica se houve erro na resposta
     if (res.data.error) {
@@ -83,12 +95,12 @@ export const signUp = async ({
   };
 
   try {
-    // Primeiro busca o CSRF token usando axios direto
-    await axios.get(`${axios.defaults.baseURL}/api/sanctum/csrf-cookie`, {
+    // Busca o CSRF token
+    await getCsrfToken();
+
+    const res = await axios.post(endpoints.auth.signUp, params, {
       withCredentials: true,
     });
-
-    const res = await axios.post(endpoints.auth.signUp, params);
 
     const { token } = res.data;
 

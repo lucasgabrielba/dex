@@ -12,16 +12,24 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest', // Importante para Laravel identificar como AJAX
   },
 });
 
 // Interceptor para requisições
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Adiciona o token CSRF se disponível
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    if (csrfToken) {
-      config.headers['X-CSRF-TOKEN'] = csrfToken;
+    // Para requisições POST, PUT, PATCH, DELETE, adiciona headers CSRF
+    if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase() || '')) {
+      // Tenta pegar o token CSRF do cookie XSRF-TOKEN (padrão do Laravel)
+      const csrfToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('XSRF-TOKEN='))
+        ?.split('=')[1];
+
+      if (csrfToken) {
+        config.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken);
+      }
     }
 
     return config;
@@ -35,8 +43,9 @@ axiosInstance.interceptors.response.use(
   (error) => {
     // Se receber 419 (CSRF token mismatch), tenta renovar o token
     if (error.response?.status === 419) {
-      console.warn('CSRF token expirado, renovando...');
-      // Você pode implementar uma lógica para renovar o token aqui
+      console.warn('CSRF token expirado, tentando renovar...');
+      // Remove token antigo e força nova busca
+      document.cookie = 'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     }
 
     return Promise.reject((error.response && error.response.data) || 'Algo deu errado!');
