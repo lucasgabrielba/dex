@@ -13,7 +13,7 @@ import { useGetContacts, useGetConversation, useGetConversations } from 'src/act
 
 import { EmptyContent } from 'src/components/empty-content';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useAuthContext } from 'src/auth/hooks';
 
 import { ChatNav } from '../chat-nav';
 import { ChatLayout } from '../layout';
@@ -29,7 +29,7 @@ import { useCollapseNav } from '../hooks/use-collapse-nav';
 export function ChatView() {
   const router = useRouter();
 
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
   const { contacts } = useGetContacts();
 
@@ -59,8 +59,8 @@ export function ChatView() {
 
   const filteredParticipants: IChatParticipant[] = conversation
     ? conversation.participants.filter(
-        (participant: IChatParticipant) => participant.id !== `${user?.id}`
-      )
+      (participant: IChatParticipant) => participant.id !== `${user?.id}`
+    )
     : [];
 
   const hasConversation = selectedConversationId && conversation;

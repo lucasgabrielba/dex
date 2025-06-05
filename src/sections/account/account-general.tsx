@@ -16,7 +16,7 @@ import { fData } from 'src/utils/format-number';
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
-import { useMockedUser } from 'src/auth/hooks';
+import { useAuthContext } from 'src/auth/hooks';
 
 // Schema de validação
 export type UpdateUserSchemaType = zod.infer<typeof UpdateUserSchema>;
@@ -45,7 +45,7 @@ export const UpdateUserSchema = zod.object({
 
 // Componente
 export function AccountGeneral() {
-  const { user } = useMockedUser();
+  const { user } = useAuthContext();
 
   const currentUser: UpdateUserSchemaType = {
     displayName: user?.displayName || 'Jayvion Simon',
