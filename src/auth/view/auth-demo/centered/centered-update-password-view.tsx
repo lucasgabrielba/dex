@@ -1,9 +1,8 @@
 import { z as zod } from 'zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
-import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'src/routes/hooks';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -11,15 +10,16 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
+import { useSearchParams } from 'src/routes/hooks';
 
 import { SentIcon } from 'src/assets/icons';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
+import { resetPassword } from '../../../context/jwt';
 import { FormHead } from '../../../components/form-head';
 import { FormReturnLink } from '../../../components/form-return-link';
-import { resetPassword } from '../../../context/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -27,10 +27,6 @@ export type UpdatePasswordSchemaType = zod.infer<typeof UpdatePasswordSchema>;
 
 export const UpdatePasswordSchema = zod
   .object({
-    email: zod
-      .string()
-      .min(1, { message: 'Email é obrigatório!' })
-      .email({ message: 'Email deve ser válido!' }),
     password: zod
       .string()
       .min(1, { message: 'Senha é obrigatória!' })
@@ -55,7 +51,6 @@ export function CenteredUpdatePasswordView() {
   const [error, setError] = useState('');
 
   const defaultValues: UpdatePasswordSchemaType = {
-    email: emailFromQuery,
     password: '',
     confirmPassword: '',
   };
@@ -73,7 +68,7 @@ export function CenteredUpdatePasswordView() {
     try {
       setError('');
       await resetPassword({
-        email: data.email,
+        email: emailFromQuery,
         token,
         password: data.password,
         passwordConfirmation: data.confirmPassword,
@@ -87,12 +82,6 @@ export function CenteredUpdatePasswordView() {
 
   const renderForm = () => (
     <Box sx={{ gap: 3, display: 'flex', flexDirection: 'column' }}>
-      <Field.Text
-        name="email"
-        label="Email"
-        placeholder="example@gmail.com"
-        slotProps={{ inputLabel: { shrink: true } }}
-      />
 
       {error && (
         <Box
