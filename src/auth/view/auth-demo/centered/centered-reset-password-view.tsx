@@ -12,9 +12,9 @@ import { PasswordIcon } from 'src/assets/icons';
 
 import { Form, Field } from 'src/components/hook-form';
 
+import { forgotPassword } from '../../../context/jwt';
 import { FormHead } from '../../../components/form-head';
 import { FormReturnLink } from '../../../components/form-return-link';
-import { forgotPassword } from '../../../context/jwt';
 
 // ----------------------------------------------------------------------
 
