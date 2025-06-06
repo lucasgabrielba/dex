@@ -80,6 +80,7 @@ export const endpoints = {
     signIn: '/api/auth/login', // Endpoint do Laravel
     signUp: '/api/auth/sign-up'
   },
+  onboarding: '/api/onboarding',
   mail: { list: '/api/mail/list', details: '/api/mail/details', labels: '/api/mail/labels' },
   post: {
     list: '/api/post/list',
