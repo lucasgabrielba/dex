@@ -13,6 +13,10 @@ import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { Form, Field } from 'src/components/hook-form';
+import { useRouter } from 'src/routes/hooks';
+import { endpoints } from 'src/lib/axios';
+import axios from 'src/lib/axios';
+import { useAuthContext } from 'src/auth/hooks';
 
 import { OnboardingSchema, type OnboardingSchemaType } from './onboarding-schema';
 
@@ -144,11 +148,40 @@ export function OnboardingForm() {
     }
   };
 
+  const router = useRouter();
+  const { checkUserSession, user } = useAuthContext();
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('Dados completos do formulário:', data);
-      alert('Formulário enviado com sucesso!');
+      const payload = {
+        organizationName: data.companyName,
+        corporateName: data.razaoSocial,
+        tradeName: data.nomeFantasia,
+        email: user?.email || '',
+        document: data.cnpj.replace(/\D/g, ''),
+        phone: data.telefone.replace(/\D/g, ''),
+        cep: data.cep.replace(/\D/g, ''),
+        street: data.rua,
+        number: data.numero,
+        district: data.bairro,
+        city: data.cidade,
+        state: data.estado,
+        services: {
+          propertySales: data.services.vendaImoveis,
+          propertyRentals: data.services.aluguelImoveis,
+          propertyManagement: data.services.administracaoImoveis,
+        },
+        teamSize: data.teamSize,
+        status: 'Ativo',
+      };
+
+      await axios.post(endpoints.onboarding, payload);
+
+      if (checkUserSession) {
+        await checkUserSession();
+      }
+
+      router.push('/dashboard');
     } catch (error) {
       console.error(error);
     }
