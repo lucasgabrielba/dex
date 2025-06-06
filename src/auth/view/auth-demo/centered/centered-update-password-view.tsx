@@ -1,7 +1,9 @@
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSearchParams } from 'src/routes/hooks';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -16,8 +18,8 @@ import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 
 import { FormHead } from '../../../components/form-head';
-import { FormResendCode } from '../../../components/form-resend-code';
 import { FormReturnLink } from '../../../components/form-return-link';
+import { resetPassword } from '../../../context/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -25,10 +27,6 @@ export type UpdatePasswordSchemaType = zod.infer<typeof UpdatePasswordSchema>;
 
 export const UpdatePasswordSchema = zod
   .object({
-    code: zod
-      .string()
-      .min(1, { message: 'O código é obrigatório!' })
-      .min(6, { message: 'O código deve ter 6 caracteres.' }),
     email: zod
       .string()
       .min(1, { message: 'Email é obrigatório!' })
@@ -48,10 +46,16 @@ export const UpdatePasswordSchema = zod
 
 export function CenteredUpdatePasswordView() {
   const showPassword = useBoolean();
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get('token') || '';
+  const emailFromQuery = searchParams.get('email') || '';
+
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const defaultValues: UpdatePasswordSchemaType = {
-    code: '',
-    email: '',
+    email: emailFromQuery,
     password: '',
     confirmPassword: '',
   };
@@ -67,10 +71,17 @@ export function CenteredUpdatePasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
+      setError('');
+      await resetPassword({
+        email: data.email,
+        token,
+        password: data.password,
+        passwordConfirmation: data.confirmPassword,
+      });
+      setSuccess(true);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Erro ao atualizar senha.');
     }
   });
 
@@ -83,7 +94,40 @@ export function CenteredUpdatePasswordView() {
         slotProps={{ inputLabel: { shrink: true } }}
       />
 
-      <Field.Code name="code" />
+      {error && (
+        <Box
+          sx={{
+            color: 'error.main',
+            textAlign: 'center',
+            mt: 1,
+            mb: 1,
+            p: 2,
+            bgcolor: 'error.lighter',
+            borderRadius: 1,
+            typography: 'body2',
+          }}
+        >
+          {error}
+        </Box>
+      )}
+
+      {success && (
+        <Box
+          sx={{
+            color: 'success.main',
+            textAlign: 'center',
+            mt: 1,
+            mb: 1,
+            p: 2,
+            bgcolor: 'success.lighter',
+            borderRadius: 1,
+            typography: 'body2',
+          }}
+        >
+          Senha atualizada com sucesso!
+        </Box>
+      )}
+
 
       <Field.Text
         name="password"
@@ -139,15 +183,14 @@ export function CenteredUpdatePasswordView() {
     <>
       <FormHead
         icon={<SentIcon />}
-        title="Solicitação enviada com sucesso!"
-        description={`Enviamos um código de verificação de 6 dígitos para o email ${defaultValues.email}. \nInsira-o no campo abaixo para confirmar sua conta.`}
+        title="Atualize sua senha"
+        description="Defina uma nova senha para acessar sua conta."
       />
 
       <Form methods={methods} onSubmit={onSubmit}>
         {renderForm()}
       </Form>
 
-      <FormResendCode onResendCode={() => { }} value={0} disabled={false} />
 
       <FormReturnLink href={paths.auth.signIn} />
     </>

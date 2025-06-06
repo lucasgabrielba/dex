@@ -1,4 +1,5 @@
 import { z as zod } from 'zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -13,6 +14,7 @@ import { Form, Field } from 'src/components/hook-form';
 
 import { FormHead } from '../../../components/form-head';
 import { FormReturnLink } from '../../../components/form-return-link';
+import { forgotPassword } from '../../../context/jwt';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,9 @@ export const ResetPasswordSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function CenteredResetPasswordView() {
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
   const defaultValues: ResetPasswordSchemaType = {
     email: '',
   };
@@ -44,10 +49,12 @@ export function CenteredResetPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
+      setError('');
+      await forgotPassword(data.email);
+      setSuccess(true);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Erro ao solicitar redefinição de senha.');
     }
   });
 
@@ -60,6 +67,40 @@ export function CenteredResetPasswordView() {
         autoFocus
         slotProps={{ inputLabel: { shrink: true } }}
       />
+
+      {error && (
+        <Box
+          sx={{
+            color: 'error.main',
+            textAlign: 'center',
+            mt: 1,
+            mb: 1,
+            p: 2,
+            bgcolor: 'error.lighter',
+            borderRadius: 1,
+            typography: 'body2',
+          }}
+        >
+          {error}
+        </Box>
+      )}
+
+      {success && (
+        <Box
+          sx={{
+            color: 'success.main',
+            textAlign: 'center',
+            mt: 1,
+            mb: 1,
+            p: 2,
+            bgcolor: 'success.lighter',
+            borderRadius: 1,
+            typography: 'body2',
+          }}
+        >
+          Verifique seu email e siga as instruções para redefinir a senha.
+        </Box>
+      )}
 
       <LoadingButton
         fullWidth
