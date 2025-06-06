@@ -136,3 +136,66 @@ export const signOut = async (): Promise<void> => {
     throw error;
   }
 };
+
+/** **************************************
+ * Forgot password
+ *************************************** */
+export const forgotPassword = async (email: string): Promise<void> => {
+  try {
+    await getCsrfToken();
+
+    await axios.post('/api/auth/forgot-password', { email });
+  } catch (error: any) {
+    console.error('Erro ao solicitar redefinição de senha:', error);
+
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    }
+
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw error;
+  }
+};
+
+/** **************************************
+ * Reset password
+ *************************************** */
+export type ResetPasswordParams = {
+  email: string;
+  token: string;
+  password: string;
+  passwordConfirmation: string;
+};
+
+export const resetPassword = async ({
+  email,
+  token,
+  password,
+  passwordConfirmation,
+}: ResetPasswordParams): Promise<void> => {
+  try {
+    await getCsrfToken();
+
+    await axios.post('/api/auth/reset-password', {
+      email,
+      token,
+      password,
+      password_confirmation: passwordConfirmation,
+    });
+  } catch (error: any) {
+    console.error('Erro ao redefinir senha:', error);
+
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    }
+
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+
+    throw error;
+  }
+};
