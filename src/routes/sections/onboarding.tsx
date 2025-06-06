@@ -7,6 +7,8 @@ import { OnboardingLayout } from 'src/layouts/onboarding';
 
 import { SplashScreen } from 'src/components/loading-screen';
 
+import { AuthGuard, OnboardingGuard } from 'src/auth/guard';
+
 const Onboarding = {
   OnboardingMultiSteps: lazy(() => import('src/pages/onboarding')),
 };
@@ -29,9 +31,13 @@ export const onboardingRoutes: RouteObject[] = [
   {
     path: 'onboarding',
     element: (
-      <Suspense fallback={<SplashScreen />}>
-        <Outlet />
-      </Suspense>
+      <AuthGuard>
+        <OnboardingGuard>
+          <Suspense fallback={<SplashScreen />}>
+            <Outlet />
+          </Suspense>
+        </OnboardingGuard>
+      </AuthGuard>
     ),
     children: [onboarding],
   },
