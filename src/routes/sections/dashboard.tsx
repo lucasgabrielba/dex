@@ -10,7 +10,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 
 import { AccountLayout } from 'src/sections/account/account-layout';
 
-import { AuthGuard } from 'src/auth/guard';
+import { AuthGuard, OnboardingGuard } from 'src/auth/guard';
 
 import { usePathname } from '../hooks';
 
@@ -120,7 +120,13 @@ const accountLayout = () => (
 export const dashboardRoutes: RouteObject[] = [
   {
     path: 'dashboard',
-    element: CONFIG.auth.skip ? dashboardLayout() : <AuthGuard>{dashboardLayout()}</AuthGuard>,
+    element: CONFIG.auth.skip
+      ? dashboardLayout()
+      : (
+          <AuthGuard>
+            <OnboardingGuard>{dashboardLayout()}</OnboardingGuard>
+          </AuthGuard>
+        ),
     children: [
       { index: true, element: <IndexPage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
