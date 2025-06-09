@@ -37,15 +37,24 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+async function refreshCsrfToken() {
+  try {
+    await axiosInstance.get('/api/sanctum/csrf-cookie');
+  } catch (refreshError) {
+    console.error('Falha ao renovar CSRF token:', refreshError);
+  }
+}
+
 // Interceptor para respostas
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    // Se receber 419 (CSRF token mismatch), tenta renovar o token
-    if (error.response?.status === 419) {
+  async (error) => {
+    // Se receber 419 (CSRF token mismatch), tenta renovar o token e refazer a requisição uma vez
+    if (error.response?.status === 419 && !error.config.__isRetryRequest) {
       console.warn('CSRF token expirado, tentando renovar...');
-      // Remove token antigo e força nova busca
-      document.cookie = 'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      await refreshCsrfToken();
+      error.config.__isRetryRequest = true;
+      return axiosInstance(error.config);
     }
 
     return Promise.reject((error.response && error.response.data) || 'Algo deu errado!');
