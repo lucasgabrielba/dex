@@ -27,7 +27,7 @@ export function OnboardingGuard({ children }: OnboardingGuardProps) {
     }
 
     // If user is logged in but has no organization, force onboarding
-    if (user && !user.current_organization_id) {
+    if (user && user.current_organization_id == null) {
       if (pathname !== paths.onboarding.root) {
         router.replace(paths.onboarding.root);
       } else {
@@ -37,7 +37,7 @@ export function OnboardingGuard({ children }: OnboardingGuardProps) {
     }
 
     // If user has organization but tries to access onboarding, redirect to dashboard
-    if (user && user.current_organization_id && pathname.startsWith(paths.onboarding.root)) {
+    if (user && user.current_organization_id != null && pathname.startsWith(paths.onboarding.root)) {
       router.replace(paths.dashboard.root);
       return;
     }
