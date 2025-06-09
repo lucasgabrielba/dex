@@ -18,14 +18,27 @@ const axiosInstance = axios.create({
 
 // Interceptor para requisições
 axiosInstance.interceptors.request.use(
-  (config) => {
+  async (config) => {
     // Para requisições POST, PUT, PATCH, DELETE, adiciona headers CSRF
     if (['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase() || '')) {
       // Tenta pegar o token CSRF do cookie XSRF-TOKEN (padrão do Laravel)
-      const csrfToken = document.cookie
+      let csrfToken = document.cookie
         .split('; ')
-        .find(row => row.startsWith('XSRF-TOKEN='))
+        .find((row) => row.startsWith('XSRF-TOKEN='))
         ?.split('=')[1];
+
+      // Se não existir token, tenta buscar um novo
+      if (!csrfToken) {
+        try {
+          await axiosInstance.get('/api/sanctum/csrf-cookie');
+          csrfToken = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+        } catch (error) {
+          console.error('Falha ao buscar CSRF token:', error);
+        }
+      }
 
       if (csrfToken) {
         config.headers['X-XSRF-TOKEN'] = decodeURIComponent(csrfToken);
