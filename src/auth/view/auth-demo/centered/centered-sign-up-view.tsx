@@ -11,16 +11,15 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
 import { useRouter } from 'src/routes/hooks';
-
-import { useAuthContext } from 'src/auth/hooks';
-import { signUp } from 'src/auth/context/jwt';
+import { RouterLink } from 'src/routes/components';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
 import { AnimateLogoRotate } from 'src/components/animate';
 
+import { signUp } from 'src/auth/context/jwt';
+import { useAuthContext } from 'src/auth/hooks';
 import { SignUpTerms } from 'src/auth/components/sign-up-terms';
 
 import { FormHead } from '../../../components/form-head';

@@ -12,10 +12,12 @@ import InfoIcon from '@mui/icons-material/Info';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { Form, Field } from 'src/components/hook-form';
 import { useRouter } from 'src/routes/hooks';
-import { endpoints } from 'src/lib/axios';
-import axios from 'src/lib/axios';
+
+import axios, { endpoints } from 'src/lib/axios';
+
+import { Form, Field } from 'src/components/hook-form';
+
 import { useAuthContext } from 'src/auth/hooks';
 
 import { OnboardingSchema, type OnboardingSchemaType } from './onboarding-schema';
