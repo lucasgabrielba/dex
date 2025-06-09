@@ -34,9 +34,11 @@ export function AuthProvider({ children }: Props) {
         // Busca os dados do usuário usando o token na rota get-me
         const res = await axios.get(endpoints.auth.me);
 
-        const { user } = res.data;
+        // Alguns backends podem retornar os dados do usuário diretamente
+        // enquanto outros utilizam a chave "user". Suportamos ambos.
+        const userData = res.data.user ?? res.data;
 
-        setState({ user: { ...user, accessToken }, loading: false });
+        setState({ user: { ...userData, accessToken }, loading: false });
       } else {
         setState({ user: null, loading: false });
       }
