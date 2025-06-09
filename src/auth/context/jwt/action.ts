@@ -1,7 +1,6 @@
 import axios, { endpoints } from 'src/lib/axios';
 
 import { setSession } from './utils';
-import { SANCTUM_TOKEN_KEY } from './constant';
 
 // ----------------------------------------------------------------------
 
@@ -11,10 +10,13 @@ export type SignInParams = {
 };
 
 export type SignUpParams = {
-  email: string;
-  password: string;
-  firstName: string;
+  name: string;
   lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  passwordConfirmation: string;
+  role?: string;
 };
 
 // Função auxiliar para buscar CSRF token
@@ -82,16 +84,22 @@ export const signInWithPassword = async ({ email, password }: SignInParams): Pro
  * Sign up
  *************************************** */
 export const signUp = async ({
-  email,
-  password,
-  firstName,
+  name,
   lastName,
-}: SignUpParams): Promise<void> => {
+  email,
+  phone,
+  password,
+  passwordConfirmation,
+  role = 'admin',
+}: SignUpParams): Promise<{ user: any; token: string }> => {
   const params = {
+    name,
+    last_name: lastName,
     email,
+    phone,
     password,
-    firstName,
-    lastName,
+    password_confirmation: passwordConfirmation,
+    role,
   };
 
   try {
@@ -102,13 +110,15 @@ export const signUp = async ({
       withCredentials: true,
     });
 
-    const { token } = res.data;
+    const { token, user } = res.data;
 
-    if (!token) {
-      throw new Error('Token de acesso não encontrado na resposta');
+    if (!token || !user) {
+      throw new Error('Token ou usuário não encontrado na resposta');
     }
 
-    sessionStorage.setItem(SANCTUM_TOKEN_KEY, token);
+    setSession(token);
+
+    return { user, token };
   } catch (error: any) {
     console.error('Erro durante o cadastro:', error);
 
