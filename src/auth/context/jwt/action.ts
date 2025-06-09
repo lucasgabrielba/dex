@@ -19,17 +19,6 @@ export type SignUpParams = {
   role?: string;
 };
 
-// Função auxiliar para buscar CSRF token
-const getCsrfToken = async (): Promise<void> => {
-  try {
-    await axios.get('/api/sanctum/csrf-cookie', {
-      withCredentials: true,
-    });
-  } catch (error) {
-    console.error('Erro ao buscar CSRF token:', error);
-    throw error;
-  }
-};
 
 // ----------------------------------------------------------------------
 
@@ -38,14 +27,9 @@ const getCsrfToken = async (): Promise<void> => {
  *************************************** */
 export const signInWithPassword = async ({ email, password }: SignInParams): Promise<void> => {
   try {
-    // Busca o CSRF token
-    await getCsrfToken();
-
     const params = { email, password };
 
-    const res = await axios.post(endpoints.auth.signIn, params, {
-      withCredentials: true,
-    });
+    const res = await axios.post(endpoints.auth.signIn, params);
 
     // Verifica se houve erro na resposta
     if (res.data.error) {
@@ -103,12 +87,7 @@ export const signUp = async ({
   };
 
   try {
-    // Busca o CSRF token
-    await getCsrfToken();
-
-    const res = await axios.post(endpoints.auth.signUp, params, {
-      withCredentials: true,
-    });
+    const res = await axios.post(endpoints.auth.signUp, params);
 
     const { token, user } = res.data;
 
@@ -152,8 +131,6 @@ export const signOut = async (): Promise<void> => {
  *************************************** */
 export const forgotPassword = async (email: string): Promise<void> => {
   try {
-    await getCsrfToken();
-
     await axios.post('/api/auth/forgot-password', { email });
   } catch (error: any) {
     console.error('Erro ao solicitar redefinição de senha:', error);
@@ -187,8 +164,6 @@ export const resetPassword = async ({
   passwordConfirmation,
 }: ResetPasswordParams): Promise<void> => {
   try {
-    await getCsrfToken();
-
     await axios.post('/api/auth/reset-password', {
       email,
       token,
