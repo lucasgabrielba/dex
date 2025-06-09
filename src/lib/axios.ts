@@ -30,7 +30,7 @@ axiosInstance.interceptors.request.use(
       // Se não existir token, tenta buscar um novo
       if (!csrfToken) {
         try {
-          await axiosInstance.get('/api/sanctum/csrf-cookie');
+          await axiosInstance.get('/sanctum/csrf-cookie');
           csrfToken = document.cookie
             .split('; ')
             .find((row) => row.startsWith('XSRF-TOKEN='))
@@ -52,7 +52,7 @@ axiosInstance.interceptors.request.use(
 
 async function refreshCsrfToken() {
   try {
-    await axiosInstance.get('/api/sanctum/csrf-cookie');
+    await axiosInstance.get('/sanctum/csrf-cookie');
   } catch (refreshError) {
     console.error('Falha ao renovar CSRF token:', refreshError);
   }

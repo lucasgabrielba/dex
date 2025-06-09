@@ -22,7 +22,7 @@ export type SignUpParams = {
 // Função auxiliar para buscar CSRF token
 const getCsrfToken = async (): Promise<void> => {
   try {
-    await axios.get('/api/sanctum/csrf-cookie', {
+    await axios.get('/sanctum/csrf-cookie', {
       withCredentials: true,
     });
   } catch (error) {
