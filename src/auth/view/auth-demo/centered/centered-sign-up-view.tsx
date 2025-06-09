@@ -1,4 +1,5 @@
 import { z as zod } from 'zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useBoolean } from 'minimal-shared/hooks';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +12,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
+import { useRouter } from 'src/routes/hooks';
+
+import { useAuthContext } from 'src/auth/hooks';
+import { signUp } from 'src/auth/context/jwt';
 
 import { Iconify } from 'src/components/iconify';
 import { Form, Field } from 'src/components/hook-form';
@@ -49,8 +54,11 @@ export const SignUpSchema = zod.object({
 // ----------------------------------------------------------------------
 
 export function CenteredSignUpView() {
+  const router = useRouter();
+  const { checkUserSession } = useAuthContext();
   const showPassword = useBoolean();
   const showConfirmPassword = useBoolean();
+  const [error, setError] = useState('');
 
   const defaultValues: SignUpSchemaType = {
     firstName: '',
@@ -73,10 +81,26 @@ export function CenteredSignUpView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
+      setError('');
+
+      await signUp({
+        name: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        passwordConfirmation: data.confirmPassword,
+        role: 'admin',
+      });
+
+      if (checkUserSession) {
+        await checkUserSession();
+      }
+
+      router.push(paths.onboarding.root);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Erro ao criar conta');
     }
   });
 
@@ -154,6 +178,23 @@ export function CenteredSignUpView() {
           },
         }}
       />
+
+      {error && (
+        <Box
+          sx={{
+            color: 'error.main',
+            textAlign: 'center',
+            mt: 1,
+            mb: 1,
+            p: 2,
+            bgcolor: 'error.lighter',
+            borderRadius: 1,
+            typography: 'body2'
+          }}
+        >
+          {error}
+        </Box>
+      )}
 
       <LoadingButton
         fullWidth

@@ -87,7 +87,7 @@ export const endpoints = {
   auth: {
     me: '/api/auth/get-me', // Sua rota para buscar dados do usuário
     signIn: '/api/auth/login', // Endpoint do Laravel
-    signUp: '/api/auth/sign-up'
+    signUp: '/api/auth/register'
   },
   onboarding: '/api/onboarding',
   mail: { list: '/api/mail/list', details: '/api/mail/details', labels: '/api/mail/labels' },
