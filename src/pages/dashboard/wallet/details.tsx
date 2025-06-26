@@ -1,23 +1,21 @@
 import { Helmet } from 'react-helmet-async';
 
-import { HomeView } from 'src/sections/home/view';
+import { CONFIG } from 'src/global-config';
+
+import { WalletDetailsView } from 'src/sections/wallet/view/wallet-details-view';
 
 // ----------------------------------------------------------------------
 
-const metadata = {
-  title: 'Duplicate',
-  description: 'Potencialize seu negócioimobiliário'
-};
+const metadata = { title: `Carteira da imobiliária | Dashboard - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
     <>
       <Helmet>
         <title> {metadata.title}</title>
-        <meta name="description" content={metadata.description} />
       </Helmet>
 
-      <HomeView />
+      <WalletDetailsView />
     </>
   );
 }

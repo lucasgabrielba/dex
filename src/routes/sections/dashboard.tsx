@@ -24,11 +24,8 @@ const OverviewBankingPage = lazy(() => import('src/pages/dashboard/banking'));
 const OverviewBookingPage = lazy(() => import('src/pages/dashboard/booking'));
 const OverviewFilePage = lazy(() => import('src/pages/dashboard/file'));
 const OverviewCoursePage = lazy(() => import('src/pages/dashboard/course'));
-// Product
-const ProductDetailsPage = lazy(() => import('src/pages/dashboard/product/details'));
-const ProductListPage = lazy(() => import('src/pages/dashboard/product/list'));
-const ProductCreatePage = lazy(() => import('src/pages/dashboard/product/new'));
-const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
+// Wallet
+const WalletRealEstatePage = lazy(() => import('src/pages/dashboard/wallet/details'));
 // Order
 const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
 const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
@@ -123,10 +120,10 @@ export const dashboardRoutes: RouteObject[] = [
     element: CONFIG.auth.skip
       ? dashboardLayout()
       : (
-          <AuthGuard>
-            <OnboardingGuard>{dashboardLayout()}</OnboardingGuard>
-          </AuthGuard>
-        ),
+        <AuthGuard>
+          <OnboardingGuard>{dashboardLayout()}</OnboardingGuard>
+        </AuthGuard>
+      ),
     children: [
       { index: true, element: <IndexPage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
@@ -179,13 +176,9 @@ export const dashboardRoutes: RouteObject[] = [
         ],
       },
       {
-        path: 'product',
+        path: 'wallet',
         children: [
-          { index: true, element: <ProductListPage /> },
-          { path: 'list', element: <ProductListPage /> },
-          { path: ':id', element: <ProductDetailsPage /> },
-          { path: 'new', element: <ProductCreatePage /> },
-          { path: ':id/edit', element: <ProductEditPage /> },
+          { index: true, element: <WalletRealEstatePage /> },
         ],
       },
       {

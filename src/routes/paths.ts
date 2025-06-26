@@ -113,6 +113,9 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/property/${MOCK_ID}/edit`,
       },
     },
+    wallet: {
+      root: `${ROOTS.DASHBOARD}/wallet`,
+    },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
