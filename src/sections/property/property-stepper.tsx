@@ -168,7 +168,7 @@ export default function PropertyStepper() {
     } else {
       setValidationMessage('');
     }
-  }, [activeStep]);
+  }, [activeStep, validateCurrentStep]);
 
   // Verificar mudanças no localStorage
   useEffect(() => {
@@ -187,7 +187,7 @@ export default function PropertyStepper() {
     const interval = setInterval(handleStorageChange, 500);
 
     return () => clearInterval(interval);
-  }, [activeStep]);
+  }, [activeStep, validateCurrentStep]);
 
   // Marca o passo atual como completo
   const handleComplete = () => {

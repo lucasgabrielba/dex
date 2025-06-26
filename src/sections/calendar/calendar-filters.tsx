@@ -80,10 +80,10 @@ export function CalendarFilters({
         }}
       >
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Filters
+          Filtros
         </Typography>
 
-        <Tooltip title="Reset">
+        <Tooltip title="Limpar filtros">
           <IconButton onClick={() => resetFilters()}>
             <Badge color="error" variant="dot" invisible={!canReset}>
               <Iconify icon="solar:restart-bold" />
@@ -110,7 +110,7 @@ export function CalendarFilters({
       }}
     >
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
-        Colors
+        Cores
       </Typography>
       <ColorPicker
         options={colorOptions}
@@ -130,7 +130,7 @@ export function CalendarFilters({
       }}
     >
       <Typography variant="subtitle2" sx={{ mb: 1.5 }}>
-        Range
+        Período
       </Typography>
 
       <DatePicker
@@ -147,7 +147,7 @@ export function CalendarFilters({
         slotProps={{
           textField: {
             error: dateError,
-            helperText: dateError ? 'End date must be later than start date' : null,
+            helperText: dateError ? 'A data final deve ser posterior à data inicial' : null,
           },
         }}
       />
@@ -157,7 +157,7 @@ export function CalendarFilters({
   const renderEvents = () => (
     <>
       <Typography variant="subtitle2" sx={{ px: 2.5, mb: 1 }}>
-        Events ({events.length})
+        Eventos ({events.length})
       </Typography>
 
       <Box component="ul">

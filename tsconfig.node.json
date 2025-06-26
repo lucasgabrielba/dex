@@ -7,8 +7,6 @@
     "skipLibCheck": true,
     "strict": false,
     "noImplicitAny": false,
-    "suppressExcessPropertyErrors": true,
-    "suppressImplicitAnyIndexErrors": true
   },
   "include": [
     "vite.config.ts"

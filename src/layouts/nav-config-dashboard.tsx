@@ -43,6 +43,7 @@ const ICONS = {
   users: icon('ic-users'),
   graph: icon('ic-graph'),
   wallet: icon('ic-wallet'),
+  star: icon('ic-star'),
 };
 
 // ----------------------------------------------------------------------
@@ -76,7 +77,7 @@ export const navData: NavSectionProps['data'] = [
       },
       { title: 'Vendas', path: paths.dashboard.general.banking, icon: ICONS.order },
       { title: 'Carteira da imobiliária', path: paths.dashboard.wallet.root, icon: ICONS.wallet },
-      { title: 'E-mail', path: paths.dashboard.general.file, icon: ICONS.mail },
+      // { title: 'E-mail', path: paths.dashboard.general.file, icon: ICONS.mail },
       { title: 'Calendário', path: paths.dashboard.calendar, icon: ICONS.calendar },
     ],
   },
@@ -88,15 +89,10 @@ export const navData: NavSectionProps['data'] = [
     items: [
       {
         title: 'Leads',
-        path: paths.dashboard.user.root,
-        icon: ICONS.user,
+        path: paths.dashboard.lead.root,
+        icon: ICONS.star,
         children: [
-          { title: 'Profile', path: paths.dashboard.user.root },
-          { title: 'Cards', path: paths.dashboard.user.cards },
-          { title: 'List', path: paths.dashboard.user.list },
-          { title: 'Create', path: paths.dashboard.user.new },
-          { title: 'Edit', path: paths.dashboard.user.demo.edit },
-          { title: 'Account', path: paths.dashboard.user.account },
+          { title: 'Adicionar novo lead', path: paths.dashboard.lead.new },
         ],
       },
       {

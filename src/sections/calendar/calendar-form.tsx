@@ -31,12 +31,12 @@ export type EventSchemaType = zod.infer<typeof EventSchema>;
 export const EventSchema = zod.object({
   title: zod
     .string()
-    .min(1, { message: 'Title is required!' })
-    .max(100, { message: 'Title must be less than 100 characters' }),
+    .min(1, { message: 'Título é obrigatório!' })
+    .max(100, { message: 'Título deve ter menos de 100 caracteres' }),
   description: zod
     .string()
-    .min(1, { message: 'Description is required!' })
-    .min(50, { message: 'Description must be at least 50 characters' }),
+    .min(1, { message: 'Descrição é obrigatória!' })
+    .min(50, { message: 'Descrição deve ter pelo menos 50 caracteres' }),
   // Not required
   color: zod.string(),
   allDay: zod.boolean(),
@@ -86,10 +86,10 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
       if (!dateError) {
         if (currentEvent?.id) {
           await updateEvent(eventData);
-          toast.success('Update success!');
+          toast.success('Atualizado com sucesso!');
         } else {
           await createEvent(eventData);
-          toast.success('Create success!');
+          toast.success('Criado com sucesso!');
         }
         onClose();
         reset();
@@ -102,7 +102,7 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
   const onDelete = useCallback(async () => {
     try {
       await deleteEvent(`${currentEvent?.id}`);
-      toast.success('Apagado com sucesso!');
+      toast.success('Excluído com sucesso!');
       onClose();
     } catch (error) {
       console.error(error);
@@ -113,21 +113,21 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
     <Form methods={methods} onSubmit={onSubmit}>
       <Scrollbar sx={{ p: 3, bgcolor: 'background.neutral' }}>
         <Stack spacing={3}>
-          <Field.Text name="title" label="Title" />
+          <Field.Text name="title" label="Título" />
 
-          <Field.Text name="description" label="Description" multiline rows={3} />
+          <Field.Text name="description" label="Descrição" multiline rows={3} />
 
-          <Field.Switch name="allDay" label="All day" />
+          <Field.Switch name="allDay" label="Dia inteiro" />
 
-          <Field.MobileDateTimePicker name="start" label="Start date" />
+          <Field.MobileDateTimePicker name="start" label="Data de início" />
 
           <Field.MobileDateTimePicker
             name="end"
-            label="End date"
+            label="Data de término"
             slotProps={{
               textField: {
                 error: dateError,
-                helperText: dateError ? 'End date must be later than start date' : null,
+                helperText: dateError ? 'Data de término deve ser posterior à data de início' : null,
               },
             }}
           />
@@ -148,7 +148,7 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
 
       <DialogActions sx={{ flexShrink: 0 }}>
         {!!currentEvent?.id && (
-          <Tooltip title="Delete event">
+          <Tooltip title="Excluir evento">
             <IconButton onClick={onDelete}>
               <Iconify icon="solar:trash-bin-trash-bold" />
             </IconButton>
@@ -158,7 +158,7 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Button variant="outlined" color="inherit" onClick={onClose}>
-          Cancel
+          Cancelar
         </Button>
 
         <LoadingButton
@@ -167,7 +167,7 @@ export function CalendarForm({ currentEvent, colorOptions, onClose }: Props) {
           loading={isSubmitting}
           disabled={dateError}
         >
-          Save changes
+          Salvar alterações
         </LoadingButton>
       </DialogActions>
     </Form>

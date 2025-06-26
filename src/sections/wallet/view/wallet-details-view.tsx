@@ -38,7 +38,6 @@ import {
   TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
-  TablePaginationCustom,
 } from 'src/components/table';
 
 // ----------------------------------------------------------------------
@@ -172,7 +171,7 @@ export function WalletDetailsView() {
         router.push(paths.dashboard.wallet.transfer);
         break;
       case 'copy':
-        toast.info('Função copia e cola em desenvolvimento');
+        router.push(paths.dashboard.wallet.transferCopyPaste);
         break;
       case 'extract':
         toast.info('Função extrato em desenvolvimento');

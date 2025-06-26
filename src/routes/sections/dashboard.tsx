@@ -27,6 +27,7 @@ const OverviewCoursePage = lazy(() => import('src/pages/dashboard/course'));
 // Wallet
 const WalletRealEstatePage = lazy(() => import('src/pages/dashboard/wallet/details'));
 const WalletTransferPage = lazy(() => import('src/pages/dashboard/wallet/transfer'));
+const WalletTransferCopyPastePage = lazy(() => import('src/pages/dashboard/wallet/transfer-copy.-paste'));
 // Order
 const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
 const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
@@ -54,6 +55,13 @@ const PropertyListPage = lazy(() => import('src/pages/dashboard/property/list'))
 const PropertyDevelopmentListPage = lazy(() => import('src/pages/dashboard/property/developmentList'));
 const PropertyCreatePage = lazy(() => import('src/pages/dashboard/property/new'));
 // const PropertyEditPage = lazy(() => import('src/pages/dashboard/property/edit'));
+
+// Lead
+// const LeadListPage = lazy(() => import('src/pages/dashboard/lead/list'));
+const LeadCreatePage = lazy(() => import('src/pages/dashboard/lead/new'));
+// const LeadDetailsPage = lazy(() => import('src/pages/dashboard/lead/details'));
+// const LeadEditPage = lazy(() => import('src/pages/dashboard/lead/edit'));
+
 // Account
 const AccountGeneralPage = lazy(() => import('src/pages/dashboard/user/account/general'));
 const AccountBillingPage = lazy(() => import('src/pages/dashboard/user/account/billing'));
@@ -181,6 +189,17 @@ export const dashboardRoutes: RouteObject[] = [
         children: [
           { index: true, element: <WalletRealEstatePage /> },
           { path: 'transfer', element: <WalletTransferPage /> },
+          { path: 'transfer-copy-paste', element: <WalletTransferCopyPastePage /> },
+        ],
+      },
+      {
+        path: 'lead',
+        children: [
+          // { index: true, element: <LeadListPage /> },
+          // { path: 'list', element: <LeadListPage /> },
+          { path: 'new', element: <LeadCreatePage /> },
+          // { path: ':id', element: <LeadDetailsPage /> },
+          // { path: ':id/edit', element: <LeadEditPage /> },
         ],
       },
       {

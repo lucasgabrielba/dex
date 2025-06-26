@@ -2,11 +2,12 @@ import { Helmet } from 'react-helmet-async';
 
 import { CONFIG } from 'src/global-config';
 
-import { CalendarView } from 'src/sections/calendar/view';
+import { ClientListView } from 'src/sections/client/view/client-list-view';
+
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Calendário | Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Lista de clientes | Dashboard - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
@@ -15,7 +16,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <CalendarView />
+      <ClientListView />
     </>
   );
 }

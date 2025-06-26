@@ -116,6 +116,19 @@ export const paths = {
     wallet: {
       root: `${ROOTS.DASHBOARD}/wallet`,
       transfer: `${ROOTS.DASHBOARD}/wallet/transfer`,
+      transferCopyPaste: `${ROOTS.DASHBOARD}/wallet/transfer-copy-paste`,
+    },
+    lead: {
+      root: `${ROOTS.DASHBOARD}/lead`,
+      new: `${ROOTS.DASHBOARD}/lead/new`,
+      list: `${ROOTS.DASHBOARD}/lead/list`,
+      cards: `${ROOTS.DASHBOARD}/lead/cards`,
+      details: (id: string) => `${ROOTS.DASHBOARD}/lead/${id}`,
+      account: `${ROOTS.DASHBOARD}/lead/account`,
+      edit: (id: string) => `${ROOTS.DASHBOARD}/lead/${id}/edit`,
+      demo: {
+        edit: `${ROOTS.DASHBOARD}/lead/${MOCK_ID}/edit`,
+      },
     },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,

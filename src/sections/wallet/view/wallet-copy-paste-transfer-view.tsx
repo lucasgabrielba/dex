@@ -1,30 +1,23 @@
 import React, { useState } from 'react';
 import { Image } from '@/components/image';
-import { NumericFormat } from 'react-number-format';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Step from '@mui/material/Step';
-import List from '@mui/material/List';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Switch from '@mui/material/Switch';
 import Dialog from '@mui/material/Dialog';
 import Stepper from '@mui/material/Stepper';
-import ListItem from '@mui/material/ListItem';
 import StepLabel from '@mui/material/StepLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import RadioGroup from '@mui/material/RadioGroup';
-import ListItemText from '@mui/material/ListItemText';
 import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemButton from '@mui/material/ListItemButton';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
@@ -39,25 +32,16 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 // ----------------------------------------------------------------------
 
-interface Contact {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  institution?: string;
-  pixKey?: string;
-  cpf?: string;
-}
-
-interface PixKeyData {
+interface PixCopyPasteData {
   key: string;
   type: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random';
   name?: string;
+  institution?: string;
+  cpf?: string;
 }
 
 interface TransferData {
-  recipient?: Contact;
-  pixKeyData?: PixKeyData;
+  pixCopyPasteData?: PixCopyPasteData;
   amount: number;
   description?: string;
   scheduledDate?: string;
@@ -68,70 +52,34 @@ interface TransferData {
   endDate?: string;
 }
 
-const MOCK_CONTACTS: Contact[] = [
-  {
-    id: '1',
-    name: 'Amiah Pruitt',
-    email: 'nannie.abernathy70@yahoo.com',
-    institution: 'Nubank',
-    cpf: '***.***.891-***'
-  },
-  {
-    id: '2',
-    name: 'Mireya Conner',
-    email: 'ashlynn.ohara62@gmail.com',
-  },
-  {
-    id: '3',
-    name: 'Lucian Obrien',
-    email: 'milo.farrell@hotmail.com',
-  },
-  {
-    id: '4',
-    name: 'Deja Brady',
-    email: 'violet.ratke85@yahoo.com',
-  },
-  {
-    id: '5',
-    name: 'Harrison Stein',
-    email: 'letha.lubowitz4@yahoo.com',
-  },
-];
-
-const steps = ['Quem vai receber?', 'Qual o valor?', 'Confirmação'];
+const steps = ['Código copia e cola', 'Confirmação'];
 
 // ----------------------------------------------------------------------
 
-// Função para identificar o tipo da chave PIX
-const identifyPixKeyType = (key: string): 'cpf' | 'cnpj' | 'email' | 'phone' | 'random' => {
-  const cleanKey = key.replace(/\D/g, '');
-
-  // CPF: 11 dígitos
-  if (cleanKey.length === 11 && /^\d{11}$/.test(cleanKey)) {
-    return 'cpf';
+// Função para decodificar PIX copia e cola (simulação)
+const decodePixCopyPaste = (pixCode: string): PixCopyPasteData | null => {
+  // Simulação de decodificação do código PIX
+  // Em produção, seria feita a decodificação real do código QR/copia e cola
+  if (pixCode.length > 20) {
+    return {
+      key: 'nannie.abernathy70@yahoo.com',
+      type: 'email',
+      name: 'Amiah Pruitt',
+      institution: 'Nubank',
+      cpf: '***.***.891-***'
+    };
   }
-
-  // CNPJ: 14 dígitos
-  if (cleanKey.length === 14 && /^\d{14}$/.test(cleanKey)) {
-    return 'cnpj';
-  }
-
-  // Email
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(key)) {
-    return 'email';
-  }
-
-  // Telefone: formato brasileiro
-  if (/^(\+?55)?(\d{10,11})$/.test(cleanKey) || /^\(\d{2}\)\s?\d{4,5}-?\d{4}$/.test(key)) {
-    return 'phone';
-  }
-
-  // Chave aleatória (UUID ou outras)
-  return 'random';
+  return null;
 };
 
+// Função para extrair valor do código PIX (simulação)
+const extractAmountFromPixCode = (pixCode: string): number =>
+  // Simulação - em produção seria extraído do código real
+  500.00
+  ;
+
 // Função para formatar a chave PIX para exibição
-const formatPixKey = (type: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random', key: string) => {
+const formatPixKey = (key: string, type: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random'): string => {
   switch (type) {
     case 'cpf': {
       const cpf = key.replace(/\D/g, '');
@@ -149,26 +97,15 @@ const formatPixKey = (type: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random', key: 
       if (phone.length === 10) {
         return phone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
       }
-      return key;
+      // Fallback para telefone com formato inesperado
+      return phone;
     }
     default:
       return key;
   }
 };
 
-// Função para obter o nome do tipo da chave
-const getPixKeyTypeName = (type: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random'): string => {
-  const types = {
-    cpf: 'CPF',
-    cnpj: 'CNPJ',
-    email: 'E-mail',
-    phone: 'Telefone',
-    random: 'Chave aleatória'
-  };
-  return types[type];
-};
-
-export function WalletTransferView() {
+export function WalletPixCopyPasteView() {
   const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
   const [transferData, setTransferData] = useState<TransferData>({
@@ -180,24 +117,16 @@ export function WalletTransferView() {
     monthsQuantity: 12,
     endDate: '31/12/2025'
   });
-  const [pixKey, setPixKey] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [pixCode, setPixCode] = useState('');
   const [showPinModal, setShowPinModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showFrequencyModal, setShowFrequencyModal] = useState(false);
   const [showRecurrenceEndModal, setShowRecurrenceEndModal] = useState(false);
   const [pin, setPin] = useState(['', '', '', '']);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [recurrenceConfigCompleted, setRecurrenceConfigCompleted] = useState(false);
 
   console.log(recurrenceConfigCompleted);
-
-  const availableBalance = 36963899.00;
-
-  const filteredContacts = MOCK_CONTACTS.filter(contact =>
-    contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    contact.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
@@ -207,29 +136,28 @@ export function WalletTransferView() {
     setActiveStep((prevStep) => prevStep - 1);
   };
 
-  const handleSelectContact = (contact: Contact) => {
-    setTransferData(prev => ({
-      ...prev,
-      recipient: contact,
-      pixKeyData: undefined
-    }));
-    handleNext();
-  };
+  const handlePixCodeProcess = async () => {
+    if (pixCode.trim()) {
+      setIsLoading(true);
 
-  const handlePixKeySelect = () => {
-    if (pixKey.trim()) {
-      const keyType = identifyPixKeyType(pixKey.trim());
-      const pixKeyData: PixKeyData = {
-        key: pixKey.trim(),
-        type: keyType
-      };
+      // Simula processamento do código PIX
+      setTimeout(() => {
+        const decodedData = decodePixCopyPaste(pixCode.trim());
+        const amount = extractAmountFromPixCode(pixCode.trim());
 
-      setTransferData(prev => ({
-        ...prev,
-        pixKeyData,
-        recipient: undefined
-      }));
-      handleNext();
+        if (decodedData) {
+          setTransferData(prev => ({
+            ...prev,
+            pixCopyPasteData: decodedData,
+            amount
+          }));
+          setIsLoading(false);
+          handleNext();
+        } else {
+          setIsLoading(false);
+          // Aqui você poderia mostrar um erro
+        }
+      }, 2000);
     }
   };
 
@@ -295,21 +223,15 @@ export function WalletTransferView() {
     setRecurrenceConfigCompleted(false);
   };
 
-  const canProceedStep1 = transferData.recipient || transferData.pixKeyData || pixKey.length > 0;
-  const canProceedStep2 = transferData.amount > 0 && transferData.amount <= availableBalance;
+  const canProceedStep1 = pixCode.length > 0 && !isLoading;
   const isPinComplete = pin.every(digit => digit !== '');
 
-  const handleAmountChange = (value) => {
-    const limitedValue = Math.min(value, availableBalance);
-    setTransferData(prev => ({ ...prev, amount: limitedValue }));
-  };
-
-  // Step 1: Quem vai receber
-  const renderRecipientStep = () => (
+  // Step 1: Código copia e cola
+  const renderPixCodeStep = () => (
     <Stack spacing={3}>
       <Card sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ mb: 3 }}>
-          Quem vai receber?
+          Pix copia e cola
         </Typography>
 
         <Box>
@@ -318,236 +240,70 @@ export function WalletTransferView() {
           </Typography>
           <TextField
             fullWidth
-            placeholder="Insira a chave (CPF, CNPJ, e-mail, celular, chave aleatória) ou Pix copia e cola"
-            value={pixKey}
-            onChange={(e) => {
-              setPixKey(e.target.value);
-              setSearchQuery(e.target.value);
-            }}
+            multiline
+            rows={4}
+            placeholder="Cole aqui o código Pix que você recebeu"
+            value={pixCode}
+            onChange={(e) => setPixCode(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && pixKey.trim()) {
-                handlePixKeySelect();
+              if (e.key === 'Enter' && e.ctrlKey && pixCode.trim()) {
+                handlePixCodeProcess();
               }
             }}
             InputProps={{
               startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" />
-                </InputAdornment>
-              ),
-              endAdornment: pixKey.trim() && (
-                <InputAdornment position="end">
-                  <IconButton onClick={handlePixKeySelect}>
-                    <Iconify icon="eva:arrow-ios-forward-fill" />
-                  </IconButton>
+                <InputAdornment position="start" sx={{ alignSelf: 'flex-start', mt: 1 }}>
+                  <Iconify icon="eva:clipboard-fill" />
                 </InputAdornment>
               )
             }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: 'background.paper',
+                borderRadius: 2
+              }
+            }}
           />
           <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-            Você também pode buscar pelo nome de um contato
+            Cole o código Pix completo que você recebeu por WhatsApp, e-mail ou outro aplicativo
           </Typography>
         </Box>
-      </Card>
 
-      <Card sx={{ p: 3 }}>
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          Todos os contatos
-        </Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-          Você possui {filteredContacts.length} contatos
-        </Typography>
-
-        {filteredContacts.length > 0 ? (
-          <List>
-            {filteredContacts.map((contact) => (
-              <ListItem key={contact.id} disablePadding>
-                <ListItemButton
-                  onClick={() => handleSelectContact(contact)}
-                  sx={{
-                    borderRadius: 1,
-                    '&:hover': {
-                      backgroundColor: 'action.hover'
-                    }
-                  }}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      sx={{
-                        bgcolor: 'primary.main',
-                        width: 40,
-                        height: 40
-                      }}
-                    >
-                      {contact.name.charAt(0).toUpperCase()}
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={contact.name}
-                    secondary={contact.email}
-                    primaryTypographyProps={{
-                      fontWeight: 500
-                    }}
-                  />
-                  <IconButton
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                  >
-                    <Iconify icon="eva:more-vertical-fill" />
-                  </IconButton>
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <Box sx={{ textAlign: 'center', py: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              {searchQuery ? 'Nenhum contato encontrado' : 'Nenhum contato encontrado'}
+        {isLoading && (
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Processando código Pix...
             </Typography>
-            {pixKey.trim() && !filteredContacts.length && (
-              <Button
-                variant="outlined"
-                onClick={handlePixKeySelect}
-                sx={{ mt: 2 }}
-                startIcon={<Iconify icon="eva:plus-fill" />}
-              >
-                Usar chave PIX: {pixKey}
-              </Button>
-            )}
+            <Box sx={{
+              width: '100%',
+              height: 4,
+              backgroundColor: 'action.hover',
+              borderRadius: 2,
+              overflow: 'hidden'
+            }}>
+              <Box sx={{
+                width: '30%',
+                height: '100%',
+                backgroundColor: 'primary.main',
+                borderRadius: 2,
+                animation: 'loading 1.5s ease-in-out infinite'
+              }} />
+            </Box>
           </Box>
         )}
       </Card>
-    </Stack>
-  );
 
-  // Step 2: Qual o valor
-  const renderAmountStep = () => (
-    <Stack spacing={3}>
-      <Alert severity="info">
-        Transferências acima de R$ 10.000,00 no período noturno só são permitidas para contatos seguros.
-        Para os demais, agende a transferência.
-      </Alert>
-      <Card sx={{ p: 3 }}>
-        <Stack spacing={3}>
-          <Typography variant="h6">
-            Qual o valor?
+      {pixCode && (
+        <Alert severity="info">
+          <Typography variant="body2">
+            Verifique se o código foi colado corretamente antes de continuar.
           </Typography>
-          <Box sx={{ minHeight: '80px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            {isEditing ? (
-              <NumericFormat
-                customInput={TextField}
-                value={transferData.amount || ''}
-                onValueChange={(values) => {
-                  const inputValue = parseFloat(values.value) || 0;
-                  handleAmountChange(inputValue);
-                }}
-                onBlur={() => setIsEditing(false)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    setIsEditing(false);
-                  }
-                }}
-                autoFocus
-                variant="standard"
-                thousandSeparator="."
-                decimalSeparator=","
-                decimalScale={2}
-                fixedDecimalScale
-                allowNegative={false}
-                isAllowed={(values) => {
-                  const { floatValue } = values;
-                  return !floatValue || floatValue <= availableBalance;
-                }}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">R$</InputAdornment>,
-                  disableUnderline: true,
-                  sx: {
-                    fontSize: '2.125rem',
-                    fontWeight: 400,
-                    lineHeight: 1.2,
-                    '& input': {
-                      padding: 0,
-                      height: 'auto',
-                    }
-                  }
-                }}
-                sx={{
-                  '& .MuiInputBase-root': {
-                    fontSize: '2.125rem',
-                    fontWeight: 400,
-                    lineHeight: 1.2,
-                  }
-                }}
-              />
-            ) : (
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 400,
-                  cursor: 'pointer',
-                  padding: '4px 8px',
-                  borderRadius: 1,
-                  transition: 'background-color 0.2s',
-                  '&:hover': {
-                    backgroundColor: 'action.hover',
-                  }
-                }}
-                onClick={() => setIsEditing(true)}
-              >
-                R$ {transferData.amount.toFixed(2).replace('.', ',')}
-              </Typography>
-            )}
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              Saldo disponível: {fCurrency(availableBalance)}
-            </Typography>
-          </Box>
-        </Stack>
-      </Card>
-      <Card sx={{ p: 3 }}>
-        <Typography variant="subtitle2" sx={{ mb: 2 }}>
-          Quem vai receber
-        </Typography>
-        {transferData.recipient ? (
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar sx={{ bgcolor: 'primary.main' }}>
-              {transferData.recipient.name.charAt(0)}
-            </Avatar>
-            <Box>
-              <Typography variant="body2" fontWeight={600}>
-                {transferData.recipient.name}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {transferData.recipient.email}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Nubank | 0001 | 45548309-0
-              </Typography>
-            </Box>
-          </Stack>
-        ) : transferData.pixKeyData ? (
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar sx={{ bgcolor: 'secondary.main' }}>
-              <Iconify icon="eva:credit-card-fill" />
-            </Avatar>
-            <Box>
-              <Typography variant="body2" fontWeight={600}>
-                {getPixKeyTypeName(transferData.pixKeyData.type)}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {formatPixKey(transferData.pixKeyData.type, transferData.pixKeyData.key)}
-              </Typography>
-              <Typography variant="caption" color="text.secondary" display="block">
-                Chave PIX
-              </Typography>
-            </Box>
-          </Stack>
-        ) : null}
-      </Card>
+        </Alert>
+      )}
     </Stack>
   );
 
-  // Step 3: Confirmação
+  // Step 2: Confirmação
   const renderConfirmationStep = () => (
     <Stack spacing={3}>
       <Card sx={{ p: 3 }}>
@@ -558,7 +314,7 @@ export function WalletTransferView() {
           <Button
             size="small"
             startIcon={<Iconify icon="eva:edit-fill" />}
-            onClick={() => setActiveStep(1)}
+            onClick={() => setActiveStep(0)}
           >
             Editar
           </Button>
@@ -616,7 +372,7 @@ export function WalletTransferView() {
           </Button>
         </Stack>
 
-        {transferData.recipient ? (
+        {transferData.pixCopyPasteData && (
           <Stack spacing={2}>
             <Box sx={{
               display: 'grid',
@@ -632,7 +388,7 @@ export function WalletTransferView() {
                   Nome
                 </Typography>
                 <Typography variant="body2" fontWeight={600}>
-                  {transferData.recipient.name}
+                  {transferData.pixCopyPasteData.name || 'Não informado'}
                 </Typography>
               </Box>
 
@@ -641,7 +397,7 @@ export function WalletTransferView() {
                   CPF/CNPJ
                 </Typography>
                 <Typography variant="body2">
-                  {transferData.recipient.cpf || '***.***.891-***'}
+                  {transferData.pixCopyPasteData.cpf || '***.***.891-***'}
                 </Typography>
               </Box>
 
@@ -656,7 +412,7 @@ export function WalletTransferView() {
                     fontSize: { xs: '0.875rem', sm: '0.875rem' }
                   }}
                 >
-                  {transferData.recipient.email}
+                  {formatPixKey(transferData.pixCopyPasteData.key, transferData.pixCopyPasteData.type)}
                 </Typography>
               </Box>
             </Box>
@@ -666,50 +422,11 @@ export function WalletTransferView() {
                 Instituição
               </Typography>
               <Typography variant="body2">
-                {transferData.recipient.institution || '260 - Nubank'}
+                {transferData.pixCopyPasteData.institution || '260 - Nubank'}
               </Typography>
             </Box>
           </Stack>
-        ) : transferData.pixKeyData ? (
-          <Stack spacing={2}>
-            <Box sx={{
-              display: 'grid',
-              gridTemplateColumns: {
-                xs: '1fr',
-                sm: 'auto 1fr auto'
-              },
-              gap: 2,
-              alignItems: 'center'
-            }}>
-              <Box sx={{ gridColumn: { xs: '1', sm: '1 / -1' } }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                  Tipo da chave
-                </Typography>
-                <Typography variant="body2" fontWeight={600}>
-                  {getPixKeyTypeName(transferData.pixKeyData.type)}
-                </Typography>
-              </Box>
-
-              <Box>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                  Chave PIX
-                </Typography>
-                <Typography variant="body2">
-                  {formatPixKey(transferData.pixKeyData.type, transferData.pixKeyData.key)}
-                </Typography>
-              </Box>
-
-              <Box sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                  Instituição
-                </Typography>
-                <Typography variant="body2">
-                  PIX
-                </Typography>
-              </Box>
-            </Box>
-          </Stack>
-        ) : null}
+        )}
       </Card>
 
       <TextField
@@ -732,10 +449,8 @@ export function WalletTransferView() {
   const renderStepContent = () => {
     switch (activeStep) {
       case 0:
-        return renderRecipientStep();
+        return renderPixCodeStep();
       case 1:
-        return renderAmountStep();
-      case 2:
         return renderConfirmationStep();
       default:
         return null;
@@ -747,12 +462,11 @@ export function WalletTransferView() {
 
     let disabled = false;
     if (activeStep === 0) disabled = !canProceedStep1;
-    if (activeStep === 1) disabled = !canProceedStep2;
 
     return (
       <Button
         variant="contained"
-        onClick={isLastStep ? handleConfirmTransfer : handleNext}
+        onClick={isLastStep ? handleConfirmTransfer : handlePixCodeProcess}
         disabled={disabled}
         sx={{
           bgcolor: '#06092B',
@@ -955,8 +669,8 @@ export function WalletTransferView() {
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Digite seu PIN
           </Typography>
-
         </Box>
+
         <Box sx={{ bgcolor: 'background.neutral', borderRadius: 0, p: 3 }}>
           <Typography variant="body1" color="text.primary" sx={{ mb: 4 }}>
             Por favor, insira sua senha de 4 dígitos para confirmar a transação.
@@ -1151,7 +865,7 @@ export function WalletTransferView() {
                 Nome
               </Typography>
               <Typography variant="body2" fontWeight={600}>
-                {transferData.recipient?.name || transferData.pixKeyData?.name || 'Destinatário via PIX'}
+                {transferData.pixCopyPasteData?.name || 'Destinatário via PIX'}
               </Typography>
             </Stack>
             <Stack direction="row" justifyContent="space-between">
@@ -1205,11 +919,11 @@ export function WalletTransferView() {
   return (
     <DashboardContent>
       <CustomBreadcrumbs
-        heading="Transferir"
+        heading="Pix copia e cola"
         links={[
           { name: 'Painel', href: paths.dashboard.root },
           { name: 'Carteira da imobiliária', href: paths.dashboard.wallet.root },
-          { name: 'Transferir' },
+          { name: 'Pix copia e cola' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
@@ -1268,6 +982,18 @@ export function WalletTransferView() {
       {renderRecurrenceEndModal()}
       {renderPinModal()}
       {renderSuccessModal()}
+
+      <style>{`
+        @keyframes loading {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(300%); }
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
     </DashboardContent>
   );
 }

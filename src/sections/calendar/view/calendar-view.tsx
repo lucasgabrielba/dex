@@ -8,6 +8,7 @@ import { useEffect, startTransition } from 'react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 import interactionPlugin from '@fullcalendar/interaction';
+import ptBrLocale from '@fullcalendar/core/locales/pt-br';
 import { useBoolean, useSetState } from 'minimal-shared/hooks';
 
 import Box from '@mui/material/Box';
@@ -114,13 +115,13 @@ export function CalendarView() {
             mb: { xs: 3, md: 5 },
           }}
         >
-          <Typography variant="h4">Calendar</Typography>
+          <Typography variant="h4">Calendário</Typography>
           <Button
             variant="contained"
             startIcon={<Iconify icon="mingcute:add-line" />}
             onClick={onOpenForm}
           >
-            New event
+            Novo evento
           </Button>
         </Box>
 
@@ -168,6 +169,7 @@ export function CalendarView() {
               select={onSelectRange}
               eventClick={onClickEvent}
               aspectRatio={3}
+              locale={ptBrLocale}
               eventDrop={(arg) => {
                 startTransition(() => {
                   onDropEvent(arg, updateEvent);
@@ -212,7 +214,7 @@ export function CalendarView() {
         }}
       >
         <DialogTitle sx={{ minHeight: 76 }}>
-          {openForm && <> {currentEvent?.id ? 'Edit' : 'Add'} event</>}
+          {openForm && <> {currentEvent?.id ? 'Editar' : 'Adicionar'} evento</>}
         </DialogTitle>
 
         <CalendarForm

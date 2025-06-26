@@ -1,12 +1,11 @@
 import { Helmet } from 'react-helmet-async';
+import { WalletPixCopyPasteView } from '@/sections/wallet/view/wallet-copy-paste-transfer-view';
 
 import { CONFIG } from 'src/global-config';
 
-import { CalendarView } from 'src/sections/calendar/view';
-
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Calendário | Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Transferência copia e cola | Dashboard - ${CONFIG.appName}` };
 
 export default function Page() {
   return (
@@ -15,7 +14,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <CalendarView />
+      <WalletPixCopyPasteView />
     </>
   );
 }
