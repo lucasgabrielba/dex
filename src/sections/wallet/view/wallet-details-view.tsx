@@ -10,12 +10,14 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
 import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 import { fCurrency } from 'src/utils/format-number';
 
@@ -38,7 +40,6 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
-import { Checkbox } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -92,28 +93,34 @@ const WALLET_ACTIONS = [
   {
     icon: 'solar:transfer-horizontal-bold',
     label: 'Transferir',
+    action: 'transfer',
   },
   {
     icon: 'solar:copy-bold',
-    label: 'copia e cola',
+    label: 'Copia e cola',
+    action: 'copy',
   },
   {
     icon: 'solar:download-bold',
     label: 'Extrato',
+    action: 'extract',
   },
   {
     icon: 'solar:card-bold',
     label: 'Limites',
+    action: 'limits',
   },
   {
     icon: 'solar:lock-password-bold',
     label: 'PIN',
+    action: 'pin',
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export function WalletDetailsView() {
+  const router = useRouter();
   const table = useTable({ defaultOrderBy: 'type' });
 
   const confirmDialog = useBoolean();
@@ -159,6 +166,28 @@ export function WalletDetailsView() {
     setShowBalance(!showBalance);
   };
 
+  const handleWalletAction = (action: string) => {
+    switch (action) {
+      case 'transfer':
+        router.push(paths.dashboard.wallet.transfer);
+        break;
+      case 'copy':
+        toast.info('Função copia e cola em desenvolvimento');
+        break;
+      case 'extract':
+        toast.info('Função extrato em desenvolvimento');
+        break;
+      case 'limits':
+        toast.info('Função limites em desenvolvimento');
+        break;
+      case 'pin':
+        toast.info('Função PIN em desenvolvimento');
+        break;
+      default:
+        break;
+    }
+  };
+
   const renderConfirmDialog = () => (
     <ConfirmDialog
       open={confirmDialog.value}
@@ -187,7 +216,7 @@ export function WalletDetailsView() {
   const renderBalanceCard = () => (
     <Stack spacing={3} sx={{ mb: 3, p: 3 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h6" color="text.secondary">
+        <Typography variant="h6" color="text.primary">
           Saldo disponível
         </Typography>
         <Button
@@ -217,11 +246,11 @@ export function WalletDetailsView() {
         {WALLET_ACTIONS.map((action) => (
           <Stack
             key={action.label}
+            onClick={() => handleWalletAction(action.action)}
             sx={{
               position: 'relative',
-              minWidth: 80,
-              height: 80,
-              p: 4,
+              minWidth: 100,
+              height: 100,
               borderRadius: 1,
               border: '1px solid',
               borderColor: 'divider',
@@ -246,13 +275,13 @@ export function WalletDetailsView() {
             >
               <Iconify
                 icon={action.icon}
-                width={20}
+                width={25}
                 sx={{ color: 'text.secondary' }}
               />
             </Box>
 
             <Typography
-              variant="caption"
+              variant="button"
               sx={{
                 position: 'absolute',
                 bottom: 8,
@@ -410,7 +439,7 @@ export function WalletDetailsView() {
         </Scrollbar>
       </Box>
 
-      <TablePaginationCustom
+      {/* <TablePaginationCustom
         page={table.page}
         dense={table.dense}
         count={dataFiltered.length}
@@ -418,17 +447,9 @@ export function WalletDetailsView() {
         onPageChange={table.onChangePage}
         onChangeDense={table.onChangeDense}
         onRowsPerPageChange={table.onChangeRowsPerPage}
-      />
+      /> */}
     </Card>
   );
-
-  // TABLE_HEAD para referência
-  const TABLE_HEAD = [
-    { id: 'type', label: 'Tipo de chave', width: 200 },
-    { id: 'key', label: 'Chave', width: 300 },
-    { id: 'status', label: 'Status', width: 120 },
-    { id: '', width: 88 },
-  ];
 
   return (
     <>

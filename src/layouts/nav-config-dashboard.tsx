@@ -42,6 +42,7 @@ const ICONS = {
   parameter: icon('ic-parameter'),
   users: icon('ic-users'),
   graph: icon('ic-graph'),
+  wallet: icon('ic-wallet'),
 };
 
 // ----------------------------------------------------------------------
@@ -74,7 +75,7 @@ export const navData: NavSectionProps['data'] = [
         ],
       },
       { title: 'Vendas', path: paths.dashboard.general.banking, icon: ICONS.order },
-      { title: 'Carteira da imobiliária', path: paths.dashboard.wallet.root, icon: ICONS.label },
+      { title: 'Carteira da imobiliária', path: paths.dashboard.wallet.root, icon: ICONS.wallet },
       { title: 'E-mail', path: paths.dashboard.general.file, icon: ICONS.mail },
       { title: 'Calendário', path: paths.dashboard.calendar, icon: ICONS.calendar },
     ],

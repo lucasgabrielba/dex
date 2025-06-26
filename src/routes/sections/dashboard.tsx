@@ -26,6 +26,7 @@ const OverviewFilePage = lazy(() => import('src/pages/dashboard/file'));
 const OverviewCoursePage = lazy(() => import('src/pages/dashboard/course'));
 // Wallet
 const WalletRealEstatePage = lazy(() => import('src/pages/dashboard/wallet/details'));
+const WalletTransferPage = lazy(() => import('src/pages/dashboard/wallet/transfer'));
 // Order
 const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
 const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
@@ -179,6 +180,7 @@ export const dashboardRoutes: RouteObject[] = [
         path: 'wallet',
         children: [
           { index: true, element: <WalletRealEstatePage /> },
+          { path: 'transfer', element: <WalletTransferPage /> },
         ],
       },
       {

@@ -115,6 +115,7 @@ export const paths = {
     },
     wallet: {
       root: `${ROOTS.DASHBOARD}/wallet`,
+      transfer: `${ROOTS.DASHBOARD}/wallet/transfer`,
     },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
