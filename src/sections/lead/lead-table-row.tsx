@@ -1,4 +1,4 @@
-import type { IClientItem } from 'src/types/client';
+import type { ILeadItem } from 'src/types/lead';
 
 import { useBoolean, usePopover } from 'minimal-shared/hooks';
 
@@ -18,38 +18,36 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
-import { fDate, fTime } from 'src/utils/format-time';
-
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { CustomPopover } from 'src/components/custom-popover';
 
-import { ClientQuickEditForm } from './client-quick-edit-form';
+import { LeadQuickEditForm } from './lead-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IClientItem;
+  row: ILeadItem;
   selected: boolean;
   editHref: string;
   onSelectRow: () => void;
   onDeleteRow: () => void;
 };
 
-export function ClientTableRow({ row, selected, editHref, onSelectRow, onDeleteRow }: Props) {
+export function LeadTableRow({ row, selected, editHref, onSelectRow, onDeleteRow }: Props) {
   const router = useRouter();
   const menuActions = usePopover();
   const confirmDialog = useBoolean();
   const quickEditForm = useBoolean();
 
   const handleRowClick = () => {
-    router.push(paths.dashboard.client.profile(row.id));
+    router.push(paths.dashboard.lead.details(row.id));
   };
 
   const renderQuickEditForm = () => (
-    <ClientQuickEditForm
-      currentClient={row}
+    <LeadQuickEditForm
+      currentLead={row}
       open={quickEditForm.value}
       onClose={quickEditForm.onFalse}
     />
@@ -89,7 +87,7 @@ export function ClientTableRow({ row, selected, editHref, onSelectRow, onDeleteR
       open={confirmDialog.value}
       onClose={confirmDialog.onFalse}
       title="Delete"
-      content="Você tem certeza que deseja apagar este cliente?"
+      content="Você tem certeza que deseja apagar este lead?"
       action={
         <Button variant="contained" color="error" onClick={onDeleteRow}>
           Apagar
@@ -146,49 +144,32 @@ export function ClientTableRow({ row, selected, editHref, onSelectRow, onDeleteR
         </TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
-            <Box
-              component="span"
-              color="inherit"
-            >
-              {fDate(row.createdAt)}
-            </Box>
-            <Box component="span" sx={{ color: 'text.disabled' }}>
-              {fTime(row.createdAt)}
-            </Box>
-          </Stack>
+          {row.email}
         </TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          <Stack sx={{ typography: 'body2', flex: '1 1 auto', alignItems: 'flex-start' }}>
-            <Box
-              component="span"
-              color="inherit"
-            >
-              {fDate(row.updatedAt)}
-            </Box>
-            <Box component="span" sx={{ color: 'text.disabled' }}>
-              {fTime(row.updatedAt)}
-            </Box>
-          </Stack>
+          {row.productInterest}
         </TableCell>
 
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>R$ {row.value}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.product}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {row.broker}
+        </TableCell>
 
         <TableCell>
           <Label
             variant="soft"
             color={
-              (row.status === 'vendido' && 'success') ||
-              (row.status === 'em andamento' && 'warning') ||
-              (row.status === 'vencendo' && 'error') ||
-              (row.status === 'prospecto' && 'info') ||
+              (row.status === 'ativo' && 'success') ||
+              (row.status === 'convertido' && 'info') ||
+              (row.status === 'perdido' && 'error') ||
+              (row.status === 'rascunho' && 'default') ||
               'default'
             }
           >
-            {row.status}
+            {row.status === 'ativo' && 'Ativo'}
+            {row.status === 'convertido' && 'Convertido'}
+            {row.status === 'perdido' && 'Perdido'}
+            {row.status === 'rascunho' && 'Rascunho'}
           </Label>
         </TableCell>
 

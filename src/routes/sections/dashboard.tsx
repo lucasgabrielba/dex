@@ -57,10 +57,10 @@ const PropertyCreatePage = lazy(() => import('src/pages/dashboard/property/new')
 // const PropertyEditPage = lazy(() => import('src/pages/dashboard/property/edit'));
 
 // Lead
-// const LeadListPage = lazy(() => import('src/pages/dashboard/lead/list'));
+const LeadListPage = lazy(() => import('src/pages/dashboard/lead/list'));
 const LeadCreatePage = lazy(() => import('src/pages/dashboard/lead/new'));
-// const LeadDetailsPage = lazy(() => import('src/pages/dashboard/lead/details'));
-// const LeadEditPage = lazy(() => import('src/pages/dashboard/lead/edit'));
+const LeadDetailsPage = lazy(() => import('src/pages/dashboard/lead/details'));
+
 
 // Account
 const AccountGeneralPage = lazy(() => import('src/pages/dashboard/user/account/general'));
@@ -195,11 +195,10 @@ export const dashboardRoutes: RouteObject[] = [
       {
         path: 'lead',
         children: [
-          // { index: true, element: <LeadListPage /> },
-          // { path: 'list', element: <LeadListPage /> },
+          { index: true, element: <LeadListPage /> },
+          { path: 'list', element: <LeadListPage /> },
           { path: 'new', element: <LeadCreatePage /> },
-          // { path: ':id', element: <LeadDetailsPage /> },
-          // { path: ':id/edit', element: <LeadEditPage /> },
+          { path: ':id', element: <LeadDetailsPage /> },
         ],
       },
       {

@@ -124,7 +124,6 @@ export const paths = {
       list: `${ROOTS.DASHBOARD}/lead/list`,
       cards: `${ROOTS.DASHBOARD}/lead/cards`,
       details: (id: string) => `${ROOTS.DASHBOARD}/lead/${id}`,
-      account: `${ROOTS.DASHBOARD}/lead/account`,
       edit: (id: string) => `${ROOTS.DASHBOARD}/lead/${id}/edit`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/lead/${MOCK_ID}/edit`,

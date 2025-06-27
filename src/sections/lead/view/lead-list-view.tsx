@@ -1,5 +1,5 @@
 import type { TableHeadCellProps } from 'src/components/table';
-import type { IClientItem, IClientTableFilters } from 'src/types/client';
+import type { ILeadItem, ILeadTableFilters } from 'src/types/lead';
 
 import { useState, useCallback } from 'react';
 import { varAlpha } from 'minimal-shared/utils';
@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { _clientList } from 'src/_mock/_client';
+import { _leadList } from 'src/_mock/_lead';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Label } from 'src/components/label';
@@ -39,48 +39,45 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { ClientTableRow } from '../client-table-row';
-import { ClientTableToolbar } from '../client-table-toolbar';
-import { ClientTableFiltersResult } from '../client-table-filters-result';
+import { LeadTableRow } from '../lead-table-row';
+import { LeadTableToolbar } from '../lead-table-toolbar';
+import { LeadTableFiltersResult } from '../lead-table-filters-result';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
   { value: 'todos', label: 'Todos' },
-  { value: 'vendido', label: 'Vendas' },
-  { value: 'em andamento', label: 'Em andamento' },
-  { value: 'vencendo', label: 'Vencendo' },
-  { value: 'prospecto', label: 'Prospecto' },
-  { value: 'desatualizado', label: 'Desatualizados' },
+  { value: 'ativo', label: 'Ativos' },
+  { value: 'rascunho', label: 'Rascunho' },
 ];
 
 const TABLE_HEAD: TableHeadCellProps[] = [
-  { id: 'name', label: 'Cliente', width: 300 },
-  { id: 'phoneNumber', label: 'Criado em' },
-  { id: 'company', label: 'Última atualização' },
-  { id: 'profession', label: 'Valor' },
-  { id: 'status', label: 'Produto' },
+  { id: 'name', label: 'Nome', width: 300 },
+  { id: 'email', label: 'E-mail' },
+  { id: 'product', label: 'Produto' },
+  { id: 'broker', label: 'Corretor' },
   { id: 'status', label: 'Status' },
   { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export function ClientListView() {
+export function LeadListView() {
   const table = useTable();
 
   const confirmDialog = useBoolean();
 
-  const [tableData, setTableData] = useState<IClientItem[]>(_clientList);
+  const [tableData, setTableData] = useState<ILeadItem[]>(_leadList);
 
-  const filters = useSetState<IClientTableFilters>({
+  const filters = useSetState<ILeadTableFilters>({
     name: '',
     status: 'todos',
-    profession: [],
-    filterBy: 'name', // Default to 'name'
+    product: [],
+    filterBy: 'name',
     startDate: '',
     endDate: '',
     search: '',
+    broker: '',
   });
   const { state: currentFilters, setState: updateFilters } = filters;
 
@@ -94,9 +91,10 @@ export function ClientListView() {
 
   const canReset =
     !!currentFilters.name ||
-    currentFilters.profession.length > 0 ||
+    currentFilters.product.length > 0 ||
     currentFilters.status !== 'todos' ||
-    !!currentFilters.search;
+    !!currentFilters.search ||
+    !!currentFilters.broker;
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -138,7 +136,7 @@ export function ClientListView() {
       title="Apagar"
       content={
         <>
-          Você tem certeza que deseja apagar os <strong> {table.selected.length} </strong> clientes?
+          Você tem certeza que deseja apagar os <strong> {table.selected.length} </strong> leads?
         </>
       }
       action={
@@ -160,20 +158,20 @@ export function ClientListView() {
     <>
       <DashboardContent>
         <CustomBreadcrumbs
-          heading="Meus clientes"
+          heading="Meus leads"
           links={[
             { name: 'Painel', href: paths.dashboard.root },
-            { name: 'Clientes', href: paths.dashboard.client.root },
-            { name: 'Meus Clientes' },
+            { name: 'Leads', href: paths.dashboard.client.root },
+            { name: 'Meus Leads' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.client.new}
+              href={paths.dashboard.lead.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
-              Novo cliente
+              Novo lead
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -203,32 +201,30 @@ export function ClientListView() {
                       'soft'
                     }
                     color={
-                      (tab.value === 'vendido' && 'success') ||
-                      (tab.value === 'em andamento' && 'warning') ||
-                      (tab.value === 'vencendo' && 'error') ||
-                      (tab.value === 'prospectos' && 'info') ||
+                      (tab.value === 'ativo' && 'success') ||
+                      (tab.value === 'rascunho' && 'default') ||
                       'default'
                     }
                   >
-                    {['active', 'em andamento', 'vencendo', 'desatualizado'].includes(tab.value)
-                      ? tableData.filter((client) => client.status === tab.value).length
-                      : tableData.length}
+                    {tab.value === 'todos'
+                      ? tableData.length
+                      : tableData.filter((lead) => lead.status === tab.value).length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <ClientTableToolbar
+          <LeadTableToolbar
             filters={filters}
             onResetPage={table.onResetPage}
             options={{
-              filterOptions: ['name', 'phoneNumber', 'email', 'company', 'product'],
+              filterOptions: ['name', 'phoneNumber', 'email', 'productInterest', 'broker'],
             }}
           />
 
           {canReset && (
-            <ClientTableFiltersResult
+            <LeadTableFiltersResult
               filters={filters}
               totalResults={dataFiltered.length}
               onResetPage={table.onResetPage}
@@ -280,7 +276,7 @@ export function ClientListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <ClientTableRow
+                      <LeadTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
@@ -321,13 +317,13 @@ export function ClientListView() {
 // ----------------------------------------------------------------------
 
 type ApplyFilterProps = {
-  inputData: IClientItem[];
-  filters: IClientTableFilters;
+  inputData: ILeadItem[];
+  filters: ILeadTableFilters;
   comparator: (a: any, b: any) => number;
 };
 
 function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
-  const { name, status, profession, filterBy, search, startDate, endDate } = filters;
+  const { name, status, product, filterBy, search, startDate, endDate, broker } = filters;
 
   let filteredData = [...inputData];
 
@@ -342,38 +338,43 @@ function applyFilter({ inputData, comparator, filters }: ApplyFilterProps) {
 
   // Apply search filter based on selected attribute (filterBy)
   if (search && filterBy) {
-    filteredData = filteredData.filter((client) => {
-      const value = client[filterBy as keyof IClientItem]?.toString().toLowerCase() || '';
+    filteredData = filteredData.filter((lead) => {
+      const value = lead[filterBy as keyof ILeadItem]?.toString().toLowerCase() || '';
       return value.includes(search.toLowerCase());
     });
   }
 
   // Apply name filter (if still needed separately)
   if (name) {
-    filteredData = filteredData.filter((client) =>
-      client.name.toLowerCase().includes(name.toLowerCase())
+    filteredData = filteredData.filter((lead) =>
+      lead.name.toLowerCase().includes(name.toLowerCase())
     );
   }
 
   // Apply status filter
   if (status !== 'todos') {
-    filteredData = filteredData.filter((client) => client.status === status);
+    filteredData = filteredData.filter((lead) => lead.status === status);
   }
 
-  // Apply profession filter
-  if (profession.length) {
-    filteredData = filteredData.filter((client) => profession.includes(client.profession));
+  // Apply product filter
+  if (product.length) {
+    filteredData = filteredData.filter((lead) => product.includes(lead.productInterest));
+  }
+
+  // Apply broker filter
+  if (broker) {
+    filteredData = filteredData.filter((lead) => lead.broker === broker);
   }
 
   // Apply date range filter (assuming createdAt is used)
   if (startDate) {
     filteredData = filteredData.filter(
-      (client) => new Date(client.createdAt) >= new Date(startDate)
+      (lead) => new Date(lead.createdAt) >= new Date(startDate)
     );
   }
   if (endDate) {
     filteredData = filteredData.filter(
-      (client) => new Date(client.createdAt) <= new Date(endDate)
+      (lead) => new Date(lead.createdAt) <= new Date(endDate)
     );
   }
 

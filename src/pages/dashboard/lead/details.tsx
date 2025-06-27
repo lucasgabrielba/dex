@@ -1,24 +1,21 @@
-import type { IClientItem } from 'src/types/client';
+import type { ILeadItem } from 'src/types/lead';
 
 import { useParams } from 'react-router';
+import { _leadList } from '@/_mock/_lead';
 import { Helmet } from 'react-helmet-async';
+import { LeadDetailsView } from '@/sections/lead/view/lead-details-view';
 
-import { _clientList } from 'src/_mock';
 import { CONFIG } from 'src/global-config';
-
-import { ClientDetailsView } from 'src/sections/client/view/client-profile-view';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Cliente | Dashboard - ${CONFIG.appName}` };
+const metadata = { title: `Lead | Dashboard - ${CONFIG.appName}` };
 
 export default function Page() {
   const { id = '' } = useParams();
 
   // const { client, clientLoading, clientError } = useGetClient(id);
-  const client = _clientList.find((item: IClientItem) => item.id === id);
-  const clientLoading = false;
-  const clientError = false;
+  const lead = _leadList.find((item: ILeadItem) => item.id === id);
 
   return (
     <>
@@ -26,7 +23,7 @@ export default function Page() {
         <title> {metadata.title}</title>
       </Helmet>
 
-      <ClientDetailsView client={client} loading={clientLoading} error={clientError} />
+      <LeadDetailsView lead={lead} />
     </>
   );
 }

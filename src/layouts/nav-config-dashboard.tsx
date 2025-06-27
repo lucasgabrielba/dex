@@ -92,6 +92,7 @@ export const navData: NavSectionProps['data'] = [
         path: paths.dashboard.lead.root,
         icon: ICONS.star,
         children: [
+          { title: 'Lista de leads', path: paths.dashboard.lead.list },
           { title: 'Adicionar novo lead', path: paths.dashboard.lead.new },
         ],
       },

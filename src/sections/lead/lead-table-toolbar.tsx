@@ -1,4 +1,4 @@
-import type { IClientTableFilters } from 'src/types/client';
+import type { ILeadTableFilters } from '@/types/lead';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import type { UseSetStateReturn } from 'minimal-shared/hooks';
 
@@ -16,7 +16,6 @@ import IconButton from '@mui/material/IconButton';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
@@ -26,24 +25,16 @@ import { CustomPopover } from 'src/components/custom-popover';
 type Props = {
   onResetPage: () => void;
   dateError?: boolean;
-  filters: UseSetStateReturn<IClientTableFilters>;
+  filters: UseSetStateReturn<ILeadTableFilters>;
   options: {
     filterOptions: string[];
   };
 };
 
-export function ClientTableToolbar({ filters, options, onResetPage, dateError }: Props) {
+export function LeadTableToolbar({ filters, options, onResetPage, dateError }: Props) {
   const menuActions = usePopover();
 
   const { state: currentFilters, setState: updateFilters } = filters;
-
-  // const handleFilterName = useCallback(
-  //   (event: React.ChangeEvent<HTMLInputElement>) => {
-  //     onResetPage();
-  //     updateFilters({ name: event.target.value });
-  //   },
-  //   [onResetPage, updateFilters]
-  // );
 
   const handleFilterChange = useCallback(
     (event: SelectChangeEvent<string>) => {
@@ -142,29 +133,6 @@ export function ClientTableToolbar({ filters, options, onResetPage, dateError }:
           </FormControl>
         </Box>
 
-        <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <DatePicker
-            label="Data inicial"
-            value={startDateValue}
-            onChange={handleFilterStartDate}
-            slotProps={{ textField: { fullWidth: true } }}
-          />
-        </Box>
-
-        <Box sx={{ width: { xs: '100%', sm: 200 } }}>
-          <DatePicker
-            label="Data final"
-            value={endDateValue}
-            onChange={handleFilterEndDate}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                error: dateError,
-                helperText: dateError ? 'Data final deve ser posterior à data inicial' : null,
-              },
-            }}
-          />
-        </Box>
 
         <Box sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}>
           <TextField

@@ -1,4 +1,4 @@
-import type { IClientItem } from 'src/types/client';
+import type { ILeadItem } from 'src/types/lead';
 
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -15,32 +15,32 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
-import { CLIENT_STATUS_OPTIONS } from 'src/_mock';
+import { BROKERS, UNIT_OPTIONS, PRODUCT_OPTIONS, LEAD_STATUS_OPTIONS } from 'src/_mock/_lead';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
 
 // ----------------------------------------------------------------------
 
-export type ClientQuickEditSchemaType = zod.infer<typeof ClientQuickEditSchema>;
+export type LeadQuickEditSchemaType = zod.infer<typeof LeadQuickEditSchema>;
 
-export const ClientQuickEditSchema = zod.object({
-  name: zod.string().min(1, { message: 'Name is required!' }),
+export const LeadQuickEditSchema = zod.object({
+  name: zod.string().min(1, { message: 'Nome é obrigatório!' }),
   email: zod
     .string()
-    .min(1, { message: 'Email is required!' })
-    .email({ message: 'Email must be a valid email address!' }),
+    .min(1, { message: 'Email é obrigatório!' })
+    .email({ message: 'Email deve ser um endereço válido!' }),
   phoneNumber: schemaHelper.phoneNumber({ isValid: isValidPhoneNumber }),
-  country: schemaHelper.nullableInput(zod.string().min(1, { message: 'Country is required!' }), {
-    // message for null value
-    message: 'Country is required!',
+  country: schemaHelper.nullableInput(zod.string().min(1, { message: 'País é obrigatório!' }), {
+    message: 'País é obrigatório!',
   }),
-  state: zod.string().min(1, { message: 'State is required!' }),
-  city: zod.string().min(1, { message: 'City is required!' }),
-  address: zod.string().min(1, { message: 'Address is required!' }),
-  zipCode: zod.string().min(1, { message: 'Zip code is required!' }),
-  company: zod.string().min(1, { message: 'Company is required!' }),
-  role: zod.string().min(1, { message: 'Role is required!' }),
+  state: zod.string().min(1, { message: 'Estado é obrigatório!' }),
+  city: zod.string().min(1, { message: 'Cidade é obrigatória!' }),
+  address: zod.string().min(1, { message: 'Endereço é obrigatório!' }),
+  zipCode: zod.string().min(1, { message: 'CEP é obrigatório!' }),
+  productInterest: zod.string().min(1, { message: 'Produto de interesse é obrigatório!' }),
+  interestUnit: zod.string().min(1, { message: 'Unidade de interesse é obrigatória!' }),
+  broker: zod.string().min(1, { message: 'Corretor é obrigatório!' }),
   // Not required
   status: zod.string(),
 });
@@ -50,11 +50,11 @@ export const ClientQuickEditSchema = zod.object({
 type Props = {
   open: boolean;
   onClose: () => void;
-  currentClient?: IClientItem;
+  currentLead?: ILeadItem;
 };
 
-export function ClientQuickEditForm({ currentClient, open, onClose }: Props) {
-  const defaultValues: ClientQuickEditSchemaType = {
+export function LeadQuickEditForm({ currentLead, open, onClose }: Props) {
+  const defaultValues: LeadQuickEditSchemaType = {
     name: '',
     email: '',
     phoneNumber: '',
@@ -64,15 +64,16 @@ export function ClientQuickEditForm({ currentClient, open, onClose }: Props) {
     city: '',
     zipCode: '',
     status: '',
-    company: '',
-    role: '',
+    productInterest: '',
+    interestUnit: '',
+    broker: '',
   };
 
-  const methods = useForm<ClientQuickEditSchemaType>({
+  const methods = useForm<LeadQuickEditSchemaType>({
     mode: 'all',
-    resolver: zodResolver(ClientQuickEditSchema),
+    resolver: zodResolver(LeadQuickEditSchema),
     defaultValues,
-    values: currentClient,
+    values: currentLead,
   });
 
   const {
@@ -110,12 +111,12 @@ export function ClientQuickEditForm({ currentClient, open, onClose }: Props) {
       onClose={onClose}
       PaperProps={{ sx: { maxWidth: 720 } }}
     >
-      <DialogTitle>Quick update</DialogTitle>
+      <DialogTitle>Edição rápida de lead</DialogTitle>
 
       <Form methods={methods} onSubmit={onSubmit}>
         <DialogContent>
           <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            Account is waiting for confirmation
+            Lead aguardando qualificação
           </Alert>
 
           <Box
@@ -127,42 +128,63 @@ export function ClientQuickEditForm({ currentClient, open, onClose }: Props) {
             }}
           >
             <Field.Select name="status" label="Status">
-              {CLIENT_STATUS_OPTIONS.map((status) => (
+              {LEAD_STATUS_OPTIONS.map((status) => (
                 <MenuItem key={status.value} value={status.value}>
                   {status.label}
                 </MenuItem>
               ))}
             </Field.Select>
 
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
+            <Field.Select name="broker" label="Corretor">
+              {BROKERS.map((broker) => (
+                <MenuItem key={broker} value={broker}>
+                  {broker}
+                </MenuItem>
+              ))}
+            </Field.Select>
 
-            <Field.Text name="name" label="Full name" />
-            <Field.Text name="email" label="Email address" />
-            <Field.Phone name="phoneNumber" label="Phone number" />
+            <Field.Text name="name" label="Nome" />
+            <Field.Text name="email" label="Email" />
+            <Field.Phone name="phoneNumber" label="Telefone" />
+
+            <Field.Text name="address" label="Endereço" />
 
             <Field.CountrySelect
               fullWidth
               name="country"
-              label="Country"
-              placeholder="Choose a country"
+              label="País"
+              placeholder="Escolha um país"
             />
 
-            <Field.Text name="state" label="State/region" />
-            <Field.Text name="city" label="City" />
-            <Field.Text name="address" label="Address" />
-            <Field.Text name="zipCode" label="Zip/code" />
-            <Field.Text name="company" label="Company" />
-            <Field.Text name="role" label="Role" />
+            <Field.Text name="state" label="Estado" />
+            <Field.Text name="city" label="Cidade" />
+            <Field.Text name="zipCode" label="CEP" />
+
+            <Field.Select name="productInterest" label="Produto interessado">
+              {PRODUCT_OPTIONS.map((product) => (
+                <MenuItem key={product.value} value={product.value}>
+                  {product.label}
+                </MenuItem>
+              ))}
+            </Field.Select>
+
+            <Field.Select name="interestUnit" label="Unidade de interesse">
+              {UNIT_OPTIONS.map((unit) => (
+                <MenuItem key={unit.value} value={unit.value}>
+                  {unit.label}
+                </MenuItem>
+              ))}
+            </Field.Select>
           </Box>
         </DialogContent>
 
         <DialogActions>
           <Button variant="outlined" onClick={onClose}>
-            Cancel
+            Cancelar
           </Button>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Update
+            Atualizar
           </LoadingButton>
         </DialogActions>
       </Form>
